@@ -1077,3 +1077,79 @@ extension AnyRealmCollection: AssistedObjectiveCBridgeable {
         )
     }
 }
+
+// MARK: Combine
+#if canImport(Combine)
+import Combine
+
+//@available(OSX 10.15, *)
+//@available(watchOS 6.0, *)
+//@available(iOS 13.0, *)
+//@available(iOSApplicationExtension 13.0, *)
+//@available(OSXApplicationExtension 10.15, *)
+//extension RealmCollection: ObservableObject where Self == LinkingObjects {
+//    public var objectWillChange: RealmCollectionPublisher<AnyRealmCollection<Element>> {
+//        RealmCollectionPublisher(collection: self)
+//    }
+//}
+
+@available(watchOS 6.0, *)
+@available(iOS 13.0, *)
+@available(iOSApplicationExtension 13.0, *)
+@available(OSXApplicationExtension 10.15, *)
+extension RealmCollection {
+    /// Allows a subscriber to hook into Realm Changes.
+    public func observe<S>(_ subscriber: S) -> NotificationToken where S: Subscriber, S.Input == Self {
+        return observe { change in
+            switch change {
+            case .update(_, deletions: _, insertions: _, modifications: _):
+                _ = subscriber.receive(self)
+            default:
+                break
+            }
+        }
+    }
+}
+
+@available(watchOS 6.0, *)
+@available(iOS 13.0, *)
+@available(iOSApplicationExtension 13.0, *)
+@available(OSXApplicationExtension 10.15, *)
+public struct RealmCollectionSubscription: Subscription {
+    private var token: NotificationToken
+
+    public var combineIdentifier: CombineIdentifier {
+        return CombineIdentifier(token)
+    }
+
+    init<S: Subscriber, Collection: RealmCollection>(object: Collection, subscriber: S) where S.Input == Collection {
+        self.token = object.observe(subscriber)
+    }
+
+    public func request(_ demand: Subscribers.Demand) {
+    }
+
+    public func cancel() {
+        token.invalidate()
+    }
+}
+
+@available(watchOS 6.0, *)
+@available(iOS 13.0, *)
+@available(iOSApplicationExtension 13.0, *)
+@available(OSXApplicationExtension 10.15, *)
+public struct RealmCollectionPublisher<Collection: RealmCollection>: Publisher {
+    public typealias Output = Collection
+    public typealias Failure = Never
+
+    let collection: Collection
+
+    init(collection: Collection) {
+        self.collection = collection
+    }
+
+    public func receive<S>(subscriber: S) where S: Subscriber, S.Failure == Never, Output == S.Input {
+        subscriber.receive(subscription: RealmCollectionSubscription(object: self.collection, subscriber: subscriber))
+    }
+}
+#endif
