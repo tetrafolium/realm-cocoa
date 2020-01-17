@@ -426,14 +426,11 @@ extension Results: Encodable where Element: Encodable {
 // MARK: - Combine
 
 #if canImport(Combine)
-@available(OSX 10.15, *)
-@available(watchOS 6.0, *)
-@available(iOS 13.0, *)
-@available(iOSApplicationExtension 13.0, *)
-@available(OSXApplicationExtension 10.15, *)
-extension Results: Combine.ObservableObject, Identifiable {
-    public var objectWillChange: RealmCollectionPublisher<Results> {
-        RealmCollectionPublisher(collection: self)
+@available(OSX 10.15, watchOS 6.0, iOS 13.0, iOSApplicationExtension 13.0, OSXApplicationExtension 10.15, *)
+//extension Results: Combine.ObservableObject, Identifiable {
+extension Results {
+    public var objectWillChange: RealmPublisher<Results> {
+        RealmPublisher(self)
     }
 }
 #endif

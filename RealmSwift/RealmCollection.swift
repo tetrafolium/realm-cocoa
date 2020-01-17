@@ -1082,28 +1082,20 @@ extension AnyRealmCollection: AssistedObjectiveCBridgeable {
 #if canImport(Combine)
 import Combine
 
-//@available(OSX 10.15, *)
-//@available(watchOS 6.0, *)
-//@available(iOS 13.0, *)
-//@available(iOSApplicationExtension 13.0, *)
-//@available(OSXApplicationExtension 10.15, *)
-//extension RealmCollection: ObservableObject where Self == LinkingObjects {
-//    public var objectWillChange: RealmCollectionPublisher<AnyRealmCollection<Element>> {
-//        RealmCollectionPublisher(collection: self)
-//    }
-//}
+@available(OSX 10.15, watchOS 6.0, iOS 13.0, iOSApplicationExtension 13.0, OSXApplicationExtension 10.15, *)
+public protocol RealmSubscribable {
+    func observe<S>(_ subscriber: S, freeze: Bool) -> NotificationToken where S: Subscriber, S.Input == Self
+    func freeze() -> Self
+}
 
-@available(watchOS 6.0, *)
-@available(iOS 13.0, *)
-@available(iOSApplicationExtension 13.0, *)
-@available(OSXApplicationExtension 10.15, *)
+@available(OSX 10.15, watchOS 6.0, iOS 13.0, iOSApplicationExtension 13.0, OSXApplicationExtension 10.15, *)
 extension RealmCollection {
     /// Allows a subscriber to hook into Realm Changes.
-    public func observe<S>(_ subscriber: S) -> NotificationToken where S: Subscriber, S.Input == Self {
+    public func observe<S>(_ subscriber: S, freeze: Bool) -> NotificationToken where S: Subscriber, S.Input == Self {
         return observe { change in
             switch change {
             case .update(_, deletions: _, insertions: _, modifications: _):
-                _ = subscriber.receive(self)
+                _ = subscriber.receive(freeze ? self.freeze() : self)
             default:
                 break
             }
@@ -1111,19 +1103,28 @@ extension RealmCollection {
     }
 }
 
-@available(watchOS 6.0, *)
-@available(iOS 13.0, *)
-@available(iOSApplicationExtension 13.0, *)
-@available(OSXApplicationExtension 10.15, *)
-public struct RealmCollectionSubscription: Subscription {
+@available(OSX 10.15, watchOS 6.0, iOS 13.0, iOSApplicationExtension 13.0, OSXApplicationExtension 10.15, *)
+extension Results: RealmSubscribable {
+}
+
+@available(OSX 10.15, watchOS 6.0, iOS 13.0, iOSApplicationExtension 13.0, OSXApplicationExtension 10.15, *)
+extension List: RealmSubscribable {
+}
+
+@available(OSX 10.15, watchOS 6.0, iOS 13.0, iOSApplicationExtension 13.0, OSXApplicationExtension 10.15, *)
+extension LinkingObjects: RealmSubscribable {
+}
+
+@available(OSX 10.15, watchOS 6.0, iOS 13.0, iOSApplicationExtension 13.0, OSXApplicationExtension 10.15, *)
+public struct RealmSubscription: Subscription {
     private var token: NotificationToken
 
     public var combineIdentifier: CombineIdentifier {
         return CombineIdentifier(token)
     }
 
-    init<S: Subscriber, Collection: RealmCollection>(object: Collection, subscriber: S) where S.Input == Collection {
-        self.token = object.observe(subscriber)
+    init<S: Subscriber, Collection: RealmSubscribable>(freeze: Bool, object: Collection, subscriber: S) where S.Input == Collection {
+        self.token = object.observe(subscriber, freeze: freeze)
     }
 
     public func request(_ demand: Subscribers.Demand) {
@@ -1134,22 +1135,34 @@ public struct RealmCollectionSubscription: Subscription {
     }
 }
 
-@available(watchOS 6.0, *)
-@available(iOS 13.0, *)
-@available(iOSApplicationExtension 13.0, *)
-@available(OSXApplicationExtension 10.15, *)
-public struct RealmCollectionPublisher<Collection: RealmCollection>: Publisher {
+@available(OSX 10.15, watchOS 6.0, iOS 13.0, iOSApplicationExtension 13.0, OSXApplicationExtension 10.15, *)
+public struct RealmPublisher<Collection: RealmSubscribable>: Publisher {
     public typealias Output = Collection
     public typealias Failure = Never
 
-    let collection: Collection
-
-    init(collection: Collection) {
-        self.collection = collection
+    let object: Collection
+    public init(_ object: Collection) {
+        self.object = object
     }
 
     public func receive<S>(subscriber: S) where S: Subscriber, S.Failure == Never, Output == S.Input {
-        subscriber.receive(subscription: RealmCollectionSubscription(object: self.collection, subscriber: subscriber))
+        subscriber.receive(subscription: RealmSubscription(freeze: false, object: self.object, subscriber: subscriber))
     }
 }
+
+@available(OSX 10.15, watchOS 6.0, iOS 13.0, iOSApplicationExtension 13.0, OSXApplicationExtension 10.15, *)
+public struct FrozenRealmPublisher<Collection: RealmSubscribable>: Publisher {
+    public typealias Output = Collection
+    public typealias Failure = Never
+
+    let object: Collection
+    public init(_ object: Collection) {
+        self.object = object
+    }
+
+    public func receive<S>(subscriber: S) where S: Subscriber, S.Failure == Never, Output == S.Input {
+        subscriber.receive(subscription: RealmSubscription(freeze: true, object: self.object, subscriber: subscriber))
+    }
+}
+
 #endif

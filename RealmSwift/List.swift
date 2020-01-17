@@ -754,18 +754,14 @@ extension List: AssistedObjectiveCBridgeable {
 #if canImport(Combine)
 import Combine
 
-@available(OSX 10.15, *)
-@available(watchOS 6.0, *)
-@available(iOS 13.0, *)
-@available(iOSApplicationExtension 13.0, *)
-@available(OSXApplicationExtension 10.15, *)
+@available(OSX 10.15, watchOS 6.0, iOS 13.0, iOSApplicationExtension 13.0, OSXApplicationExtension 10.15, *)
 extension List {
     /// Allows a subscriber to hook into Realm Changes.
     public func observe<S, V, L: List<V>>(_ subscriber: S) -> NotificationToken where S: Subscriber, S.Input == L {
         return observe { change in
             switch change {
             case .update(_, deletions: _, insertions: _, modifications: _):
-                _ = subscriber.receive(self as! L)
+                _ = subscriber.receive(self.freeze() as! L)
             default:
                 break
             }
@@ -773,14 +769,10 @@ extension List {
     }
 }
 
-@available(OSX 10.15, *)
-@available(watchOS 6.0, *)
-@available(iOS 13.0, *)
-@available(iOSApplicationExtension 13.0, *)
-@available(OSXApplicationExtension 10.15, *)
+@available(OSX 10.15, watchOS 6.0, iOS 13.0, iOSApplicationExtension 13.0, OSXApplicationExtension 10.15, *)
 extension List: ObservableObject {
-    public var objectWillChange: RealmCollectionPublisher<List> {
-        RealmCollectionPublisher(collection: self)
+    public var objectWillChange: RealmPublisher<List> {
+        RealmPublisher(self)
     }
 }
 #endif
