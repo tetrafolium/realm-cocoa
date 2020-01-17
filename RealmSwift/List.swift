@@ -693,6 +693,28 @@ extension List: MutableCollection {
             insert(contentsOf: newElements, at: subrange.startIndex)
     }
 #endif
+    /// :nodoc:
+    public func remove(atOffsets offsets: IndexSet) {
+        for offset in offsets.reversed() {
+            remove(at: offset)
+        }
+    }
+
+    /// :nodoc:
+    public func move(fromOffsets offsets: IndexSet, toOffset destination: Int) {
+        var tmp = [Element]()
+        for offset in offsets {
+            tmp.append(self[offset])
+        }
+        insert(contentsOf: tmp, at: destination)
+        for offset in offsets.reversed() {
+            var o = offset
+            if o >= destination {
+                o += tmp.count
+            }
+            remove(at: o)
+        }
+    }
 }
 #else
 // MARK: - RangeReplaceableCollection support

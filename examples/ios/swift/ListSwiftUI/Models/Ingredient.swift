@@ -20,14 +20,13 @@ import Foundation
 import RealmSwift
 
 /// An individual ingredient. Part of a `Recipe`.
-final class Ingredient: Object {
+final class Ingredient: Object, ObjectKeyIdentifable {
     /// The name of the ingredient.
     @objc dynamic var name: String?
 
     /// The backlink to the `Recipe` this ingredient is a part of.
     let recipes = LinkingObjects(fromType: Recipe.self,
                                  property: "ingredients")
-
 
     /// The raw `FoodType` value. Realm cannot store an
     /// `enum` with non-int raw values, so we use a backing property

@@ -30,7 +30,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let window = UIWindow(windowScene: windowScene)
 
-        window.rootViewController = UIHostingController(rootView: ContentView())
+        let realm = try! Realm()
+        var recipes = realm.object(ofType: Recipes.self, forPrimaryKey: 0)
+        if recipes == nil {
+            recipes = try! realm.write { realm.create(Recipes.self, value: []) }
+        }
+
+        window.rootViewController = UIHostingController(rootView: ContentView(recipes: recipes!.recipes))
 
         self.window = window
         window.makeKeyAndVisible()

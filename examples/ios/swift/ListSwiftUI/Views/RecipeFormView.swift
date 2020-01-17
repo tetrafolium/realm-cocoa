@@ -20,8 +20,9 @@ import SwiftUI
 import RealmSwift
 
 struct RecipeFormView: View {
-    @State var showIngredientForm: Bool = false
-    @State var draftRecipe: Recipe = Recipe()
+    let recipes: RealmSwift.List<Recipe>
+    @State var showIngredientForm = false
+    @State var draftRecipe = Recipe()
     @Binding var showRecipeFormView: Bool
 
     var body: some View {
@@ -43,10 +44,9 @@ struct RecipeFormView: View {
                 }
             }
             Button("save") {
-                try! Realm().write {
-                    Recipes.shared.recipes.append(self.draftRecipe)
-                    self.draftRecipe = Recipe()
-                }
+                self.recipes.realm?.beginWrite()
+                self.recipes.append(self.draftRecipe)
+                try! self.recipes.realm?.commitWrite()
                 self.showRecipeFormView = false
             }
         }.navigationBarTitle("make recipe")
@@ -59,6 +59,6 @@ struct RecipeFormView: View {
 
 struct RecipeFormViewPreviews: PreviewProvider {
     static var previews: some View {
-        RecipeFormView(showRecipeFormView: .constant(true))
+        RecipeFormView(recipes: RealmSwift.List<Recipe>(), showRecipeFormView: .constant(true))
     }
 }

@@ -28,10 +28,7 @@ struct SearchBar: View {
                 TextField("recipe or ingredient", text: $text).scaledToFill()
             }.padding()
             RoundedRectangle(cornerRadius: 10)
-                .stroke(Color(red: 0.9,
-                              green: 0.9,
-                              blue: 0.9),
-                        lineWidth: 3)
+                .stroke(Color(red: 0.9, green: 0.9, blue: 0.9), lineWidth: 3)
         }
     }
 }

@@ -59,8 +59,8 @@ final class ContentViewState: ObservableObject {
 struct ContentView: View {
     @State private var searchTerm: String = ""
     @State private var showRecipeFormView = false
-    @ObservedObject var recipes = Recipes.shared.recipes
-    @ObservedObject var state: ContentViewState = ContentViewState()
+    @ObservedObject var state = ContentViewState()
+    @ObservedObject var recipes: RealmSwift.List<Recipe>
 
     var body: some View {
         NavigationView {
@@ -70,7 +70,7 @@ struct ContentView: View {
                         SearchBar(text: self.$searchTerm)
                             .frame(width: 300, alignment: .leading)
                             .padding(5)
-                        NavigationLink(destination: RecipeFormView(showRecipeFormView: self.$showRecipeFormView),
+                        NavigationLink(destination: RecipeFormView(recipes: self.recipes, showRecipeFormView: self.$showRecipeFormView),
                                        isActive: self.$showRecipeFormView,
                                        label: {
                                         Button("add recipe") {
@@ -78,9 +78,11 @@ struct ContentView: View {
                                         }
                         })
                 }) {
-                    ForEach(filteredCollection(), id: \.id) { recipe in
+                    ForEach(filteredCollection()) { recipe in
                         RecipeRow(recipe).environmentObject(self.state)
                     }
+                    .onDelete(perform: delete)
+                    .onMove(perform: move)
                 }
             }.listStyle(GroupedListStyle())
                 .navigationBarTitle("recipes", displayMode: .large)
@@ -92,30 +94,34 @@ struct ContentView: View {
 
     func filteredCollection() -> AnyRealmCollection<Recipe> {
         if self.searchTerm.isEmpty {
-            return AnyRealmCollection(self.recipes)
+            return AnyRealmCollection(self.recipes.freeze())
         } else {
-            return AnyRealmCollection(self.recipes.filter("name CONTAINS '%@'", searchTerm))
+            return AnyRealmCollection(self.recipes.filter("name CONTAINS[c] %@", searchTerm).freeze())
         }
     }
 
     func delete(at offsets: IndexSet) {
-        try! Realm().write {
-            self.recipes.remove(at: offsets.first!)
+        if let realm = recipes.realm {
+            try! realm.write {
+                realm.delete(recipes[offsets.first!])
+            }
+        }
+        else {
+            recipes.remove(at: offsets.first!)
         }
     }
 
-    func move(fromOffsets offsets: IndexSet, toOffset offset: Int) {
-        try! Realm().write {
-            self.recipes.move(from: offsets.first!,
-                              to: offset == 0 ? 0 : offset - 1)
-        }
+    func move(fromOffsets offsets: IndexSet, toOffset to: Int) {
+        recipes.realm?.beginWrite()
+        recipes.move(fromOffsets: offsets, toOffset: to)
+        try! recipes.realm?.commitWrite()
     }
 }
 
 #if DEBUG
 struct ContentViewPreviews: PreviewProvider {
     static var previews: some View {
-        return ContentView()
+        return ContentView(recipes: .init())
     }
 }
 #endif

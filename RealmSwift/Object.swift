@@ -852,4 +852,15 @@ extension Object: RealmSubscribable {
         return realm!.freeze(self)
     }
 }
+
+public protocol ObjectKeyIdentifable: Identifiable, Object {
+    var id: UInt64 { get }
+}
+
+extension ObjectKeyIdentifable {
+    public var id: UInt64 {
+        RLMObjectBaseGetCombineId(self)
+    }
+}
+
 #endif
