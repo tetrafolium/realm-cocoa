@@ -18,9 +18,6 @@
 
 import Foundation
 import Realm
-#if canImport(Combine)
-import Combine
-#endif
 
 // MARK: MinMaxType
 
@@ -419,18 +416,6 @@ extension Results: Encodable where Element: Encodable {
         for value in self {
             try container.encode(value)
         }
-    }
-}
-#endif
-
-// MARK: - Combine
-
-#if canImport(Combine)
-@available(OSX 10.15, watchOS 6.0, iOS 13.0, iOSApplicationExtension 13.0, OSXApplicationExtension 10.15, *)
-//extension Results: Combine.ObservableObject, Identifiable {
-extension Results {
-    public var objectWillChange: RealmPublisher<Results> {
-        RealmPublisher(self)
     }
 }
 #endif

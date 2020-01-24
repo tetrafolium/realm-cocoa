@@ -19,9 +19,6 @@
 import Foundation
 import Realm
 import Realm.Private
-#if canImport(Combine)
-import Combine
-#endif
 
 /**
  `Object` is a class used to define Realm model objects.
@@ -329,7 +326,6 @@ extension Object: ThreadConfined {
         return realm!.freeze(self)
     }
 }
-
 
 /**
  Information about a specific property which changed in an `Object` change notification.
@@ -823,44 +819,3 @@ extension Object: AssistedObjectiveCBridgeable {
         return (objectiveCValue: unsafeCastToRLMObject(), metadata: nil)
     }
 }
-
-// MARK: - Combine
-#if canImport(Combine)
-@available(OSX 10.15, watchOS 6.0, iOS 13.0, iOSApplicationExtension 13.0, OSXApplicationExtension 10.15, *)
-extension Object: Combine.ObservableObject {
-    public var objectWillChange: RealmPublisher<Object> {
-        return RealmPublisher(self)
-    }
-}
-
-@available(OSX 10.15, watchOS 6.0, iOS 13.0, iOSApplicationExtension 13.0, OSXApplicationExtension 10.15, *)
-extension Object: RealmSubscribable {
-    public func observe<S>(_ subscriber: S, freeze: Bool) -> NotificationToken where S: Subscriber, S.Input: Object {
-        return observe { change in
-            switch change {
-            case .change:
-                _ = subscriber.receive((freeze ? self.freeze() : self) as! S.Input)
-            case .deleted:
-                subscriber.receive(completion: .finished)
-            default:
-                break
-            }
-        }
-    }
-
-    public func freeze() -> Self {
-        return realm!.freeze(self)
-    }
-}
-
-public protocol ObjectKeyIdentifable: Identifiable, Object {
-    var id: UInt64 { get }
-}
-
-extension ObjectKeyIdentifable {
-    public var id: UInt64 {
-        RLMObjectBaseGetCombineId(self)
-    }
-}
-
-#endif

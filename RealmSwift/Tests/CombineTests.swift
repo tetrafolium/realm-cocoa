@@ -18,6 +18,7 @@
 
 #if canImport(Combine)
 import XCTest
+import Combine
 import RealmSwift
 
 class BackLink: Object {
@@ -27,52 +28,158 @@ class Linked: Object {
     let backlink = LinkingObjects(fromType: BackLink.self, property: "list")
 }
 
+// XCTest doesn't care about the @available on the class and will try to run
+// the tests even on older versions. Putting this check inside `defaultTestSuite`
+// results in a warning about it being redundant due to the encoding check, so
+// it needs to be out of line.
+func hasCombine() -> Bool {
+    if #available(OSX 10.15, watchOS 6.0, iOS 13.0, iOSApplicationExtension 13.0, OSXApplicationExtension 10.15, *) {
+        return true
+    }
+    return false
+}
+
 @available(OSX 10.15, watchOS 6.0, iOS 13.0, iOSApplicationExtension 13.0, OSXApplicationExtension 10.15, *)
-class CombineTests: TestCase {
+class CombinePublisherTests: TestCase {
     var realm: Realm! = nil
+    var token: AnyCancellable? = nil
 
     override class var defaultTestSuite: XCTestSuite {
-        if #available(OSX 10.15, watchOS 6.0, iOS 13.0, iOSApplicationExtension 13.0, OSXApplicationExtension 10.15, *) {
+        if hasCombine() {
             return super.defaultTestSuite
         }
-        return XCTestSuite(name: "CombineTests")
+        return XCTestSuite(name: "CombinePublisherTests")
     }
 
     override func setUp() {
         super.setUp()
         realm = try! Realm(configuration: Realm.Configuration(inMemoryIdentifier: "test"))
-        realm.beginWrite()
     }
 
     override func tearDown() {
         realm = nil
+        if let token = token {
+            token.cancel()
+        }
         super.tearDown()
     }
 
-    func getObject(_ obj: SwiftKVOObject) -> (SwiftKVOObject, SwiftKVOObject) {
-        realm.add(obj)
-        try! realm.commitWrite()
-        return (obj, obj)
-    }
-
-    func testObjectWillChange() {
+    func testObjectChange() {
         let obj = try! realm.write { realm.create(SwiftIntObject.self, value: []) }
-        let exp = XCTestExpectation(description: "sink will receive objects")
+        let exp = XCTestExpectation()
 
-        let cancellable = RealmPublisher(obj).sink { (o: SwiftIntObject) in
+        token = RealmPublisher(obj).sink { o in
             XCTAssertEqual(obj, o)
             exp.fulfill()
         }
 
         try! realm.write { obj.intCol = 1 }
-
         wait(for: [exp], timeout: 1)
-        cancellable.cancel()
     }
 
-    func testListWillChange() {
+    func testObjectChangeSet() {
+        let obj = try! realm.write { realm.create(SwiftIntObject.self, value: []) }
+        let exp = XCTestExpectation()
+
+        token = RealmChangePublisher(obj).sink { (o, change) in
+            XCTAssertEqual(obj, o)
+            if case .change(let properties) = change {
+                XCTAssertEqual(properties.count, 1)
+                XCTAssertEqual(properties[0].name, "intCol")
+                XCTAssertNil(properties[0].oldValue)
+                XCTAssertEqual(properties[0].newValue as? Int, 1)
+            }
+            else {
+                XCTFail("Expected .change but got \(change)")
+            }
+            exp.fulfill()
+        }
+
+        try! realm.write { obj.intCol = 1 }
+        wait(for: [exp], timeout: 1)
+    }
+
+    func testObjectDelete() {
+        let obj = try! realm.write { realm.create(SwiftIntObject.self, value: []) }
+        let exp = XCTestExpectation()
+
+        token = RealmPublisher(obj).sink(receiveCompletion: { _ in exp.fulfill() },
+                                         receiveValue: { _ in })
+
+        try! realm.write { realm.delete(obj) }
+        wait(for: [exp], timeout: 1)
+    }
+
+    func testFrozenObject() {
+        let obj = try! realm.write { realm.create(SwiftIntObject.self, value: []) }
+        let exp = XCTestExpectation()
+
+        token = RealmPublisher(obj, freeze: true).collect().sink { arr in
+            XCTAssertEqual(arr.count, 10)
+            for i in 0..<10 {
+                XCTAssertEqual(arr[i].intCol, i + 1)
+            }
+            exp.fulfill()
+        }
+
+        for _ in 0..<10 {
+            try! realm.write { obj.intCol += 1 }
+        }
+        try! realm.write { realm.delete(obj) }
+        wait(for: [exp], timeout: 1)
+    }
+
+    func testFrozenObjectSchedulers() {
+        let obj = try! realm.write { realm.create(SwiftIntObject.self, value: []) }
+        let exp = XCTestExpectation()
+
+        token = RealmPublisher(obj, freeze: true)
+            .subscribe(on: DispatchQueue.global())
+            .receive(on: DispatchQueue.global())
+//            .receive(on: RunLoop.main)
+            .collect()
+            .sink { arr in
+                XCTAssertEqual(arr.count, 10)
+                for i in 0..<10 {
+                    XCTAssertEqual(arr[i].intCol, i + 1)
+                }
+                exp.fulfill()
+        }
+
+        for _ in 0..<10 {
+            try! realm.write { obj.intCol += 1 }
+        }
+        try! realm.write { realm.delete(obj) }
+        wait(for: [exp], timeout: 1)
+    }
+
+    func testFrozenObjectChangeSet() {
+        let obj = try! realm.write { realm.create(SwiftIntObject.self, value: []) }
+        let exp = XCTestExpectation()
+
+        token = RealmChangePublisher(obj, freeze: true)
+            .sink { (o, change) in
+            XCTAssertEqual(obj, o)
+            if case .change(let properties) = change {
+                XCTAssertEqual(properties.count, 1)
+                XCTAssertEqual(properties[0].name, "intCol")
+                XCTAssertNil(properties[0].oldValue)
+                XCTAssertEqual(properties[0].newValue as? Int, 1)
+            }
+            else {
+                XCTFail("Expected .change but got \(change)")
+            }
+            exp.fulfill()
+        }
+
+        try! realm.write { obj.intCol = 1 }
+        wait(for: [exp], timeout: 1)
+    }
+
+    /*
+    func testList() {
         let exp = XCTestExpectation(description: "sink will receive objects")
-        let (obj, _) = getObject(SwiftKVOObject())
+        let obj = try! realm.write { realm.create(SwiftIntObject.self, value: []) }
 
         let cancellable = obj.arrayBool.objectWillChange.sink {
             XCTAssertEqual(obj.arrayBool, $0)
@@ -88,7 +195,7 @@ class CombineTests: TestCase {
     func testResultsWillChange() {
         let exp = XCTestExpectation(description: "sink will receive objects")
 
-        let (obj, _) = getObject(SwiftKVOObject())
+        let obj = try! realm.write { realm.create(SwiftIntObject.self, value: []) }
         let results = obj.arrayCol.filter("int64Col == 4")
 
         let cancellable = results.objectWillChange.sink {
@@ -122,6 +229,7 @@ class CombineTests: TestCase {
         wait(for: [exp], timeout: 10)
         cancellable.cancel()
     }
+ */
 }
 
 #endif // canImport(Combine)

@@ -18,10 +18,6 @@
 
 import Foundation
 import Realm
-#if canImport(Combine)
-import Combine
-#endif
-
 
 /**
  `LinkingObjects` is an auto-updating container type. It represents zero or more objects that are linked to its owning
@@ -404,15 +400,3 @@ extension LinkingObjects: AssistedObjectiveCBridgeable {
         return (objectiveCValue: handle!.parent, metadata: handle!.property.name)
     }
 }
-
-// MARK: - Combine
-
-#if canImport(Combine)
-@available(OSX 10.15, watchOS 6.0, iOS 13.0, iOSApplicationExtension 13.0, OSXApplicationExtension 10.15, *)
-//extension LinkingObjects: Combine.ObservableObject, Identifiable {
-extension LinkingObjects {
-    public var objectWillChange: RealmPublisher<LinkingObjects> {
-        RealmPublisher(self)
-    }
-}
-#endif

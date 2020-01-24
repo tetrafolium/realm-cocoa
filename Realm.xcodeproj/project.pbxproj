@@ -124,6 +124,7 @@
 		3F0543ED1C56F71900AA5322 /* realm_coordinator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F0543EA1C56F71500AA5322 /* realm_coordinator.cpp */; };
 		3F0C6AD023E11FAD00F03A4F /* object_changeset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F0C6ACE23E11FAD00F03A4F /* object_changeset.cpp */; };
 		3F0C6AD123E11FAD00F03A4F /* object_changeset.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 3F0C6ACF23E11FAD00F03A4F /* object_changeset.hpp */; };
+		3F102CBD23DBC68300108FD2 /* Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F102CBC23DBC68300108FD2 /* Combine.swift */; };
 		3F1F47821B9612B300CD99A3 /* KVOTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3F0F029D1B6FFE610046A4D5 /* KVOTests.mm */; };
 		3F1F47831B9656B900CD99A3 /* KVOTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3F0F029D1B6FFE610046A4D5 /* KVOTests.mm */; };
 		3F222C4E1E26F51300CA0713 /* ThreadSafeReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F222C4D1E26F51300CA0713 /* ThreadSafeReference.swift */; };
@@ -740,6 +741,7 @@
 		3F0F029D1B6FFE610046A4D5 /* KVOTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = KVOTests.mm; sourceTree = "<group>"; };
 		3F0F02AC1B6FFF3D0046A4D5 /* RLMObservation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RLMObservation.hpp; sourceTree = "<group>"; };
 		3F0F02AD1B6FFF3D0046A4D5 /* RLMObservation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RLMObservation.mm; sourceTree = "<group>"; };
+		3F102CBC23DBC68300108FD2 /* Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Combine.swift; sourceTree = "<group>"; };
 		3F1A5E721992EB7400F45F4C /* TestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F1F47881B97AB8B00CD99A3 /* transact_log_handler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = transact_log_handler.hpp; sourceTree = "<group>"; };
 		3F1F47891B97ABA300CD99A3 /* transact_log_handler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = transact_log_handler.cpp; sourceTree = "<group>"; };
@@ -1329,6 +1331,7 @@
 			isa = PBXGroup;
 			children = (
 				5D660FE31BE98D670021E04F /* Aliases.swift */,
+				3F102CBC23DBC68300108FD2 /* Combine.swift */,
 				29B7FDF51C0DA6560023224E /* Error.swift */,
 				5D1534B71CCFF545008976D7 /* LinkingObjects.swift */,
 				5D660FE41BE98D670021E04F /* List.swift */,
@@ -2437,6 +2440,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5D660FF11BE98D670021E04F /* Aliases.swift in Sources */,
+				3F102CBD23DBC68300108FD2 /* Combine.swift in Sources */,
 				29B7FDF61C0DA6560023224E /* Error.swift in Sources */,
 				5D1534B81CCFF545008976D7 /* LinkingObjects.swift in Sources */,
 				5D660FF21BE98D670021E04F /* List.swift in Sources */,
