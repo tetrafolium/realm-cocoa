@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NSString *RLMSyncCredentialsToken;
 
 /// A type representing the unique identifier of a Realm Object Server identity provider.
-typedef NSString *RLMIdentityProvider RLM_EXTENSIBLE_STRING_ENUM;
+typedef NSString *RLMIdentityProvider NS_EXTENSIBLE_STRING_ENUM;
 
 /// The debug identity provider, which accepts any token string and creates a user associated with that token if one
 /// does not yet exist. Not enabled for Realm Object Server configured for production.

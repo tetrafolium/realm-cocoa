@@ -138,6 +138,19 @@ static NSDate *date(int i) {
 static NSData *data(int i) {
     return [NSData dataWithBytesNoCopy:calloc(i, 1) length:i freeWhenDone:YES];
 }
+static RLMDecimal128 *decimal128(int i) {
+    return [RLMDecimal128 decimalWithNumber:@(i)];
+}
+static RLMObjectId *objectId(NSUInteger i) {
+    static NSMutableArray *objectIds;
+    if (!objectIds) {
+        objectIds = [NSMutableArray new];
+    }
+    while (i >= objectIds.count) {
+        [objectIds addObject:RLMObjectId.objectId];
+    }
+    return objectIds[i];
+}
 
 - (void)testObjectAtIndex {
     RLMAssertThrowsWithReason([unmanaged.intObj objectAtIndex:0],

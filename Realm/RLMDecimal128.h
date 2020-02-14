@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////
 //
-// Copyright 2014 Realm Inc.
+// Copyright 2020 Realm Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,27 +18,15 @@
 
 #import <Foundation/Foundation.h>
 
-#import <Realm/RLMArray.h>
-#import <Realm/RLMDecimal128.h>
-#import <Realm/RLMMigration.h>
-#import <Realm/RLMObject.h>
-#import <Realm/RLMObjectId.h>
-#import <Realm/RLMObjectSchema.h>
-#import <Realm/RLMPlatform.h>
-#import <Realm/RLMProperty.h>
-#import <Realm/RLMRealm.h>
-#import <Realm/RLMRealmConfiguration.h>
-#import <Realm/RLMResults.h>
-#import <Realm/RLMSchema.h>
+NS_ASSUME_NONNULL_BEGIN
 
-#import <Realm/RLMRealm+Sync.h>
-#import <Realm/RLMRealmConfiguration+Sync.h>
-#import <Realm/RLMSyncConfiguration.h>
-#import <Realm/RLMSyncCredentials.h>
-#import <Realm/RLMSyncManager.h>
-#import <Realm/RLMSyncPermission.h>
-#import <Realm/RLMSyncSession.h>
-#import <Realm/RLMSyncUser.h>
-#import <Realm/RLMSyncUtil.h>
+@interface RLMDecimal128 : NSObject
+- (instancetype)initWithNumber:(NSNumber *)number;
+- (nullable instancetype)initWithString:(NSString *)string error:(NSError *_Nullable*)error;
 
-#import <Realm/NSError+RLMSync.h>
++ (instancetype)decimalWithNumber:(NSNumber *)number;
++ (instancetype)decimalWithNSDecimal:(NSDecimalNumber *)number;
++ (instancetype)decimalWithString:(NSString *)string error:(NSError **)error;
+@end
+
+NS_ASSUME_NONNULL_END

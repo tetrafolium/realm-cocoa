@@ -1,6 +1,14 @@
 import os, re
 
+# Tags:
+# (un)minmax: Type supports min() and max()
+# (un)sum: Type supports sum()
+# (un)avg: Type supports average()
+# r/o: Type is Required or Optional
+# (un)man: Type is Managed or Unmanaged
+
 types = [
+  # Class, Object, Property, Values, Tags
   ['AllPrimitiveArrays', 'unmanaged', 'boolObj', ['@NO', '@YES'], ['r', 'nominmax', 'nosum', 'noavg', 'unman']],
   ['AllPrimitiveArrays', 'unmanaged', 'intObj', ['@2', '@3'], ['r', 'minmax', 'sum', 'avg', 'unman']],
   ['AllPrimitiveArrays', 'unmanaged', 'floatObj', ['@2.2f', '@3.3f'], ['r', 'minmax', 'sum', 'avg', 'unman']],
@@ -8,6 +16,9 @@ types = [
   ['AllPrimitiveArrays', 'unmanaged', 'stringObj', ['@"a"', '@"b"'], ['r', 'nominmax', 'nosum', 'noavg', 'unman', 'string']],
   ['AllPrimitiveArrays', 'unmanaged', 'dataObj', ['data(1)', 'data(2)'], ['r', 'nominmax', 'nosum', 'noavg', 'unman']],
   ['AllPrimitiveArrays', 'unmanaged', 'dateObj', ['date(1)', 'date(2)'], ['r', 'minmax', 'nosum', 'noavg', 'unman']],
+  # FIXME: decimal supports sum/average
+  ['AllPrimitiveArrays', 'unmanaged', 'decimalObj', ['decimal128(1)', 'decimal128(2)'], ['r', 'minmax', 'nosum', 'noavg', 'unman']],
+  ['AllPrimitiveArrays', 'unmanaged', 'objectIdObj', ['objectId(1)', 'objectId(2)'], ['r', 'nominmax', 'nosum', 'noavg', 'unman']],
   ['AllOptionalPrimitiveArrays', 'optUnmanaged', 'boolObj', ['@NO', '@YES', 'NSNull.null'], ['o', 'nominmax', 'nosum', 'noavg', 'unman']],
   ['AllOptionalPrimitiveArrays', 'optUnmanaged', 'intObj', ['@2', '@3', 'NSNull.null'], ['o', 'minmax', 'sum', 'avg', 'unman']],
   ['AllOptionalPrimitiveArrays', 'optUnmanaged', 'floatObj', ['@2.2f', '@3.3f', 'NSNull.null'], ['o', 'minmax', 'sum', 'avg', 'unman']],
@@ -15,6 +26,8 @@ types = [
   ['AllOptionalPrimitiveArrays', 'optUnmanaged', 'stringObj', ['@"a"', '@"b"', 'NSNull.null'], ['o', 'nominmax', 'nosum', 'noavg', 'unman']],
   ['AllOptionalPrimitiveArrays', 'optUnmanaged', 'dataObj', ['data(1)', 'data(2)', 'NSNull.null'], ['o', 'nominmax', 'nosum', 'noavg', 'unman']],
   ['AllOptionalPrimitiveArrays', 'optUnmanaged', 'dateObj', ['date(1)', 'date(2)', 'NSNull.null'], ['o', 'minmax', 'nosum', 'noavg', 'unman']],
+  ['AllOptionalPrimitiveArrays', 'optUnmanaged', 'decimalObj', ['decimal128(1)', 'decimal128(2)', 'NSNull.null'], ['0', 'minmax', 'nosum', 'noavg', 'unman']],
+  ['AllOptionalPrimitiveArrays', 'optUnmanaged', 'objectIdObj', ['objectId(1)', 'objectId(2)', 'NSNull.null'], ['0', 'nominmax', 'nosum', 'noavg', 'unman']],
   ['AllPrimitiveArrays', 'managed', 'boolObj', ['@NO', '@YES'], ['r', 'nominmax', 'nosum', 'noavg', 'man']],
   ['AllPrimitiveArrays', 'managed', 'intObj', ['@2', '@3'], ['r', 'minmax', 'sum', 'avg', 'man']],
   ['AllPrimitiveArrays', 'managed', 'floatObj', ['@2.2f', '@3.3f'], ['r', 'minmax', 'sum', 'avg', 'man']],
@@ -41,18 +54,10 @@ types = [{'class': t[0], 'obj': t[1], 'prop': t[2], 'v0': t[3][0], 'v1': t[3][1]
           'tags': t[4],
           }
          for t in types]
-types[4]['wrong'] = '@2'
-types[4]['wdesc'] = '2'
-types[4]['wtype'] = '__NSCFNumber'
-types[11]['wrong'] = '@2'
-types[11]['wdesc'] = '2'
-types[11]['wtype'] = '__NSCFNumber'
-types[18]['wrong'] = '@2'
-types[18]['wdesc'] = '2'
-types[18]['wtype'] = '__NSCFNumber'
-types[25]['wrong'] = '@2'
-types[25]['wdesc'] = '2'
-types[25]['wtype'] = '__NSCFNumber'
+for string_type in (t for t in types if 'string' in t['tags']):
+    string_type['wrong'] = '@2'
+    string_type['wdesc'] = '2'
+    string_type['wtype'] = '__NSCFNumber'
 
 file = open(os.path.dirname(__file__) + '/PrimitiveArrayPropertyTests.tpl.m', 'rt')
 for line in file:

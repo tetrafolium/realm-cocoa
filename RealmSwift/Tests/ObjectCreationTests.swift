@@ -1088,6 +1088,8 @@ class ObjectCreationTests: TestCase {
         case .data:     return ["b".data(using: String.Encoding.utf8, allowLossyConversion: false)!]
         case .date:     return [Date(timeIntervalSince1970: 2)]
         case .object:   return [[true], ["boolCol": true], SwiftBoolObject(value: [true]), persistedObject]
+        case .objectId: fatalError()
+        case .decimal128: fatalError()
         case .any: XCTFail("not supported")
         case .linkingObjects: XCTFail("not supported")
         }
@@ -1111,6 +1113,8 @@ class ObjectCreationTests: TestCase {
         case .data:     return ["invalid"]
         case .date:     return ["invalid"]
         case .object:   return ["invalid", ["a"], ["boolCol": "a"], SwiftIntObject()]
+        case .objectId: fatalError()
+        case .decimal128: fatalError()
         case .any: XCTFail("not supported")
         case .linkingObjects: XCTFail("not supported")
         }
