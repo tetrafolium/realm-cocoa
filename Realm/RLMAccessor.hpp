@@ -39,7 +39,7 @@ struct RLMOptionalId {
 class RLMAccessorContext {
 public:
     // Accessor context interface
-    RLMAccessorContext(RLMAccessorContext& parent, realm::Property const& property);
+    RLMAccessorContext(RLMAccessorContext& parent, realm::Obj const& parent_obj, realm::Property const& property);
 
     id box(realm::List&&);
     id box(realm::Results&&);
@@ -82,7 +82,7 @@ public:
     template<typename T>
     T unbox(id v, realm::CreatePolicy = realm::CreatePolicy::Skip, realm::ObjKey = {});
 
-    id unbox_embedded(id v, realm::CreatePolicy = realm::CreatePolicy::Skip, realm::Obj = {}, realm::ColKey = {}, size_t = 0);
+    realm::Obj create_embedded_object() { return {}; }
 
     bool is_null(id v) { return v == NSNull.null; }
     id null_value() { return NSNull.null; }
