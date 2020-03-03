@@ -9,6 +9,7 @@ inspecode:
     thresholds: { num-issues: 999 }
 
   cpd:
+    options: [ --skip-lexical-errors ]
     thresholds: { num-issues: 999 }
 
   fossology:
