@@ -1,39 +1,53 @@
 inspecode:
 
+  ##----------------------------------------------------------------------------
+  ## found one more Metrics (Cyclomatic complexity) issue on Staging than Prod.
+  ##   + getSwiftProperties in RealmSwift/Object.swift
+  ##     (complexity=16, threshold=15)
+  ##----------------------------------------------------------------------------
+
   astyle:
     auto-fix: true
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 182 }
 
   clang-format:
     auto-fix: true
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 300 }
+      # 300 issues on prod    (6.12.0)
+      # 301 issues on staging (6.18.0)
 
   cpd:
     options: [ --skip-lexical-errors ]
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 114 }
 
   fossology:
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 5 }
 
   grep:
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 39 }
 
+  ##----------------------------------------------------------------------------
+  ## [on both prod and staging]
+  ##   (node:***) UnhandledPromiseRejectionWarning: Error: ENOTDIR: not a directory, scandir '/home/rocro/src/github.com/tetrafolium/realm-cocoa/Realm/Tests/Swift/RLMSupport.swift'
+  ##   (node:***) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 2)
+  ##   (node:***) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
+  ##----------------------------------------------------------------------------
   jscpd:
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 0 }
 
   misspell:
     auto-fix: true
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 51 }
 
   swiftlint:
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 0 }
 
   tailor:
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 709 }
 
   uncrustify:
     auto-fix: true
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 273 }
 
   unused:
-    thresholds: { num-issues: 999 }
+    thresholds: { num-issues: 10 }
