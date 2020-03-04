@@ -13,8 +13,8 @@ inspecode:
   clang-format:
     auto-fix: true
     thresholds: { num-issues: 300 }
-      # 300 issues on prod    (6.12.0)
-      # 301 issues on staging (6.18.0)
+      # 300 issues on prod    (clang 7.0.1)
+      # 301 issues on staging (clang 9.0.0)
 
   cpd:
     options: [ --skip-lexical-errors ]
