@@ -53,8 +53,8 @@ static const int RLMEnumerationBufferSize = 16;
 }
 
 - (instancetype)initWithList:(realm::List&)list
-                  collection:(id)collection
-                   classInfo:(RLMClassInfo&)info
+    collection:(id)collection
+    classInfo:(RLMClassInfo&)info
 {
     self = [super init];
     if (self) {
@@ -74,8 +74,8 @@ static const int RLMEnumerationBufferSize = 16;
 }
 
 - (instancetype)initWithResults:(realm::Results&)results
-                     collection:(id)collection
-                      classInfo:(RLMClassInfo&)info
+    collection:(id)collection
+    classInfo:(RLMClassInfo&)info
 {
     self = [super init];
     if (self) {
@@ -107,7 +107,7 @@ static const int RLMEnumerationBufferSize = 16;
 }
 
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                    count:(NSUInteger)len {
+    count:(NSUInteger)len {
     [_realm verifyThread];
     if (!_results->is_valid()) {
         @throw RLMException(@"Collection is no longer valid");
@@ -204,10 +204,10 @@ NSArray *RLMCollectionValueForKey(Collection& collection, NSString *key, RLMClas
             for (size_t i = 0; i < count; ++i) {
                 RLMListBase *list = [[cls alloc] init];
                 list._rlmArray = [[RLMManagedArray alloc] initWithList:realm::List(info.realm->_realm, *info.table(),
-                                                                                   info.tableColumn(prop),
-                                                                                   collection.get(i).get_index())
-                                                            parentInfo:&info
-                                                              property:prop];
+                                                          info.tableColumn(prop),
+                                                          collection.get(i).get_index())
+                                                          parentInfo:&info
+                                                          property:prop];
                 [array addObject:list];
             }
             return array;
@@ -249,8 +249,8 @@ NSString *RLMDescriptionWithMaxDepth(NSString *name,
 
     const NSUInteger maxObjects = 100;
     auto str = [NSMutableString stringWithFormat:@"%@<%@> <%p> (\n", name,
-                [collection objectClassName] ?: RLMTypeToString([collection type]),
-                (void *)collection];
+                                [collection objectClassName] ?: RLMTypeToString([collection type]),
+                                (void *)collection];
     size_t index = 0, skipped = 0;
     for (id obj in collection) {
         NSString *sub;
@@ -263,7 +263,7 @@ NSString *RLMDescriptionWithMaxDepth(NSString *name,
 
         // Indent child objects
         NSString *objDescription = [sub stringByReplacingOccurrencesOfString:@"\n"
-                                                                  withString:@"\n\t"];
+                                        withString:@"\n\t"];
         [str appendFormat:@"\t[%zu] %@,\n", index++, objDescription];
         if (index >= maxObjects) {
             skipped = collection.count - maxObjects;
@@ -380,12 +380,12 @@ static NSArray *toIndexPathArray(realm::IndexSet const& set, NSUInteger section)
 
 template<typename Collection>
 RLMNotificationToken *RLMAddNotificationBlock(id objcCollection,
-                                              Collection& collection,
-                                              void (^block)(id, RLMCollectionChange *, NSError *),
-                                              bool suppressInitialChange) {
+        Collection& collection,
+        void (^block)(id, RLMCollectionChange *, NSError *),
+        bool suppressInitialChange) {
     auto skip = suppressInitialChange ? std::make_shared<bool>(true) : nullptr;
     auto cb = [=, &collection](realm::CollectionChangeSet const& changes,
-                               std::exception_ptr err) {
+    std::exception_ptr err) {
         if (err) {
             try {
                 rethrow_exception(err);
@@ -411,7 +411,7 @@ RLMNotificationToken *RLMAddNotificationBlock(id objcCollection,
     };
 
     return [[RLMCancellationToken alloc] initWithToken:collection.add_notification_callback(cb)
-                                                 realm:(RLMRealm *)[objcCollection realm]];
+                                         realm:(RLMRealm *)[objcCollection realm]];
 }
 
 // Explicitly instantiate the templated function for the two types we'll use it on

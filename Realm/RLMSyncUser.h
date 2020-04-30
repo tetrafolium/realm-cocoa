@@ -82,9 +82,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface RLMSyncUser : NSObject
 
-/**
- A dictionary of all valid, logged-in user identities corresponding to their user objects.
- */
+    /**
+     A dictionary of all valid, logged-in user identities corresponding to their user objects.
+     */
 + (NSDictionary<NSString *, RLMSyncUser *> *)allUsers NS_REFINED_FOR_SWIFT;
 
 /**
@@ -132,10 +132,10 @@ NS_ASSUME_NONNULL_BEGIN
  the completion block, at which point it is ready for use.
  */
 + (void)logInWithCredentials:(RLMSyncCredentials *)credentials
-               authServerURL:(NSURL *)authServerURL
-                     timeout:(NSTimeInterval)timeout
-               callbackQueue:(dispatch_queue_t)callbackQueue
-                onCompletion:(RLMUserCompletionBlock)completion NS_REFINED_FOR_SWIFT;
+    authServerURL:(NSURL *)authServerURL
+    timeout:(NSTimeInterval)timeout
+    callbackQueue:(dispatch_queue_t)callbackQueue
+    onCompletion:(RLMUserCompletionBlock)completion NS_REFINED_FOR_SWIFT;
 
 /**
  Create, log in, and asynchronously return a new user object.
@@ -153,9 +153,9 @@ NS_ASSUME_NONNULL_BEGIN
                         indicating the completion of the login operation.
  */
 + (void)logInWithCredentials:(RLMSyncCredentials *)credentials
-               authServerURL:(NSURL *)authServerURL
-                onCompletion:(RLMUserCompletionBlock)completion
-NS_SWIFT_UNAVAILABLE("Use the full version of this API.");
+    authServerURL:(NSURL *)authServerURL
+    onCompletion:(RLMUserCompletionBlock)completion
+    NS_SWIFT_UNAVAILABLE("Use the full version of this API.");
 
 
 /**
@@ -189,7 +189,7 @@ NS_SWIFT_UNAVAILABLE("Use the full version of this API.");
          the given URL and options.
  */
 - (RLMRealmConfiguration *)configurationWithURL:(nullable NSURL *)url
-                            fullSynchronization:(bool)fullSynchronization NS_REFINED_FOR_SWIFT;
+    fullSynchronization:(bool)fullSynchronization NS_REFINED_FOR_SWIFT;
 
 /**
  Create a configuration instance for the given url.
@@ -211,9 +211,9 @@ NS_SWIFT_UNAVAILABLE("Use the full version of this API.");
          the given URL and options.
  */
 - (RLMRealmConfiguration *)configurationWithURL:(nullable NSURL *)url
-                            fullSynchronization:(bool)fullSynchronization
-                            enableSSLValidation:(bool)enableSSLValidation
-                                      urlPrefix:(nullable NSString *)urlPrefix NS_REFINED_FOR_SWIFT;
+    fullSynchronization:(bool)fullSynchronization
+    enableSSLValidation:(bool)enableSSLValidation
+    urlPrefix:(nullable NSString *)urlPrefix NS_REFINED_FOR_SWIFT;
 
 /**
  Log a user out, destroying their server state, unregistering them from the SDK,
@@ -304,8 +304,8 @@ NS_SWIFT_UNAVAILABLE("Use the full version of this API.");
                    provided by `NSURLSession`, and not on the calling queue.
  */
 + (void)requestPasswordResetForAuthServer:(NSURL *)serverURL
-                                userEmail:(NSString *)email
-                               completion:(RLMPasswordChangeStatusBlock)completion;
+    userEmail:(NSString *)email
+    completion:(RLMPasswordChangeStatusBlock)completion;
 
 /**
  Change a user's password using a one-time password reset token.
@@ -329,9 +329,9 @@ NS_SWIFT_UNAVAILABLE("Use the full version of this API.");
                     provided by `NSURLSession`, and not on the calling queue.
  */
 + (void)completePasswordResetForAuthServer:(NSURL *)serverURL
-                                     token:(NSString *)token
-                                  password:(NSString *)newPassword
-                                completion:(RLMPasswordChangeStatusBlock)completion;
+    token:(NSString *)token
+    password:(NSString *)newPassword
+    completion:(RLMPasswordChangeStatusBlock)completion;
 
 /**
  Ask the server to send a confirmation email to the given email address.
@@ -348,8 +348,8 @@ NS_SWIFT_UNAVAILABLE("Use the full version of this API.");
                    provided by `NSURLSession`, and not on the calling queue.
  */
 + (void)requestEmailConfirmationForAuthServer:(NSURL *)serverURL
-                                    userEmail:(NSString *)email
-                                   completion:(RLMPasswordChangeStatusBlock)completion;
+    userEmail:(NSString *)email
+    completion:(RLMPasswordChangeStatusBlock)completion;
 
 /**
  Confirm a user's email using a one-time confirmation token.
@@ -368,8 +368,8 @@ NS_SWIFT_UNAVAILABLE("Use the full version of this API.");
                     provided by `NSURLSession`, and not on the calling queue.
  */
 + (void)confirmEmailForAuthServer:(NSURL *)serverURL
-                            token:(NSString *)token
-                       completion:(RLMPasswordChangeStatusBlock)completion;
+    token:(NSString *)token
+    completion:(RLMPasswordChangeStatusBlock)completion;
 
 #pragma mark - Administrator
 
@@ -385,8 +385,8 @@ NS_SWIFT_UNAVAILABLE("Use the full version of this API.");
                                 by `NSURLSession`.
  */
 - (void)retrieveInfoForUser:(NSString *)providerUserIdentity
-           identityProvider:(RLMIdentityProvider)provider
-                 completion:(RLMRetrieveUserBlock)completion;
+    identityProvider:(RLMIdentityProvider)provider
+    completion:(RLMRetrieveUserBlock)completion;
 
 #pragma mark - Permissions
 
@@ -431,9 +431,9 @@ NS_SWIFT_UNAVAILABLE("Use the full version of this API.");
  @see `acceptOfferForToken:callback:`
  */
 - (void)createOfferForRealmAtURL:(NSURL *)url
-                     accessLevel:(RLMSyncAccessLevel)accessLevel
-                      expiration:(nullable NSDate *)expirationDate
-                        callback:(RLMPermissionOfferStatusBlock)callback NS_REFINED_FOR_SWIFT;
+    accessLevel:(RLMSyncAccessLevel)accessLevel
+    expiration:(nullable NSDate *)expirationDate
+    callback:(RLMPermissionOfferStatusBlock)callback NS_REFINED_FOR_SWIFT;
 
 /**
  Accept a permission offer.
@@ -448,7 +448,7 @@ NS_SWIFT_UNAVAILABLE("Use the full version of this API.");
  @see `createOfferForRealmAtURL:accessLevel:expiration:callback:`
  */
 - (void)acceptOfferForToken:(NSString *)token
-                   callback:(RLMPermissionOfferResponseStatusBlock)callback;
+    callback:(RLMPermissionOfferResponseStatusBlock)callback;
 
 /**
  Revoke a permission offer.
@@ -462,7 +462,7 @@ NS_SWIFT_UNAVAILABLE("Use the full version of this API.");
  @see `createOfferForRealmAtURL:accessLevel:expiration:callback:`
  */
 - (void)invalidateOfferForToken:(NSString *)token
-                       callback:(RLMPermissionStatusBlock)callback;
+    callback:(RLMPermissionStatusBlock)callback;
 
 /**
  Asynchronously retrieve all pending permission offers created by the calling user.
@@ -506,9 +506,9 @@ NS_SWIFT_UNAVAILABLE("Use the full version of this API.");
  */
 @interface RLMSyncUserInfo : NSObject
 
-/**
- An array of all the user accounts associated with this user.
- */
+    /**
+     An array of all the user accounts associated with this user.
+     */
 @property (nonatomic, readonly) NSArray<RLMSyncUserAccountInfo *> *accounts;
 
 /**

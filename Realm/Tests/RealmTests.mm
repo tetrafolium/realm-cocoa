@@ -95,7 +95,7 @@
         [realm commitWriteTransaction];
     }
 
-    [NSFileManager.defaultManager setAttributes:@{NSFileImmutable: @YES} ofItemAtPath:RLMTestRealmURL().path error:nil];
+    [NSFileManager.defaultManager setAttributes:@ {NSFileImmutable: @YES} ofItemAtPath:RLMTestRealmURL().path error:nil];
 
     // Should not be able to open read-write
     RLMAssertThrowsWithCodeMatching([self realmWithTestPath], RLMErrorFileAccess);
@@ -104,7 +104,7 @@
     XCTAssertNoThrow(realm = [self readOnlyRealmWithURL:RLMTestRealmURL() error:nil]);
     XCTAssertEqual(1U, [StringObject allObjectsInRealm:realm].count);
 
-    [NSFileManager.defaultManager setAttributes:@{NSFileImmutable: @NO} ofItemAtPath:RLMTestRealmURL().path error:nil];
+    [NSFileManager.defaultManager setAttributes:@ {NSFileImmutable: @NO} ofItemAtPath:RLMTestRealmURL().path error:nil];
 }
 
 - (void)testReadOnlyFileInImmutableDirectory {
@@ -121,19 +121,19 @@
 
     // Make parent directory immutable to simulate opening Realm in an app bundle
     NSURL *parentDirectoryOfTestRealmURL = [RLMTestRealmURL() URLByDeletingLastPathComponent];
-    [NSFileManager.defaultManager setAttributes:@{NSFileImmutable: @YES} ofItemAtPath:parentDirectoryOfTestRealmURL.path error:nil];
+    [NSFileManager.defaultManager setAttributes:@ {NSFileImmutable: @YES} ofItemAtPath:parentDirectoryOfTestRealmURL.path error:nil];
 
     RLMRealm *realm;
     // Read-only Realm should be opened even in immutable directory
     XCTAssertNoThrow(realm = [self readOnlyRealmWithURL:RLMTestRealmURL() error:nil]);
 
-    [self dispatchAsyncAndWait:^{ XCTAssertNoThrow([self readOnlyRealmWithURL:RLMTestRealmURL() error:nil]); }];
+    [self dispatchAsyncAndWait:^ { XCTAssertNoThrow([self readOnlyRealmWithURL:RLMTestRealmURL() error:nil]); }];
 
-    [NSFileManager.defaultManager setAttributes:@{NSFileImmutable: @NO} ofItemAtPath:parentDirectoryOfTestRealmURL.path error:nil];
+    [NSFileManager.defaultManager setAttributes:@ {NSFileImmutable: @NO} ofItemAtPath:parentDirectoryOfTestRealmURL.path error:nil];
 }
 
 - (void)testReadOnlyRealmMustExist {
-   RLMAssertThrowsWithCodeMatching([self readOnlyRealmWithURL:RLMTestRealmURL() error:nil], RLMErrorFileNotFound);
+    RLMAssertThrowsWithCodeMatching([self readOnlyRealmWithURL:RLMTestRealmURL() error:nil], RLMErrorFileNotFound);
 }
 
 - (void)testCannotHaveReadOnlyAndReadWriteRealmsAtSamePathAtSameTime {
@@ -148,8 +148,8 @@
         RLMAssertThrowsWithReasonMatching([self realmWithTestPath], exceptionReason);
     }
 
-    [self dispatchAsyncAndWait:^{
-        XCTAssertNoThrow([self readOnlyRealmWithURL:RLMTestRealmURL() error:nil]);
+    [self dispatchAsyncAndWait:^ {
+             XCTAssertNoThrow([self readOnlyRealmWithURL:RLMTestRealmURL() error:nil]);
         RLMAssertThrowsWithReasonMatching([self realmWithTestPath], exceptionReason);
     }];
 }
@@ -165,8 +165,8 @@
     RLMRealm *realm = [self readOnlyRealmWithURL:RLMTestRealmURL() error:nil];
     XCTAssertEqual(1U, [StringObject allObjectsInRealm:realm].count);
 
-    [self dispatchAsyncAndWait:^{
-        RLMRealm *realm = [self readOnlyRealmWithURL:RLMTestRealmURL() error:nil];
+    [self dispatchAsyncAndWait:^ {
+             RLMRealm *realm = [self readOnlyRealmWithURL:RLMTestRealmURL() error:nil];
         XCTAssertEqual(1U, [StringObject allObjectsInRealm:realm].count);
     }];
 
@@ -183,12 +183,12 @@
     NSError *error;
     NSNumber *permissions = [NSFileManager.defaultManager attributesOfItemAtPath:RLMTestRealmURL().path error:&error][NSFilePosixPermissions];
     assert(!error);
-    [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @(0000)} ofItemAtPath:RLMTestRealmURL().path error:&error];
+    [NSFileManager.defaultManager setAttributes:@ {NSFilePosixPermissions: @(0000)} ofItemAtPath:RLMTestRealmURL().path error:&error];
     assert(!error);
 
     RLMAssertThrowsWithCodeMatching([self realmWithTestPath], RLMErrorFilePermissionDenied);
 
-    [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: permissions} ofItemAtPath:RLMTestRealmURL().path error:&error];
+    [NSFileManager.defaultManager setAttributes:@ {NSFilePosixPermissions: permissions} ofItemAtPath:RLMTestRealmURL().path error:&error];
     assert(!error);
 }
 
@@ -274,9 +274,9 @@
     const NSUInteger stringLength = 1024 * 1024;
     void *mem = calloc(stringLength, '1');
     NSString *largeString = [[NSString alloc] initWithBytesNoCopy:mem
-                                                           length:stringLength
-                                                         encoding:NSUTF8StringEncoding
-                                                     freeWhenDone:YES];
+                                              length:stringLength
+                                              encoding:NSUTF8StringEncoding
+                                              freeWhenDone:YES];
 
     @autoreleasepool {
         RLMRealm *realm = [RLMRealm realmWithConfiguration:config error:nil];
@@ -326,7 +326,7 @@
     XCTestExpectation *ex = [self expectationWithDescription:@"open-async"];
 
     // Helpers
-    auto assertNoCachedRealm = ^{ XCTAssertNil(RLMGetAnyCachedRealmForPath(c.pathOnDisk.UTF8String)); };
+    auto assertNoCachedRealm = ^ { XCTAssertNil(RLMGetAnyCachedRealmForPath(c.pathOnDisk.UTF8String)); };
     auto fileExists = ^BOOL() {
         return [[NSFileManager defaultManager] fileExistsAtPath:c.pathOnDisk isDirectory:nil];
     };
@@ -334,10 +334,10 @@
     // Unsuccessful open
     c.readOnly = true;
     [RLMRealm asyncOpenWithConfiguration:c
-                           callbackQueue:dispatch_get_main_queue()
-                                callback:^(RLMRealm * _Nullable realm, NSError * _Nullable error) {
-        XCTAssertEqual(error.code, RLMErrorFileNotFound);
-        XCTAssertNil(realm);
+              callbackQueue:dispatch_get_main_queue()
+             callback:^(RLMRealm * _Nullable realm, NSError * _Nullable error) {
+                 XCTAssertEqual(error.code, RLMErrorFileNotFound);
+                 XCTAssertNil(realm);
         [ex fulfill];
     }];
     XCTAssertFalse(fileExists());
@@ -360,10 +360,10 @@
     XCTAssertEqual(0, ret);
 
     [RLMRealm asyncOpenWithConfiguration:c
-                           callbackQueue:dispatch_get_main_queue()
-                                callback:^(RLMRealm * _Nullable realm, NSError * _Nullable error) {
-        XCTAssertNil(error);
-        XCTAssertNotNil(realm);
+              callbackQueue:dispatch_get_main_queue()
+             callback:^(RLMRealm * _Nullable realm, NSError * _Nullable error) {
+                 XCTAssertNil(error);
+                 XCTAssertNotNil(realm);
         [ex fulfill];
     }];
     XCTAssertFalse(fileExists());
@@ -411,8 +411,8 @@
     obj = [StringObject createInRealm:realm withValue:@[@"b"]];
     [realm commitWriteTransaction];
 
-    [self waitForNotification:RLMRealmDidChangeNotification realm:realm block:^{
-        RLMRealm *realm = [self realmWithTestPath];
+    [self waitForNotification:RLMRealmDidChangeNotification realm:realm block:^ {
+             RLMRealm *realm = [self realmWithTestPath];
         RLMObject *obj = [[StringObject allObjectsInRealm:realm] firstObject];
         [realm beginWriteTransaction];
         [realm deleteObject:obj];
@@ -497,7 +497,7 @@
     CircleArrayObject *cao = [[CircleArrayObject alloc] init];
     [cao.circles addObject:co1];
 
-    [realm1 transactionWithBlock:^{ [realm1 addObject:co1]; }];
+    [realm1 transactionWithBlock:^ { [realm1 addObject:co1]; }];
 
     [realm2 beginWriteTransaction];
     XCTAssertThrows([realm2 addObject:co1], @"should reject already-managed object");
@@ -679,7 +679,7 @@
 
     // upsert with array of 2 objects. One is to update the existing value, another is added
     NSArray *array = @[[[PrimaryStringObject alloc] initWithValue:@[@"string2", @4]],
-                       [[PrimaryStringObject alloc] initWithValue:@[@"string4", @5]]];
+                                                    [[PrimaryStringObject alloc] initWithValue:@[@"string4", @5]]];
     [realm addOrUpdateObjects:array];
     XCTAssertEqual([objects count], 4U, @"Should have 4 objects");
     XCTAssertEqual([(PrimaryStringObject *)objects[0] intCol], 1, @"Value should be 1");
@@ -703,16 +703,16 @@
     XCTAssertThrows([realm deleteObject:obj]);
 
     RLMRealm *testRealm = [self realmWithTestPath];
-    [testRealm transactionWithBlock:^{
-        XCTAssertThrows([testRealm deleteObject:[[OwnerObject alloc] init]]);
+    [testRealm transactionWithBlock:^ {
+                  XCTAssertThrows([testRealm deleteObject:[[OwnerObject alloc] init]]);
         [realm transactionWithBlock:^{
-            XCTAssertThrows([testRealm deleteObject:obj]);
-        }];
+                  XCTAssertThrows([testRealm deleteObject:obj]);
+              }];
     }];
 
-    [realm transactionWithBlock:^{
-        [realm deleteObject:obj];
-        XCTAssertEqual(YES, obj.invalidated);
+    [realm transactionWithBlock:^ {
+              [realm deleteObject:obj];
+              XCTAssertEqual(YES, obj.invalidated);
     }];
 
     XCTAssertEqual(0U, OwnerObject.allObjects.count);
@@ -733,9 +733,9 @@
     XCTAssertThrows([realm deleteObjects:obj.employees]);
 
     RLMRealm *testRealm = [self realmWithTestPath];
-    [testRealm transactionWithBlock:^{
-        [realm transactionWithBlock:^{
-            XCTAssertThrows([testRealm deleteObjects:objects]);
+    [testRealm transactionWithBlock:^ {
+                  [realm transactionWithBlock:^{
+                      XCTAssertThrows([testRealm deleteObjects:objects]);
             XCTAssertThrows([testRealm deleteObjects:[CompanyObject allObjectsInRealm:realm]]);
             XCTAssertThrows([testRealm deleteObjects:obj.employees]);
         }];
@@ -757,9 +757,9 @@
 
     XCTAssertThrows([realm deleteAllObjects]);
 
-    [realm transactionWithBlock:^{
-        [realm deleteAllObjects];
-        XCTAssertEqual(YES, obj.invalidated);
+    [realm transactionWithBlock:^ {
+              [realm deleteAllObjects];
+              XCTAssertEqual(YES, obj.invalidated);
     }];
 
     XCTAssertEqual(0U, OwnerObject.allObjects.count);
@@ -786,9 +786,9 @@
 
 - (void)testRealmTransactionBlock {
     RLMRealm *realm = [self realmWithTestPath];
-    [realm transactionWithBlock:^{
-        [StringObject createInRealm:realm withValue:@[@"b"]];
-    }];
+    [realm transactionWithBlock:^ {
+              [StringObject createInRealm:realm withValue:@[@"b"]];
+          }];
     RLMResults *objects = [StringObject allObjectsInRealm:realm];
     XCTAssertEqual(objects.count, 1U, @"Expecting 1 object");
     XCTAssertEqualObjects([objects.firstObject stringCol], @"b", @"Expecting column to be 'b'");
@@ -800,8 +800,8 @@
     [realm beginWriteTransaction];
     XCTAssertTrue(realm.inWriteTransaction);
     [realm cancelWriteTransaction];
-    [realm transactionWithBlock:^{
-        XCTAssertTrue(realm.inWriteTransaction);
+    [realm transactionWithBlock:^ {
+              XCTAssertTrue(realm.inWriteTransaction);
         [realm cancelWriteTransaction];
         XCTAssertFalse(realm.inWriteTransaction);
     }];
@@ -816,8 +816,8 @@
 
     XCTAssertEqual(0U, [StringObject allObjectsInRealm:realm].count);
 
-    [self waitForNotification:RLMRealmDidChangeNotification realm:realm block:^{
-        RLMRealm *realm = [self realmWithTestPath];
+    [self waitForNotification:RLMRealmDidChangeNotification realm:realm block:^ {
+             RLMRealm *realm = [self realmWithTestPath];
         [realm beginWriteTransaction];
         [StringObject createInRealm:realm withValue:@[@"string"]];
         [realm commitWriteTransaction];
@@ -832,8 +832,8 @@
 
     XCTAssertEqual(0U, [StringObject allObjectsInRealm:realm].count);
 
-    [self waitForNotification:RLMRealmRefreshRequiredNotification realm:realm block:^{
-        RLMRealm *realm = [self realmWithTestPath];
+    [self waitForNotification:RLMRealmRefreshRequiredNotification realm:realm block:^ {
+             RLMRealm *realm = [self realmWithTestPath];
         [realm beginWriteTransaction];
         [StringObject createInRealm:realm withValue:@[@"string"]];
         [realm commitWriteTransaction];
@@ -855,8 +855,8 @@
 
     // Create an object in a background thread and wait for that to complete,
     // without refreshing the main thread realm
-    [self waitForNotification:RLMRealmRefreshRequiredNotification realm:realm block:^{
-        RLMRealm *realm = [self realmWithTestPath];
+    [self waitForNotification:RLMRealmRefreshRequiredNotification realm:realm block:^ {
+             RLMRealm *realm = [self realmWithTestPath];
         [realm beginWriteTransaction];
         [StringObject createInRealm:realm withValue:@[@"string"]];
         [realm commitWriteTransaction];
@@ -872,9 +872,9 @@
     // the advance
     __block bool notificationFired = false;
     RLMNotificationToken *token = [realm addNotificationBlock:^(__unused NSString *note, RLMRealm *realm) {
-        XCTAssertEqual(1U, [StringObject allObjectsInRealm:realm].count);
-        notificationFired = true;
-    }];
+              XCTAssertEqual(1U, [StringObject allObjectsInRealm:realm].count);
+              notificationFired = true;
+          }];
 
     [realm beginWriteTransaction];
     [realm commitWriteTransaction];
@@ -890,14 +890,14 @@
     // Set up notification which will be triggered when calling beginWriteTransaction
     __block bool notificationFired = false;
     RLMNotificationToken *token = [realm addNotificationBlock:^(__unused NSString *note, RLMRealm *realm) {
-        XCTAssertEqual(1U, [StringObject allObjectsInRealm:realm].count);
+              XCTAssertEqual(1U, [StringObject allObjectsInRealm:realm].count);
         XCTAssertThrows([realm beginWriteTransaction], @"We should already be in a write transaction");
         notificationFired = true;
     }];
 
     // dispatch to background syncronously
-    [self dispatchAsyncAndWait:^{
-        RLMRealm *realm = [self realmWithTestPath];
+    [self dispatchAsyncAndWait:^ {
+             RLMRealm *realm = [self realmWithTestPath];
         [realm beginWriteTransaction];
         [StringObject createInRealm:realm withValue:@[@"string"]];
         [realm commitWriteTransaction];
@@ -921,7 +921,7 @@
 
     auto expectation = [self expectationWithDescription:@""];
     RLMNotificationToken *token = [realm addNotificationBlock:^(NSString *note, RLMRealm *realm) {
-        XCTAssertEqual(RLMRealmRefreshRequiredNotification, note);
+              XCTAssertEqual(RLMRealmRefreshRequiredNotification, note);
         XCTAssertEqual(0U, [StringObject allObjectsInRealm:realm].count);
         [realm beginWriteTransaction];
         XCTAssertEqual(1U, [StringObject allObjectsInRealm:realm].count);
@@ -929,8 +929,8 @@
         [expectation fulfill]; // note that this will throw if the notification is incorrectly called twice
     }];
 
-    [self dispatchAsyncAndWait:^{
-        RLMRealm *realm = [RLMRealm defaultRealm];
+    [self dispatchAsyncAndWait:^ {
+             RLMRealm *realm = [RLMRealm defaultRealm];
         [realm beginWriteTransaction];
         [StringObject createInRealm:realm withValue:@[@"string"]];
         [realm commitWriteTransaction];
@@ -943,9 +943,9 @@
 - (void)testBeginWriteTransactionFromWithinRealmChangedNotification {
     RLMRealm *realm = [RLMRealm defaultRealm];
 
-    auto createObject = ^{
+    auto createObject = ^ {
         [self dispatchAsyncAndWait:^{
-            RLMRealm *realm = [RLMRealm defaultRealm];
+                 RLMRealm *realm = [RLMRealm defaultRealm];
             [realm beginWriteTransaction];
             [StringObject createInRealm:realm withValue:@[@"string"]];
             [realm commitWriteTransaction];
@@ -955,9 +955,9 @@
     // Test with the triggering transaction on a different thread
     auto expectation = [self expectationWithDescription:@""];
     RLMNotificationToken *token = [realm addNotificationBlock:^(NSString *note, RLMRealm *realm) {
-        XCTAssertEqual(RLMRealmDidChangeNotification, note);
+              XCTAssertEqual(RLMRealmDidChangeNotification, note);
 
-        // We're in DidChange, so the first object is already present
+              // We're in DidChange, so the first object is already present
         XCTAssertEqual(1U, [StringObject allObjectsInRealm:realm].count);
         createObject();
 
@@ -979,8 +979,8 @@
     // Test with the triggering transaction on the same thread
     __block bool first = true;
     token = [realm addNotificationBlock:^(NSString *note, RLMRealm *realm) {
-        XCTAssertTrue(first);
-        XCTAssertEqual(RLMRealmDidChangeNotification, note);
+              XCTAssertTrue(first);
+              XCTAssertEqual(RLMRealmDidChangeNotification, note);
         XCTAssertEqual(3U, [StringObject allObjectsInRealm:realm].count);
         first = false;
 
@@ -1000,9 +1000,9 @@
 - (void)testBeginWriteTransactionFromWithinCollectionChangedNotification {
     RLMRealm *realm = [RLMRealm defaultRealm];
 
-    auto createObject = ^{
+    auto createObject = ^ {
         [self dispatchAsyncAndWait:^{
-            RLMRealm *realm = [RLMRealm defaultRealm];
+                 RLMRealm *realm = [RLMRealm defaultRealm];
             [realm beginWriteTransaction];
             [StringObject createInRealm:realm withValue:@[@"string"]];
             [realm commitWriteTransaction];
@@ -1179,8 +1179,8 @@
 - (void)testRollbackTransactionWithBlock
 {
     RLMRealm *realm = [self realmWithTestPath];
-    [realm transactionWithBlock:^{
-        [IntObject createInRealm:realm withValue:@[@0]];
+    [realm transactionWithBlock:^ {
+              [IntObject createInRealm:realm withValue:@[@0]];
         [realm cancelWriteTransaction];
     }];
 
@@ -1201,9 +1201,9 @@
 - (void)testCanRestartReadTransactionAfterInvalidate
 {
     RLMRealm *realm = [RLMRealm defaultRealm];
-    [realm transactionWithBlock:^{
-        [IntObject createInRealm:realm withValue:@[@1]];
-    }];
+    [realm transactionWithBlock:^ {
+              [IntObject createInRealm:realm withValue:@[@1]];
+          }];
 
     [realm invalidate];
     IntObject *obj = [IntObject allObjectsInRealm:realm].firstObject;
@@ -1214,9 +1214,9 @@
 {
     RLMRealm *realm = [RLMRealm defaultRealm];
     __block IntObject *obj;
-    [realm transactionWithBlock:^{
-        obj = [IntObject createInRealm:realm withValue:@[@0]];
-    }];
+    [realm transactionWithBlock:^ {
+              obj = [IntObject createInRealm:realm withValue:@[@0]];
+          }];
 
     [realm invalidate];
     XCTAssertTrue(obj.isInvalidated);
@@ -1226,9 +1226,9 @@
 - (void)testInvalidateInvalidatesResults
 {
     RLMRealm *realm = [RLMRealm defaultRealm];
-    [realm transactionWithBlock:^{
-        [IntObject createInRealm:realm withValue:@[@1]];
-    }];
+    [realm transactionWithBlock:^ {
+              [IntObject createInRealm:realm withValue:@[@1]];
+          }];
 
     RLMResults *results = [IntObject objectsInRealm:realm where:@"intCol = 1"];
     XCTAssertEqual([results.firstObject intCol], 1);
@@ -1242,9 +1242,9 @@
 {
     RLMRealm *realm = [RLMRealm defaultRealm];
     __block ArrayPropertyObject *arrayObject;
-    [realm transactionWithBlock:^{
-        arrayObject = [ArrayPropertyObject createInRealm:realm withValue:@[@"", @[], @[@[@1]]]];
-    }];
+    [realm transactionWithBlock:^ {
+              arrayObject = [ArrayPropertyObject createInRealm:realm withValue:@[@"", @[], @[@[@1]]]];
+          }];
 
     RLMArray *array = arrayObject.intArray;
     XCTAssertEqual(1U, array.count);
@@ -1285,18 +1285,18 @@
 {
     RLMRealm *realm = [RLMRealm defaultRealm];
 
-    [self dispatchAsyncAndWait:^{
-        [RLMRealm.defaultRealm transactionWithBlock:^{
-            [IntObject createInDefaultRealmWithValue:@[@1]];
-        }];
+    [self dispatchAsyncAndWait:^ {
+             [RLMRealm.defaultRealm transactionWithBlock:^{
+                 [IntObject createInDefaultRealmWithValue:@[@1]];
+             }];
     }];
 
     XCTAssertTrue([realm refresh]);
 
-    [self dispatchAsyncAndWait:^{
-        [RLMRealm.defaultRealm transactionWithBlock:^{
-            [IntObject createInDefaultRealmWithValue:@[@1]];
-        }];
+    [self dispatchAsyncAndWait:^ {
+             [RLMRealm.defaultRealm transactionWithBlock:^{
+                 [IntObject createInDefaultRealmWithValue:@[@1]];
+             }];
     }];
 
     // refresh above should have created a read transaction, so realm should
@@ -1314,14 +1314,14 @@
 
     __block bool called = false;
     RLMNotificationToken *token = [realm addNotificationBlock:^(NSString *note, RLMRealm *realm) {
-        if (note == RLMRealmDidChangeNotification) {
-            called = true;
-            XCTAssertTrue(realm.inWriteTransaction);
+              if (note == RLMRealmDidChangeNotification) {
+                  called = true;
+                  XCTAssertTrue(realm.inWriteTransaction);
         }
     }];
 
-    [self waitForNotification:RLMRealmRefreshRequiredNotification realm:realm block:^{
-        [RLMRealm.defaultRealm transactionWithBlock:^{ }];
+    [self waitForNotification:RLMRealmRefreshRequiredNotification realm:realm block:^ {
+             [RLMRealm.defaultRealm transactionWithBlock:^{ }];
     }];
 
     [realm beginWriteTransaction];
@@ -1335,13 +1335,13 @@
     realm.autorefresh = NO;
 
     RLMNotificationToken *token = [realm addNotificationBlock:^(NSString *note, RLMRealm *) {
-        if (note == RLMRealmDidChangeNotification) {
-            throw 0;
-        }
-    }];
+              if (note == RLMRealmDidChangeNotification) {
+                  throw 0;
+              }
+          }];
 
-    [self waitForNotification:RLMRealmRefreshRequiredNotification realm:realm block:^{
-        [RLMRealm.defaultRealm transactionWithBlock:^{ }];
+    [self waitForNotification:RLMRealmRefreshRequiredNotification realm:realm block:^ {
+             [RLMRealm.defaultRealm transactionWithBlock:^{ }];
     }];
 
     try {
@@ -1361,10 +1361,10 @@
     realm.autorefresh = NO;
 
     RLMNotificationToken *token = [realm addNotificationBlock:^(NSString *note, RLMRealm *) {
-        if (note == RLMRealmDidChangeNotification) {
-            throw 0;
-        }
-    }];
+              if (note == RLMRealmDidChangeNotification) {
+                  throw 0;
+              }
+          }];
 
     [realm beginWriteTransaction];
     try {
@@ -1384,15 +1384,15 @@
 
     XCTestExpectation *notificationFired = [self expectationWithDescription:@"notification fired"];
     __block RLMNotificationToken *token = [realm addNotificationBlock:^(NSString *note, RLMRealm *) {
-        if (note == RLMRealmDidChangeNotification) {
-            [notificationFired fulfill];
+              if (note == RLMRealmDidChangeNotification) {
+                  [notificationFired fulfill];
             [token invalidate];
         }
     }];
 
     [realm invalidate];
-    [self dispatchAsync:^{
-        [RLMRealm.defaultRealm transactionWithBlock:^{ }];
+    [self dispatchAsync:^ {
+             [RLMRealm.defaultRealm transactionWithBlock:^{ }];
     }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
@@ -1420,8 +1420,8 @@
 {
     RLMRealm *realm = RLMRealm.defaultRealm;
 
-    [self dispatchAsyncAndWait:^{
-        XCTAssertThrows([realm beginWriteTransaction]);
+    [self dispatchAsyncAndWait:^ {
+             XCTAssertThrows([realm beginWriteTransaction]);
         XCTAssertThrows([IntObject allObjectsInRealm:realm]);
         XCTAssertThrows([IntObject objectsInRealm:realm where:@"intCol = 0"]);
     }];
@@ -1443,14 +1443,14 @@
     XCTestExpectation *bgReady = [self expectationWithDescription:@"background queue waiting for commit"];
     __block XCTestExpectation *bgDone = nil;
 
-    [self dispatchAsync:^{
-        RLMRealm *realm = [self realmWithTestPath];
-        __block bool fulfilled = false;
+    [self dispatchAsync:^ {
+             RLMRealm *realm = [self realmWithTestPath];
+             __block bool fulfilled = false;
 
-        CFRunLoopPerformBlock(CFRunLoopGetCurrent(), kCFRunLoopDefaultMode, ^{
+             CFRunLoopPerformBlock(CFRunLoopGetCurrent(), kCFRunLoopDefaultMode, ^{
             __block RLMNotificationToken *token = [realm addNotificationBlock:^(NSString *note, RLMRealm *realm) {
-                XCTAssertNotNil(realm, @"Realm should not be nil");
-                XCTAssertEqual(note, RLMRealmDidChangeNotification);
+                      XCTAssertNotNil(realm, @"Realm should not be nil");
+                      XCTAssertEqual(note, RLMRealmDidChangeNotification);
                 XCTAssertEqual(1U, [StringObject allObjectsInRealm:realm].count);
                 fulfilled = true;
                 [token invalidate];
@@ -1482,8 +1482,8 @@
 }
 
 - (void)testAddingNotificationOutsideOfRunLoopIsAnError {
-    [self dispatchAsyncAndWait:^{
-        RLMRealm *realm = RLMRealm.defaultRealm;
+    [self dispatchAsyncAndWait:^ {
+             RLMRealm *realm = RLMRealm.defaultRealm;
         XCTAssertThrows([realm addNotificationBlock:^(NSString *, RLMRealm *) { }]);
 
         CFRunLoopPerformBlock(CFRunLoopGetCurrent(), kCFRunLoopDefaultMode, ^{
@@ -1504,7 +1504,7 @@
         RLMRealm *inMemoryRealm = [self inMemoryRealmWithIdentifier:@"identifier"];
 
         [self waitForNotification:RLMRealmDidChangeNotification realm:inMemoryRealm block:^{
-            RLMRealm *inMemoryRealm = [self inMemoryRealmWithIdentifier:@"identifier"];
+                 RLMRealm *inMemoryRealm = [self inMemoryRealmWithIdentifier:@"identifier"];
             [inMemoryRealm beginWriteTransaction];
             [StringObject createInRealm:inMemoryRealm withValue:@[@"a"]];
             [StringObject createInRealm:inMemoryRealm withValue:@[@"b"]];
@@ -1589,9 +1589,9 @@
 - (void)testWriteCopyOfRealm
 {
     RLMRealm *realm = [RLMRealm defaultRealm];
-    [realm transactionWithBlock:^{
-        [IntObject createInRealm:realm withValue:@[@0]];
-    }];
+    [realm transactionWithBlock:^ {
+              [IntObject createInRealm:realm withValue:@[@0]];
+          }];
 
     NSError *writeError;
     XCTAssertTrue([realm writeCopyToURL:RLMTestRealmURL() encryptionKey:nil error:&writeError]);
@@ -1603,9 +1603,9 @@
 - (void)testCannotOverwriteWithWriteCopy
 {
     RLMRealm *realm = [self realmWithTestPath];
-    [realm transactionWithBlock:^{
-        [IntObject createInRealm:realm withValue:@[@0]];
-    }];
+    [realm transactionWithBlock:^ {
+              [IntObject createInRealm:realm withValue:@[@0]];
+          }];
 
     NSError *writeError;
     // Does not throw when given a nil error out param
@@ -1620,9 +1620,9 @@
 - (void)testCannotWriteInNonExistentDirectory
 {
     RLMRealm *realm = [self realmWithTestPath];
-    [realm transactionWithBlock:^{
-        [IntObject createInRealm:realm withValue:@[@0]];
-    }];
+    [realm transactionWithBlock:^ {
+              [IntObject createInRealm:realm withValue:@[@0]];
+          }];
 
     NSString *badPath = @"/tmp/RLMTestDirMayNotExist/foo";
 
@@ -1641,7 +1641,7 @@
     NSString *directory = RLMTestRealmURL().URLByDeletingLastPathComponent.path;
     NSFileManager *fm = NSFileManager.defaultManager;
     NSNumber *oldPermissions = [fm attributesOfItemAtPath:directory error:nil][NSFilePosixPermissions];
-    [fm setAttributes:@{NSFilePosixPermissions: @(0100)} ofItemAtPath:directory error:nil];
+    [fm setAttributes:@ {NSFilePosixPermissions: @(0100)} ofItemAtPath:directory error:nil];
 
     NSString *expectedError = [NSString stringWithFormat:@"Unable to open a Realm at path '%@'. Please use a path where your app has read-write permissions.", RLMTestRealmURL().path];
     NSString *expectedUnderlying = [NSString stringWithFormat:@"open(\"%@\") failed: permission denied", RLMTestRealmURL().path];
@@ -1650,7 +1650,7 @@
     RLMValidateRealmError(writeError, RLMErrorFilePermissionDenied, expectedError, expectedUnderlying);
 
     // Restore old permissions
-    [fm setAttributes:@{NSFilePosixPermissions: oldPermissions} ofItemAtPath:directory error:nil];
+    [fm setAttributes:@ {NSFilePosixPermissions: oldPermissions} ofItemAtPath:directory error:nil];
 }
 
 - (void)testWriteWithNonSpecialCasedError
@@ -1667,7 +1667,7 @@
     setrlimit(RLIMIT_NOFILE, &rl);
 
     NSString *expectedError = [NSString stringWithFormat:@"Unable to open a Realm at path '%@': open() failed: too many open files",
-                               RLMTestRealmURL().path];
+                                        RLMTestRealmURL().path];
     NSString *expectedUnderlying = [NSString stringWithFormat:@"open(\"%@\") failed: too many open files", RLMTestRealmURL().path];
     NSError *writeError;
     XCTAssertFalse([realm writeCopyToURL:RLMTestRealmURL() encryptionKey:nil error:&writeError]);
@@ -1680,10 +1680,10 @@
 - (void)testWritingCopyUsesWriteTransactionInProgress
 {
     RLMRealm *realm = [RLMRealm defaultRealm];
-    [realm transactionWithBlock:^{
-        [IntObject createInRealm:realm withValue:@[@0]];
+    [realm transactionWithBlock:^ {
+              [IntObject createInRealm:realm withValue:@[@0]];
 
-        NSError *writeError;
+              NSError *writeError;
         XCTAssertTrue([realm writeCopyToURL:RLMTestRealmURL() encryptionKey:nil error:&writeError]);
         XCTAssertNil(writeError);
         RLMRealm *copy = [self realmWithTestPath];
@@ -1759,9 +1759,9 @@
 {
     NSURL *testURL = RLMTestRealmURL();
     [[NSFileManager defaultManager] createDirectoryAtPath:testURL.path
-                              withIntermediateDirectories:NO
-                                               attributes:nil
-                                                    error:nil];
+                                    withIntermediateDirectories:NO
+                                    attributes:nil
+                                    error:nil];
     NSError *error;
     RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
     configuration.fileURL = testURL;
@@ -1857,7 +1857,7 @@
     RLMRealm *realm = [self inMemoryRealmWithIdentifier:@"test"];
     // pipes have a 8 KB buffer on OS X, so verify we don't block after 8192 commits
     for (int i = 0; i < 9000; ++i) {
-        [realm transactionWithBlock:^{}];
+        [realm transactionWithBlock:^ {}];
     }
 }
 
@@ -1879,7 +1879,7 @@
     }
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Block dispatched to concurrent queue should be executed"];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
         [expectation fulfill];
     });
     [self waitForExpectationsWithTimeout:1 handler:nil];
@@ -1905,9 +1905,9 @@
 }
 
 - (void)testAuxiliaryFilesAreExcludedFromBackupPerformance {
-    [self measureBlock:^{
-        @autoreleasepool {
-            RLMRealm *realm = [RLMRealm defaultRealm];
+    [self measureBlock:^ {
+             @autoreleasepool {
+                 RLMRealm *realm = [RLMRealm defaultRealm];
             realm = [RLMRealm defaultRealm];
             realm = [RLMRealm defaultRealm];
             realm = [RLMRealm defaultRealm];
@@ -1985,12 +1985,12 @@
     NSFileManager *fm = NSFileManager.defaultManager;
     [fm createFileAtPath:config.fileURL.path contents:nil attributes:nil];
     NSString *notificationPipe = [config.fileURL.path stringByAppendingPathExtension:@"note"];
-    [fm createFileAtPath:notificationPipe contents:nil attributes:@{NSFileImmutable: @YES}];
+    [fm createFileAtPath:notificationPipe contents:nil attributes:@ {NSFileImmutable: @YES}];
 
     NSError *error;
     XCTAssertTrue([RLMRealm deleteFilesForConfiguration:config error:&error]);
     XCTAssertEqual(error.code, NSFileWriteNoPermissionError);
-    [fm setAttributes:@{NSFileImmutable: @NO} ofItemAtPath:notificationPipe error:nil];
+    [fm setAttributes:@ {NSFileImmutable: @NO} ofItemAtPath:notificationPipe error:nil];
 }
 
 - (void)testDeleteOpenRealmFile {

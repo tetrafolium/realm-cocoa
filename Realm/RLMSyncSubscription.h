@@ -70,14 +70,14 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
  */
 @interface RLMSyncSubscription : NSObject
 
-/**
- The unique name for this subscription.
+    /**
+     The unique name for this subscription.
 
- This will be `nil` if this object was created with `-[RLMResults subscribe]`.
- Subscription objects read from a Realm with `-[RLMRealm subscriptions]` will
- always have a non-`nil` name and subscriptions which were not explicitly named
- will have an automatically generated one.
- */
+     This will be `nil` if this object was created with `-[RLMResults subscribe]`.
+     Subscription objects read from a Realm with `-[RLMRealm subscriptions]` will
+     always have a non-`nil` name and subscriptions which were not explicitly named
+     will have an automatically generated one.
+     */
 @property (nonatomic, readonly, nullable) NSString *name;
 
 /**
@@ -182,13 +182,13 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
  Configuration options for query-based sync subscriptions.
  */
 @interface RLMSyncSubscriptionOptions : NSObject
-/**
- The name of the subscription.
+    /**
+     The name of the subscription.
 
- Naming a subscription makes it possible to look up a subscription by name
- (using `-[RLMRealm subscriptionWithName:]`) or update an existing
- subscription rather than creating a new one.
- */
+     Naming a subscription makes it possible to look up a subscription by name
+     (using `-[RLMRealm subscriptionWithName:]`) or update an existing
+     subscription rather than creating a new one.
+     */
 @property (nonatomic, copy, nullable) NSString *name;
 
 /**
@@ -259,25 +259,25 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
  */
 @interface RLMResults (SyncSubscription)
 
-/**
- Subscribe to the query represented by this `RLMResults`.
+    /**
+     Subscribe to the query represented by this `RLMResults`.
 
- Subscribing to a query asks the server to synchronize all objects to the
- client which match the query, along with all objects which are reachable
- from those objects via links. This happens asynchronously, and the local
- client Realm may not immediately have all objects which match the query.
- Observe the `state` property of the returned subscription object to be
- notified of when the subscription has been processed by the server and
- all objects matching the query are available.
+     Subscribing to a query asks the server to synchronize all objects to the
+     client which match the query, along with all objects which are reachable
+     from those objects via links. This happens asynchronously, and the local
+     client Realm may not immediately have all objects which match the query.
+     Observe the `state` property of the returned subscription object to be
+     notified of when the subscription has been processed by the server and
+     all objects matching the query are available.
 
- The subscription will not be explicitly named. A name will be automatically
- generated for internal use. The exact format of this name may change without
- warning and should not be depended on.
+     The subscription will not be explicitly named. A name will be automatically
+     generated for internal use. The exact format of this name may change without
+     warning and should not be depended on.
 
- @return An object representing the newly-created subscription.
+     @return An object representing the newly-created subscription.
 
- @see RLMSyncSubscription
-*/
+     @see RLMSyncSubscription
+    */
 - (RLMSyncSubscription *)subscribe;
 
 /**
@@ -382,19 +382,19 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
  Support for managing existing subscriptions to object queries in a Realm.
  */
 @interface RLMRealm (SyncSubscription)
-/**
- Get a list of the query-based sync subscriptions made for this Realm.
+    /**
+     Get a list of the query-based sync subscriptions made for this Realm.
 
- This list includes all subscriptions which are currently in the states `Pending`,
- `Created`, and `Error`. Newly created subscriptions which are still in the
- `Creating` state are not included, and calling this immediately after calling
- `-[RLMResults subscribe]` will typically not include that subscription. Similarly,
- because unsubscription happens asynchronously, this may continue to include
- subscriptions after `-[RLMSyncSubscription unsubscribe]` is called on them.
+     This list includes all subscriptions which are currently in the states `Pending`,
+     `Created`, and `Error`. Newly created subscriptions which are still in the
+     `Creating` state are not included, and calling this immediately after calling
+     `-[RLMResults subscribe]` will typically not include that subscription. Similarly,
+     because unsubscription happens asynchronously, this may continue to include
+     subscriptions after `-[RLMSyncSubscription unsubscribe]` is called on them.
 
- This method can only be called on a Realm which is using query-based sync and
- will throw an exception if called on a non-synchronized or full-sync Realm.
- */
+     This method can only be called on a Realm which is using query-based sync and
+     will throw an exception if called on a non-synchronized or full-sync Realm.
+     */
 - (RLMResults<RLMSyncSubscription *> *)subscriptions;
 
 /**

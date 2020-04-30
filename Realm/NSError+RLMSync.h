@@ -26,12 +26,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// "client reset" error.
 @interface NSError (RLMSync)
 
-/**
- Given an appropriate Realm Object Server error, return the token that
- can be passed into `+[RLMSyncSession immediatelyHandleError:]` to
- immediately perform error clean-up work, or nil if the error isn't of
- a type that provides a token.
- */
+    /**
+     Given an appropriate Realm Object Server error, return the token that
+     can be passed into `+[RLMSyncSession immediatelyHandleError:]` to
+     immediately perform error clean-up work, or nil if the error isn't of
+     a type that provides a token.
+     */
 - (nullable RLMSyncErrorActionToken *)rlmSync_errorActionToken NS_REFINED_FOR_SWIFT;
 
 /**

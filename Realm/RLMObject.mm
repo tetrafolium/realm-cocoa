@@ -161,7 +161,7 @@
 
 - (RLMNotificationToken *)addNotificationBlock:(RLMObjectChangeBlock)block {
     return RLMObjectAddNotificationBlock(self, ^(NSArray<NSString *> *propertyNames,
-                                                 NSArray *oldValues, NSArray *newValues, NSError *error) {
+    NSArray *oldValues, NSArray *newValues, NSError *error) {
         if (error) {
             block(false, nil, error);
         }
@@ -193,7 +193,7 @@
 }
 
 + (NSDictionary *)linkingObjectsProperties {
-    return @{};
+    return @ {};
 }
 
 + (NSDictionary *)defaultPropertyValues {

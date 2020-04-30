@@ -74,18 +74,24 @@ uint8_t RLMGetComputedPermissions(RLMRealm *realm, id _Nullable object) {
 
 SyncSessionStopPolicy translateStopPolicy(RLMSyncStopPolicy stopPolicy) {
     switch (stopPolicy) {
-        case RLMSyncStopPolicyImmediately:              return SyncSessionStopPolicy::Immediately;
-        case RLMSyncStopPolicyLiveIndefinitely:         return SyncSessionStopPolicy::LiveIndefinitely;
-        case RLMSyncStopPolicyAfterChangesUploaded:     return SyncSessionStopPolicy::AfterChangesUploaded;
+    case RLMSyncStopPolicyImmediately:
+        return SyncSessionStopPolicy::Immediately;
+    case RLMSyncStopPolicyLiveIndefinitely:
+        return SyncSessionStopPolicy::LiveIndefinitely;
+    case RLMSyncStopPolicyAfterChangesUploaded:
+        return SyncSessionStopPolicy::AfterChangesUploaded;
     }
     REALM_UNREACHABLE();    // Unrecognized stop policy.
 }
 
 RLMSyncStopPolicy translateStopPolicy(SyncSessionStopPolicy stop_policy) {
     switch (stop_policy) {
-        case SyncSessionStopPolicy::Immediately:            return RLMSyncStopPolicyImmediately;
-        case SyncSessionStopPolicy::LiveIndefinitely:       return RLMSyncStopPolicyLiveIndefinitely;
-        case SyncSessionStopPolicy::AfterChangesUploaded:   return RLMSyncStopPolicyAfterChangesUploaded;
+    case SyncSessionStopPolicy::Immediately:
+        return RLMSyncStopPolicyImmediately;
+    case SyncSessionStopPolicy::LiveIndefinitely:
+        return RLMSyncStopPolicyLiveIndefinitely;
+    case SyncSessionStopPolicy::AfterChangesUploaded:
+        return RLMSyncStopPolicyAfterChangesUploaded;
     }
     REALM_UNREACHABLE();
 }
@@ -108,20 +114,20 @@ CocoaSyncUserContext& context_for(const std::shared_ptr<realm::SyncUser>& user)
 
 NSError *make_auth_error_bad_response(NSDictionary *json) {
     return [NSError errorWithDomain:RLMSyncAuthErrorDomain
-                               code:RLMSyncAuthErrorBadResponse
-                           userInfo:json ? @{kRLMSyncErrorJSONKey: json} : nil];
+                    code:RLMSyncAuthErrorBadResponse
+                    userInfo:json ? @ {kRLMSyncErrorJSONKey: json} : nil];
 }
 
 NSError *make_auth_error_http_status(NSInteger status) {
     return [NSError errorWithDomain:RLMSyncAuthErrorDomain
-                               code:RLMSyncAuthErrorHTTPStatusCodeError
-                           userInfo:@{kRLMSyncErrorStatusCodeKey: @(status)}];
+                    code:RLMSyncAuthErrorHTTPStatusCodeError
+                    userInfo:@ {kRLMSyncErrorStatusCodeKey: @(status)}];
 }
 
 NSError *make_auth_error_client_issue() {
     return [NSError errorWithDomain:RLMSyncAuthErrorDomain
-                               code:RLMSyncAuthErrorClientSessionError
-                           userInfo:nil];
+                    code:RLMSyncAuthErrorClientSessionError
+                    userInfo:nil];
 }
 
 NSError *make_auth_error(RLMSyncErrorResponseModel *model) {
@@ -136,7 +142,7 @@ NSError *make_auth_error(RLMSyncErrorResponseModel *model) {
 }
 
 NSError *make_sync_error(RLMSyncSystemErrorKind kind, NSString *description, NSInteger code, NSDictionary *custom) {
-    NSMutableDictionary *buffer = [custom ?: @{} mutableCopy];
+    NSMutableDictionary *buffer = [custom ?: @ {} mutableCopy];
     buffer[NSLocalizedDescriptionKey] = description;
     if (code != NSNotFound) {
         buffer[kRLMSyncErrorStatusCodeKey] = @(code);
@@ -144,40 +150,40 @@ NSError *make_sync_error(RLMSyncSystemErrorKind kind, NSString *description, NSI
 
     RLMSyncError errorCode;
     switch (kind) {
-        case RLMSyncSystemErrorKindClientReset:
-            errorCode = RLMSyncErrorClientResetError;
-            break;
-        case RLMSyncSystemErrorKindPermissionDenied:
-            errorCode = RLMSyncErrorPermissionDeniedError;
-            break;
-        case RLMSyncSystemErrorKindUser:
-            errorCode = RLMSyncErrorClientUserError;
-            break;
-        case RLMSyncSystemErrorKindSession:
-            errorCode = RLMSyncErrorClientSessionError;
-            break;
-        case RLMSyncSystemErrorKindConnection:
-        case RLMSyncSystemErrorKindClient:
-        case RLMSyncSystemErrorKindUnknown:
-            errorCode = RLMSyncErrorClientInternalError;
-            break;
+    case RLMSyncSystemErrorKindClientReset:
+        errorCode = RLMSyncErrorClientResetError;
+        break;
+    case RLMSyncSystemErrorKindPermissionDenied:
+        errorCode = RLMSyncErrorPermissionDeniedError;
+        break;
+    case RLMSyncSystemErrorKindUser:
+        errorCode = RLMSyncErrorClientUserError;
+        break;
+    case RLMSyncSystemErrorKindSession:
+        errorCode = RLMSyncErrorClientSessionError;
+        break;
+    case RLMSyncSystemErrorKindConnection:
+    case RLMSyncSystemErrorKindClient:
+    case RLMSyncSystemErrorKindUnknown:
+        errorCode = RLMSyncErrorClientInternalError;
+        break;
     }
     return [NSError errorWithDomain:RLMSyncErrorDomain
-                               code:errorCode
-                           userInfo:[buffer copy]];
+                    code:errorCode
+                    userInfo:[buffer copy]];
 }
 
 NSError *make_sync_error(NSError *wrapped_auth_error) {
     return [NSError errorWithDomain:RLMSyncErrorDomain
-                               code:RLMSyncErrorUnderlyingAuthError
-                           userInfo:@{kRLMSyncUnderlyingErrorKey: wrapped_auth_error}];
+                    code:RLMSyncErrorUnderlyingAuthError
+                    userInfo:@ {kRLMSyncUnderlyingErrorKey: wrapped_auth_error}];
 }
 
 NSError *make_sync_error(std::error_code sync_error, RLMSyncSystemErrorKind kind) {
     return [NSError errorWithDomain:RLMSyncErrorDomain
-                               code:kind
-                           userInfo:@{
-                                      NSLocalizedDescriptionKey: @(sync_error.message().c_str()),
-                                      kRLMSyncErrorStatusCodeKey: @(sync_error.value())
-                                      }];
+                    code:kind
+            userInfo:@ {
+        NSLocalizedDescriptionKey: @(sync_error.message().c_str()),
+        kRLMSyncErrorStatusCodeKey: @(sync_error.value())
+            }];
 }

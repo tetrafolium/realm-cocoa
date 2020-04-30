@@ -36,9 +36,9 @@
 
 - (NSString *)description {
     return [NSString stringWithFormat:@"%@ was born on %@ and had %ld friends",
-            self.fullName,
-            self.birthdate,
-            (long)self.numberOfFriends];
+                     self.fullName,
+                     self.birthdate,
+                     (long)self.numberOfFriends];
 }
 
 @end

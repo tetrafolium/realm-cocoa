@@ -144,7 +144,7 @@ void RLMInitializeWithValue(RLMObjectBase *self, id value, RLMSchema *schema) {
         for (id val in array) {
             RLMProperty *prop = properties[i++];
             [self setValue:validatedObjectForProperty(RLMCoerceToNil(val), objectSchema, prop, schema)
-                    forKey:prop.name];
+                  forKey:prop.name];
         }
     }
     else {
@@ -158,7 +158,7 @@ void RLMInitializeWithValue(RLMObjectBase *self, id value, RLMSchema *schema) {
             }
 
             [self setValue:validatedObjectForProperty(RLMCoerceToNil(obj), objectSchema, prop, schema)
-                    forKey:prop.name];
+                  forKey:prop.name];
         }
     }
 }
@@ -201,7 +201,7 @@ id RLMCreateManagedAccessor(Class cls, RLMClassInfo *info) {
 
             if (value) {
                 [array addObjects:validatedObjectForProperty(value, _objectSchema, property,
-                                                             RLMSchema.partialPrivateSharedSchema)];
+                        RLMSchema.partialPrivateSharedSchema)];
             }
         }
         else if (property.optional) {
@@ -339,9 +339,9 @@ id RLMCreateManagedAccessor(Class cls, RLMClassInfo *info) {
 }
 
 - (void)addObserver:(id)observer
-         forKeyPath:(NSString *)keyPath
-            options:(NSKeyValueObservingOptions)options
-            context:(void *)context {
+    forKeyPath:(NSString *)keyPath
+    options:(NSKeyValueObservingOptions)options
+    context:(void *)context {
     if (!_observationInfo) {
         _observationInfo = new RLMObservationInfo(self);
     }
@@ -377,8 +377,8 @@ id RLMCreateManagedAccessor(Class cls, RLMClassInfo *info) {
 }
 
 + (instancetype)objectWithThreadSafeReference:(std::unique_ptr<realm::ThreadSafeReferenceBase>)reference
-                                     metadata:(__unused id)metadata
-                                        realm:(RLMRealm *)realm {
+    metadata:(__unused id)metadata
+    realm:(RLMRealm *)realm {
     REALM_ASSERT_DEBUG(dynamic_cast<realm::ThreadSafeReference<Object> *>(reference.get()));
     auto object_reference = static_cast<realm::ThreadSafeReference<Object> *>(reference.get());
 
@@ -451,7 +451,7 @@ BOOL RLMObjectBaseAreEqual(RLMObjectBase *o1, RLMObjectBase *o2) {
     }
     // if table and index are the same
     return o1->_row.get_table() == o2->_row.get_table()
-        && o1->_row.get_index() == o2->_row.get_index();
+           && o1->_row.get_index() == o2->_row.get_index();
 }
 
 id RLMValidatedValueForProperty(id object, NSString *key, NSString *className) {

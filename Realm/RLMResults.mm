@@ -112,7 +112,7 @@ void RLMThrowResultsError(NSString *aggregateMethod) {
 }
 
 - (instancetype)initWithObjectInfo:(RLMClassInfo&)info
-                           results:(realm::Results&&)results {
+    results:(realm::Results&&)results {
     if (self = [super init]) {
         _results = std::move(results);
         _realm = info.realm;
@@ -122,7 +122,7 @@ void RLMThrowResultsError(NSString *aggregateMethod) {
 }
 
 + (instancetype)resultsWithObjectInfo:(RLMClassInfo&)info
-                              results:(realm::Results&&)results {
+    results:(realm::Results&&)results {
     return [[self alloc] initWithObjectInfo:info results:std::move(results)];
 }
 
@@ -173,8 +173,8 @@ static inline void RLMResultsValidateInWriteTransaction(__unsafe_unretained RLMR
 }
 
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(__unused __unsafe_unretained id [])buffer
-                                    count:(NSUInteger)len {
+    objects:(__unused __unsafe_unretained id [])buffer
+    count:(NSUInteger)len {
     if (!_info) {
         return 0;
     }
@@ -191,7 +191,7 @@ static inline void RLMResultsValidateInWriteTransaction(__unsafe_unretained RLMR
 
 - (NSUInteger)indexOfObjectWhere:(NSString *)predicateFormat args:(va_list)args {
     return [self indexOfObjectWithPredicate:[NSPredicate predicateWithFormat:predicateFormat
-                                                                   arguments:args]];
+                 arguments:args]];
 }
 
 - (NSUInteger)indexOfObjectWithPredicate:(NSPredicate *)predicate {
@@ -283,8 +283,8 @@ static inline void RLMResultsValidateInWriteTransaction(__unsafe_unretained RLMR
 }
 
 - (NSNumber *)_aggregateForKeyPath:(NSString *)keyPath
-                            method:(util::Optional<Mixed> (Results::*)(size_t))method
-                        methodName:(NSString *)methodName returnNilForEmpty:(BOOL)returnNilForEmpty {
+    method:(util::Optional<Mixed> (Results::*)(size_t))method
+    methodName:(NSString *)methodName returnNilForEmpty:(BOOL)returnNilForEmpty {
     assertKeyPathIsNotNested(keyPath);
     return [self aggregate:keyPath method:method methodName:methodName returnNilForEmpty:returnNilForEmpty];
 }
@@ -385,17 +385,17 @@ static inline void RLMResultsValidateInWriteTransaction(__unsafe_unretained RLMR
             @throw RLMException(@"Cannot distinct on keypath '%@': KVC collection operators are not supported.", keyPath);
         }
     }
-    
+
     return translateRLMResultsErrors([&] {
         if (_results.get_mode() == Results::Mode::Empty) {
             return self;
         }
-        
+
         std::vector<std::string> keyPathsVector;
         for (NSString *keyPath in keyPaths) {
             keyPathsVector.push_back(keyPath.UTF8String);
         }
-        
+
         return [self subresultsWithResults:_results.distinct(keyPathsVector)];
     });
 }
@@ -405,7 +405,7 @@ static inline void RLMResultsValidateInWriteTransaction(__unsafe_unretained RLMR
 }
 
 - (id)aggregate:(NSString *)property method:(util::Optional<Mixed> (Results::*)(size_t))method
-     methodName:(NSString *)methodName returnNilForEmpty:(BOOL)returnNilForEmpty {
+    methodName:(NSString *)methodName returnNilForEmpty:(BOOL)returnNilForEmpty {
     if (_results.get_mode() == Results::Mode::Empty) {
         return returnNilForEmpty ? nil : @0;
     }
@@ -420,17 +420,17 @@ static inline void RLMResultsValidateInWriteTransaction(__unsafe_unretained RLMR
 
 - (id)minOfProperty:(NSString *)property {
     return [self aggregate:property method:&Results::min
-                methodName:@"minOfProperty" returnNilForEmpty:YES];
+                 methodName:@"minOfProperty" returnNilForEmpty:YES];
 }
 
 - (id)maxOfProperty:(NSString *)property {
     return [self aggregate:property method:&Results::max
-                methodName:@"maxOfProperty" returnNilForEmpty:YES];
+                 methodName:@"maxOfProperty" returnNilForEmpty:YES];
 }
 
 - (id)sumOfProperty:(NSString *)property {
     return [self aggregate:property method:&Results::sum
-                methodName:@"sumOfProperty" returnNilForEmpty:NO];
+                 methodName:@"sumOfProperty" returnNilForEmpty:NO];
 }
 
 - (id)averageOfProperty:(NSString *)property {
@@ -472,7 +472,7 @@ static inline void RLMResultsValidateInWriteTransaction(__unsafe_unretained RLMR
 - (RLMFastEnumerator *)fastEnumerator {
     return translateRLMResultsErrors([&] {
         return [[RLMFastEnumerator alloc] initWithResults:_results collection:self
-                                                classInfo:*_info];
+                                          classInfo:*_info];
     });
 }
 
@@ -507,15 +507,15 @@ static inline void RLMResultsValidateInWriteTransaction(__unsafe_unretained RLMR
 }
 
 + (instancetype)objectWithThreadSafeReference:(std::unique_ptr<realm::ThreadSafeReferenceBase>)reference
-                                     metadata:(__unused id)metadata
-                                        realm:(RLMRealm *)realm {
+    metadata:(__unused id)metadata
+    realm:(RLMRealm *)realm {
     REALM_ASSERT_DEBUG(dynamic_cast<realm::ThreadSafeReference<Results> *>(reference.get()));
     auto results_reference = static_cast<realm::ThreadSafeReference<Results> *>(reference.get());
 
     Results results = realm->_realm->resolve_thread_safe_reference(std::move(*results_reference));
 
     return [RLMResults resultsWithObjectInfo:realm->_info[RLMStringDataToNSString(results.get_object_type())]
-                                     results:std::move(results)];
+                       results:std::move(results)];
 }
 
 @end

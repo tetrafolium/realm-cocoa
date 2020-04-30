@@ -27,7 +27,7 @@
         return nil;
     }
     if (self.code == RLMSyncErrorClientResetError
-        || self.code == RLMSyncErrorPermissionDeniedError) {
+            || self.code == RLMSyncErrorPermissionDeniedError) {
         return (RLMSyncErrorActionToken *)self.userInfo[kRLMSyncErrorActionTokenKey];
     }
     return nil;

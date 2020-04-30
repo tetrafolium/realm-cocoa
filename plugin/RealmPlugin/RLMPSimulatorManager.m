@@ -57,12 +57,12 @@ static NSTask *RLMPLaunchedTaskSynchonouslyWithProperty(NSString *path, NSArray 
         NSDictionary *deviceStatuses = [self processDeviceData:deviceData];
 
         [deviceStatuses enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *value, BOOL *stop) {
-            if ([value isEqualToString:RLMPBootedSimulatorKey]) {
-                bootedDeviceUUID = key;
-                // Stop when we found single booted device
-                *stop = YES;
-            }
-        }];
+                           if ([value isEqualToString:RLMPBootedSimulatorKey]) {
+                               bootedDeviceUUID = key;
+                               // Stop when we found single booted device
+                               *stop = YES;
+                           }
+                       }];
     }
 
     return bootedDeviceUUID;

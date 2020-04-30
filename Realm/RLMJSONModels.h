@@ -69,8 +69,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly, nullable) NSString *urlPrefix;
 
 - (instancetype)initWithDictionary:(NSDictionary *)jsonDictionary
-                requireAccessToken:(BOOL)requireAccessToken
-               requireRefreshToken:(BOOL)requireRefreshToken;
+    requireAccessToken:(BOOL)requireAccessToken
+    requireRefreshToken:(BOOL)requireRefreshToken;
 
 @end
 

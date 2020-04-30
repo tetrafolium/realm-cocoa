@@ -53,9 +53,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Properties
 
-/**
- The name of the property.
- */
+    /**
+     The name of the property.
+     */
 @property (nonatomic, readonly) NSString *name;
 
 /**
@@ -107,12 +107,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface RLMPropertyDescriptor : NSObject
 
-/**
- Creates and returns a property descriptor.
+    /**
+     Creates and returns a property descriptor.
 
- @param objectClass  The class of this property descriptor.
- @param propertyName The name of this property descriptor.
- */
+     @param objectClass  The class of this property descriptor.
+     @param propertyName The name of this property descriptor.
+     */
 + (instancetype)descriptorWithClass:(Class)objectClass propertyName:(NSString *)propertyName;
 
 /// The class of the property.

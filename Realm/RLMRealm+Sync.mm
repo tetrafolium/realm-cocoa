@@ -53,25 +53,25 @@ using namespace realm;
             return;
         }
         switch (state->subscription.state()) {
-            case partial_sync::SubscriptionState::Invalidated:
-            case partial_sync::SubscriptionState::Pending:
-            case partial_sync::SubscriptionState::Creating:
-                return;
+        case partial_sync::SubscriptionState::Invalidated:
+        case partial_sync::SubscriptionState::Pending:
+        case partial_sync::SubscriptionState::Creating:
+            return;
 
-            case partial_sync::SubscriptionState::Error:
-                try {
-                    rethrow_exception(state->subscription.error());
-                }
-                catch (...) {
-                    NSError *error = nil;
-                    RLMRealmTranslateException(&error);
-                    callback(nil, error);
-                }
-                break;
+        case partial_sync::SubscriptionState::Error:
+            try {
+                rethrow_exception(state->subscription.error());
+            }
+            catch (...) {
+                NSError *error = nil;
+                RLMRealmTranslateException(&error);
+                callback(nil, error);
+            }
+            break;
 
-            case partial_sync::SubscriptionState::Complete:
-                callback([RLMResults emptyDetachedResults], nil);
-                break;
+        case partial_sync::SubscriptionState::Complete:
+            callback([RLMResults emptyDetachedResults], nil);
+            break;
         }
 
         callback = nil;

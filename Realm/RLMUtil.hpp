@@ -27,14 +27,14 @@
 #import <realm/util/file.hpp>
 
 namespace realm {
-    class Mixed;
+class Mixed;
 }
 
 @class RLMObjectSchema;
 @class RLMProperty;
 
 namespace realm {
-    class RealmFileException;
+class RealmFileException;
 }
 
 __attribute__((format(NSString, 1, 2)))
@@ -108,8 +108,8 @@ static inline NSString * RLMStringDataToNSString(realm::StringData stringData) {
     }
     else {
         return [[NSString alloc] initWithBytes:stringData.data()
-                                        length:stringData.size()
-                                      encoding:NSUTF8StringEncoding];
+                                 length:stringData.size()
+                                 encoding:NSUTF8StringEncoding];
     }
 }
 

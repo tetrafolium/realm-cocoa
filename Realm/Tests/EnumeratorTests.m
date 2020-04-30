@@ -34,11 +34,11 @@
         XCTFail(@"No objects should have been added %@", row);
     }
 
-    NSArray *rowsArray = @[@{@"name": @"John", @"age": @20, @"hired": @YES},
-                           @{@"name": @"Mary", @"age": @21, @"hired": @NO},
-                           @{@"name": @"Lars", @"age": @21, @"hired": @YES},
-                           @{@"name": @"Phil", @"age": @43, @"hired": @NO},
-                           @{@"name": @"Anni", @"age": @54, @"hired": @YES}];
+    NSArray *rowsArray = @[@ {@"name": @"John", @"age": @20, @"hired": @YES},
+                             @ {@"name": @"Mary", @"age": @21, @"hired": @NO},
+                             @ {@"name": @"Lars", @"age": @21, @"hired": @YES},
+                             @ {@"name": @"Phil", @"age": @43, @"hired": @NO},
+                             @ {@"name": @"Anni", @"age": @54, @"hired": @YES}];
 
 
     // Add objects

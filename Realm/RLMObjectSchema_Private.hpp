@@ -19,7 +19,7 @@
 #import "RLMObjectSchema_Private.h"
 
 namespace realm {
-    class ObjectSchema;
+class ObjectSchema;
 }
 @class RLMSchema;
 

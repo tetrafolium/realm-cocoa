@@ -64,7 +64,7 @@ id _Nullable RLMGetObject(RLMRealm *realm, NSString *objectClassName, id _Nullab
 
 // create object from array or dictionary
 RLMObjectBase *RLMCreateObjectInRealmWithValue(RLMRealm *realm, NSString *className,
-                                               id _Nullable value, RLMUpdatePolicy updatePolicy)
+        id _Nullable value, RLMUpdatePolicy updatePolicy)
 NS_RETURNS_RETAINED;
 
 //
@@ -79,9 +79,9 @@ void RLMInitializeSwiftAccessorGenerics(RLMObjectBase *object);
 }
 
 namespace realm {
-    class Table;
-    template<typename T> class BasicRowExpr;
-    using RowExpr = BasicRowExpr<Table>;
+class Table;
+template<typename T> class BasicRowExpr;
+using RowExpr = BasicRowExpr<Table>;
 }
 class RLMClassInfo;
 

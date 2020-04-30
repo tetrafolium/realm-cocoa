@@ -46,10 +46,10 @@ typedef void (^RLMObjectMigrationBlock)(RLMObject * __nullable oldObject, RLMObj
 
 #pragma mark - Properties
 
-/**
- Returns the old `RLMSchema`. This is the schema which describes the Realm before the
- migration is applied.
- */
+    /**
+     Returns the old `RLMSchema`. This is the schema which describes the Realm before the
+     migration is applied.
+     */
 @property (nonatomic, readonly) RLMSchema *oldSchema;
 
 /**

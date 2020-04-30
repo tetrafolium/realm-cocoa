@@ -76,7 +76,7 @@
 }
 
 - (void)invokeTest {
-    CFRunLoopPerformBlock(CFRunLoopGetCurrent(), kCFRunLoopDefaultMode, ^{
+    CFRunLoopPerformBlock(CFRunLoopGetCurrent(), kCFRunLoopDefaultMode, ^ {
         [super invokeTest];
         CFRunLoopStop(CFRunLoopGetCurrent());
     });
@@ -147,7 +147,7 @@
         const char *end = start + buffer.length;
         while ((newline = memchr(start, '\n', end - start))) {
             if (newline < start + 17 ||
-                (memcmp(start, "Test Suite", 10) && memcmp(start, "Test Case", 9) && memcmp(start, "	 Executed 1 test", 17))) {
+                    (memcmp(start, "Test Suite", 10) && memcmp(start, "Test Case", 9) && memcmp(start, "	 Executed 1 test", 17))) {
                 fwrite(start, newline - start + 1, 1, stderr);
             }
             start = newline + 1;

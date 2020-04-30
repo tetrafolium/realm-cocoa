@@ -51,11 +51,11 @@ using namespace realm;
 }
 
 static std::vector<LinkPathPart> parseKeypath(StringData keypath, Group const& group,
-                                              Schema const& schema, const ObjectSchema *objectSchema) {
+        Schema const& schema, const ObjectSchema *objectSchema) {
     auto check = [&](bool condition, const char* fmt, auto... args) {
         if (!condition) {
             throw std::invalid_argument(util::format("Invalid LinkingObjects inclusion from key path '%1': %2.",
-                                                     keypath, util::format(fmt, args...)));
+                                        keypath, util::format(fmt, args...)));
         }
     };
 
@@ -258,8 +258,8 @@ static std::vector<LinkPathPart> parseKeypath(StringData keypath, Group const& g
         return nil;
     }
     return [NSError errorWithDomain:RLMErrorDomain
-                               code:RLMErrorFail
-                           userInfo:@{NSLocalizedDescriptionKey: RLMStringDataToNSString(err)}];
+                    code:RLMErrorFail
+                    userInfo:@ {NSLocalizedDescriptionKey: RLMStringDataToNSString(err)}];
 }
 
 - (NSDate *)createdAt {
@@ -293,9 +293,9 @@ static std::vector<LinkPathPart> parseKeypath(StringData keypath, Group const& g
     auto objectType = _row.get_string(_row.get_column_index("matches_property"));
     objectType = objectType.substr(0, objectType.size() - strlen("_matches"));
     return [NSString stringWithFormat:@"RLMSyncSubscription {\n\tname = %@\n\tobjectType = %@\n\tquery = %@\n\tstatus = %@\n\terror = %@\n\tcreatedAt = %@\n\tupdatedAt = %@\n\texpiresAt = %@\n\ttimeToLive = %@\n}",
-            self.name, RLMStringDataToNSString(objectType),
-            RLMStringDataToNSString(_row.get_string(_row.get_column_index("query"))),
-            @(self.state), self.error, self.createdAt, self.updatedAt, self.expiresAt, @(self.timeToLive)];
+                     self.name, RLMStringDataToNSString(objectType),
+                     RLMStringDataToNSString(_row.get_string(_row.get_column_index("query"))),
+                     @(self.state), self.error, self.createdAt, self.updatedAt, self.expiresAt, @(self.timeToLive)];
 }
 
 - (void)unsubscribe {
@@ -305,9 +305,9 @@ static std::vector<LinkPathPart> parseKeypath(StringData keypath, Group const& g
 }
 
 - (void)addObserver:(id)observer
-         forKeyPath:(NSString *)keyPath
-            options:(NSKeyValueObservingOptions)options
-            context:(void *)context {
+    forKeyPath:(NSString *)keyPath
+    options:(NSKeyValueObservingOptions)options
+    context:(void *)context {
     // Make the `state` property observable by using an object notifier to
     // trigger changes. The normal KVO mechanisms don't work for this class due
     // to it not being a normal part of the schema.
@@ -350,9 +350,9 @@ static ObjectSchema& addPublicNames(ObjectSchema& os) {
 // it points to, so for a ClassInfo that's not part of the schema we need a
 // wrapper object that owns them
 RLMResultsSetInfo::RLMResultsSetInfo(__unsafe_unretained RLMRealm *const realm)
-: osObjectSchema(realm->_realm->read_group(), partial_sync::result_sets_type_name)
-, rlmObjectSchema([RLMObjectSchema objectSchemaForObjectStoreSchema:addPublicNames(osObjectSchema)])
-, info(realm, rlmObjectSchema, &osObjectSchema)
+    : osObjectSchema(realm->_realm->read_group(), partial_sync::result_sets_type_name)
+    , rlmObjectSchema([RLMObjectSchema objectSchemaForObjectStoreSchema:addPublicNames(osObjectSchema)])
+    , info(realm, rlmObjectSchema, &osObjectSchema)
 {
     rlmObjectSchema.accessorClass = [RLMSyncSubscriptionObject class];
 }
@@ -378,7 +378,7 @@ RLMClassInfo& RLMResultsSetInfo::get(__unsafe_unretained RLMRealm *const realm) 
     // deleting them won't work out well for the user.
     auto query = table->where().ends_with(table->get_column_index("matches_property"), "_matches");
     return [self resultsWithObjectInfo:RLMResultsSetInfo::get(realm)
-                               results:Results(realm->_realm, std::move(query))];
+                 results:Results(realm->_realm, std::move(query))];
 }
 
 // These operations require a valid schema for the type. It's unclear how they

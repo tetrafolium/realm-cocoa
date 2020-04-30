@@ -108,7 +108,7 @@
 
 - (NSUInteger)indexOfObjectWhere:(NSString *)predicateFormat args:(va_list)args {
     return [self indexOfObjectWithPredicate:[NSPredicate predicateWithFormat:predicateFormat
-                                                                   arguments:args]];
+                 arguments:args]];
 }
 
 #pragma mark - Unmanaged RLMArray implementation
@@ -146,8 +146,8 @@
 }
 
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(__unused __unsafe_unretained id [])buffer
-                                    count:(__unused NSUInteger)len {
+    objects:(__unused __unsafe_unretained id [])buffer
+    count:(__unused NSUInteger)len {
     if (state->state != 0) {
         return 0;
     }
@@ -240,7 +240,7 @@ void RLMArrayValidateMatchingObjectType(__unsafe_unretained RLMArray *const arra
 }
 
 static void validateArrayBounds(__unsafe_unretained RLMArray *const ar,
-                                   NSUInteger index, bool allowOnePastEnd=false) {
+                                NSUInteger index, bool allowOnePastEnd=false) {
     NSUInteger max = ar->_backingArray.count + allowOnePastEnd;
     if (index >= max) {
         @throw RLMException(@"Index %llu is out of bounds (must be less than %llu).",
@@ -252,7 +252,7 @@ static void validateArrayBounds(__unsafe_unretained RLMArray *const ar,
     for (id obj in array) {
         RLMArrayValidateMatchingObjectType(self, obj);
     }
-    changeArray(self, NSKeyValueChangeInsertion, NSMakeRange(_backingArray.count, array.count), ^{
+    changeArray(self, NSKeyValueChangeInsertion, NSMakeRange(_backingArray.count, array.count), ^ {
         [_backingArray addObjectsFromArray:array];
     });
 }
@@ -260,13 +260,13 @@ static void validateArrayBounds(__unsafe_unretained RLMArray *const ar,
 - (void)insertObject:(id)anObject atIndex:(NSUInteger)index {
     RLMArrayValidateMatchingObjectType(self, anObject);
     validateArrayBounds(self, index, true);
-    changeArray(self, NSKeyValueChangeInsertion, index, ^{
+    changeArray(self, NSKeyValueChangeInsertion, index, ^ {
         [_backingArray insertObject:anObject atIndex:index];
     });
 }
 
 - (void)insertObjects:(id<NSFastEnumeration>)objects atIndexes:(NSIndexSet *)indexes {
-    changeArray(self, NSKeyValueChangeInsertion, indexes, ^{
+    changeArray(self, NSKeyValueChangeInsertion, indexes, ^ {
         NSUInteger currentIndex = [indexes firstIndex];
         for (RLMObject *obj in objects) {
             RLMArrayValidateMatchingObjectType(self, obj);
@@ -278,13 +278,13 @@ static void validateArrayBounds(__unsafe_unretained RLMArray *const ar,
 
 - (void)removeObjectAtIndex:(NSUInteger)index {
     validateArrayBounds(self, index);
-    changeArray(self, NSKeyValueChangeRemoval, index, ^{
+    changeArray(self, NSKeyValueChangeRemoval, index, ^ {
         [_backingArray removeObjectAtIndex:index];
     });
 }
 
 - (void)removeObjectsAtIndexes:(NSIndexSet *)indexes {
-    changeArray(self, NSKeyValueChangeRemoval, indexes, ^{
+    changeArray(self, NSKeyValueChangeRemoval, indexes, ^ {
         [_backingArray removeObjectsAtIndexes:indexes];
     });
 }
@@ -292,7 +292,7 @@ static void validateArrayBounds(__unsafe_unretained RLMArray *const ar,
 - (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject {
     RLMArrayValidateMatchingObjectType(self, anObject);
     validateArrayBounds(self, index);
-    changeArray(self, NSKeyValueChangeReplacement, index, ^{
+    changeArray(self, NSKeyValueChangeReplacement, index, ^ {
         [_backingArray replaceObjectAtIndex:index withObject:anObject];
     });
 }
@@ -304,7 +304,7 @@ static void validateArrayBounds(__unsafe_unretained RLMArray *const ar,
 
     auto start = std::min(sourceIndex, destinationIndex);
     auto len = std::max(sourceIndex, destinationIndex) - start + 1;
-    changeArray(self, NSKeyValueChangeReplacement, {start, len}, ^{
+    changeArray(self, NSKeyValueChangeReplacement, {start, len}, ^ {
         [_backingArray removeObjectAtIndex:sourceIndex];
         [_backingArray insertObject:original atIndex:destinationIndex];
     });
@@ -314,7 +314,7 @@ static void validateArrayBounds(__unsafe_unretained RLMArray *const ar,
     validateArrayBounds(self, index1);
     validateArrayBounds(self, index2);
 
-    changeArray(self, NSKeyValueChangeReplacement, ^{
+    changeArray(self, NSKeyValueChangeReplacement, ^ {
         [_backingArray exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
     }, [=] {
         NSMutableIndexSet *set = [[NSMutableIndexSet alloc] initWithIndex:index1];
@@ -343,7 +343,7 @@ static void validateArrayBounds(__unsafe_unretained RLMArray *const ar,
 }
 
 - (void)removeAllObjects {
-    changeArray(self, NSKeyValueChangeRemoval, NSMakeRange(0, _backingArray.count), ^{
+    changeArray(self, NSKeyValueChangeRemoval, NSMakeRange(0, _backingArray.count), ^ {
         [_backingArray removeAllObjects];
     });
 }
@@ -362,14 +362,14 @@ static void validateArrayBounds(__unsafe_unretained RLMArray *const ar,
 
 static bool canAggregate(RLMPropertyType type, bool allowDate) {
     switch (type) {
-        case RLMPropertyTypeInt:
-        case RLMPropertyTypeFloat:
-        case RLMPropertyTypeDouble:
-            return true;
-        case RLMPropertyTypeDate:
-            return allowDate;
-        default:
-            return false;
+    case RLMPropertyTypeInt:
+    case RLMPropertyTypeFloat:
+    case RLMPropertyTypeDouble:
+        return true;
+    case RLMPropertyTypeDate:
+        return allowDate;
+    default:
+        return false;
     }
 }
 
@@ -427,8 +427,8 @@ static bool canAggregate(RLMPropertyType type, bool allowDate) {
     if (_optional) {
         // Filter out NSNull values to match our behavior on managed arrays
         NSIndexSet *nonnull = [values indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger, BOOL *) {
-            return obj != NSNull.null;
-        }];
+                   return obj != NSNull.null;
+               }];
         if (nonnull.count < values.count) {
             values = [values objectsAtIndexes:nonnull];
         }
@@ -503,8 +503,8 @@ static bool canAggregate(RLMPropertyType type, bool allowDate) {
         return NSNotFound;
     }
     return [_backingArray indexOfObjectPassingTest:^BOOL(id obj, NSUInteger, BOOL *) {
-        return [predicate evaluateWithObject:obj];
-    }];
+                      return [predicate evaluateWithObject:obj];
+                  }];
 }
 
 - (NSArray *)objectsAtIndexes:(NSIndexSet *)indexes {
@@ -515,7 +515,7 @@ static bool canAggregate(RLMPropertyType type, bool allowDate) {
 }
 
 - (void)addObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath
-            options:(NSKeyValueObservingOptions)options context:(void *)context {
+    options:(NSKeyValueObservingOptions)options context:(void *)context {
     RLMValidateArrayObservationKey(keyPath, self);
     [super addObserver:observer forKeyPath:keyPath options:options context:context];
 }
@@ -553,8 +553,8 @@ static bool canAggregate(RLMPropertyType type, bool allowDate) {
 }
 
 + (instancetype)objectWithThreadSafeReference:(std::unique_ptr<realm::ThreadSafeReferenceBase>)reference
-                                     metadata:(id)metadata
-                                        realm:(RLMRealm *)realm {
+    metadata:(id)metadata
+    realm:(RLMRealm *)realm {
     REALM_TERMINATE("Unexpected handover of unmanaged `RLMArray`");
 }
 

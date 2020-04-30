@@ -25,9 +25,9 @@
 #import "RLMRealmUtil.hpp"
 
 void RLMAssertThrowsWithReasonMatchingSwift(XCTestCase *self,
-                                            __attribute__((noescape)) dispatch_block_t block,
-                                            NSString *regexString, NSString *message,
-                                            NSString *fileName, NSUInteger lineNumber) {
+        __attribute__((noescape)) dispatch_block_t block,
+        NSString *regexString, NSString *message,
+        NSString *fileName, NSUInteger lineNumber) {
     BOOL didThrow = NO;
     @try {
         block();
@@ -38,7 +38,7 @@ void RLMAssertThrowsWithReasonMatchingSwift(XCTestCase *self,
         NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:regexString options:(NSRegularExpressionOptions)0 error:nil];
         if ([regex numberOfMatchesInString:reason options:(NSMatchingOptions)0 range:NSMakeRange(0, reason.length)] == 0) {
             NSString *msg = [NSString stringWithFormat:@"The given expression threw an exception with reason '%@', but expected to match '%@'",
-                             reason, regexString];
+                                      reason, regexString];
             [self recordFailureWithDescription:msg inFile:fileName atLine:lineNumber expected:NO];
         }
     }
@@ -72,7 +72,7 @@ void (RLMAssertThrowsWithName)(XCTestCase *self, __attribute__((noescape)) dispa
             return nil;
         }
         return [NSString stringWithFormat:@"The given expression threw an exception named '%@', but expected '%@'",
-                             e.name, name];
+                         e.name, name];
     });
 }
 
@@ -83,21 +83,23 @@ void (RLMAssertThrowsWithReason)(XCTestCase *self, __attribute__((noescape)) dis
             return nil;
         }
         return [NSString stringWithFormat:@"The given expression threw an exception with reason '%@', but expected '%@'",
-                             e.reason, expected];
+                         e.reason, expected];
     });
 }
 
 void (RLMAssertThrowsWithReasonMatching)(XCTestCase *self, __attribute__((noescape)) dispatch_block_t block,
-                                         NSString *regexString, NSString *message,
-                                         NSString *fileName, NSUInteger lineNumber) {
+        NSString *regexString, NSString *message,
+        NSString *fileName, NSUInteger lineNumber) {
     auto regex = [NSRegularExpression regularExpressionWithPattern:regexString
-                                                           options:(NSRegularExpressionOptions)0 error:nil];
+                                      options:(NSRegularExpressionOptions)0 error:nil];
     assertThrows(self, block, message, fileName, lineNumber, ^NSString *(NSException *e) {
-        if ([regex numberOfMatchesInString:e.reason options:(NSMatchingOptions)0 range:{0, e.reason.length}] > 0) {
+        if ([regex numberOfMatchesInString:e.reason options:(NSMatchingOptions)0 range: {
+                    0, e.reason.length
+                      }] > 0) {
             return nil;
         }
         return [NSString stringWithFormat:@"The given expression threw an exception with reason '%@', but expected to match '%@'",
-                             e.reason, regexString];
+                         e.reason, regexString];
     });
 }
 
@@ -108,7 +110,7 @@ void (RLMAssertMatches)(XCTestCase *self, __attribute__((noescape)) NSString *(^
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:regexString options:(NSRegularExpressionOptions)0 error:nil];
     if ([regex numberOfMatchesInString:result options:(NSMatchingOptions)0 range:NSMakeRange(0, result.length)] == 0) {
         NSString *msg = [NSString stringWithFormat:@"The given expression '%@' did not match '%@'%@",
-                         result, regexString, message ? [NSString stringWithFormat:@": %@", message] : @""];
+                                  result, regexString, message ? [NSString stringWithFormat:@": %@", message] : @""];
         [self recordFailureWithDescription:msg inFile:fileName atLine:lineNumber expected:NO];
     }
 }

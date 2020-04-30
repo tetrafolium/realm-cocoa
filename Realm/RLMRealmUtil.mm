@@ -44,7 +44,7 @@ void RLMCacheRealm(std::string const& path, __unsafe_unretained RLMRealm *const 
     NSMapTable *realms = s_realmsPerPath[path];
     if (!realms) {
         s_realmsPerPath[path] = realms = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsOpaquePersonality|NSPointerFunctionsOpaqueMemory
-                                                               valueOptions:NSPointerFunctionsWeakMemory];
+                                          valueOptions:NSPointerFunctionsWeakMemory];
     }
     [realms setObject:realm forKey:(__bridge id)pthread_self()];
 }

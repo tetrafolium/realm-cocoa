@@ -31,12 +31,12 @@ class SyncUser;
 
 @interface RLMSyncSessionRefreshHandle ()
 
-NS_ASSUME_NONNULL_BEGIN
+    NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithRealmURL:(NSURL *)realmURL
-                            user:(std::shared_ptr<realm::SyncUser>)user
-                         session:(std::shared_ptr<realm::SyncSession>)session
-                 completionBlock:(nullable RLMSyncBasicErrorReportingBlock)completionBlock;
+    user:(std::shared_ptr<realm::SyncUser>)user
+    session:(std::shared_ptr<realm::SyncSession>)session
+    completionBlock:(nullable RLMSyncBasicErrorReportingBlock)completionBlock;
 
 NS_ASSUME_NONNULL_END
 

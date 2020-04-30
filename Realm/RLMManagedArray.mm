@@ -61,8 +61,8 @@
 }
 
 - (RLMManagedArray *)initWithList:(realm::List)list
-                       parentInfo:(RLMClassInfo *)parentInfo
-                         property:(__unsafe_unretained RLMProperty *const)property {
+    parentInfo:(RLMClassInfo *)parentInfo
+    property:(__unsafe_unretained RLMProperty *const)property {
     if (property.type == RLMPropertyTypeObject)
         self = [self initWithObjectClassName:property.objectClassName];
     else
@@ -82,13 +82,13 @@
 }
 
 - (RLMManagedArray *)initWithParent:(__unsafe_unretained RLMObjectBase *const)parentObject
-                           property:(__unsafe_unretained RLMProperty *const)property {
+    property:(__unsafe_unretained RLMProperty *const)property {
     __unsafe_unretained RLMRealm *const realm = parentObject->_realm;
     auto col = parentObject->_info->tableColumn(property);
     auto& row = parentObject->_row;
     return [self initWithList:realm::List(realm->_realm, *row.get_table(), col, row.get_index())
-                   parentInfo:parentObject->_info
-                     property:property];
+                 parentInfo:parentObject->_info
+                 property:property];
 }
 
 void RLMValidateArrayObservationKey(__unsafe_unretained NSString *const keyPath,
@@ -107,8 +107,8 @@ void RLMEnsureArrayObservationInfo(std::unique_ptr<RLMObservationInfo>& info,
     if (!info && array.class == [RLMManagedArray class]) {
         auto lv = static_cast<RLMManagedArray *>(array);
         info = std::make_unique<RLMObservationInfo>(*lv->_ownerInfo,
-                                                    lv->_backingList.get_origin_row_index(),
-                                                    observed);
+                lv->_backingList.get_origin_row_index(),
+                observed);
     }
 }
 
@@ -179,8 +179,8 @@ static void changeArray(__unsafe_unretained RLMManagedArray *const ar,
                         NSKeyValueChange kind, dispatch_block_t f, IndexSetFactory&& is) {
     translateErrors([&] { ar->_backingList.verify_in_transaction(); });
     RLMObservationInfo *info = RLMGetObservationInfo(ar->_observationInfo.get(),
-                                                     ar->_backingList.get_origin_row_index(),
-                                                     *ar->_ownerInfo);
+                               ar->_backingList.get_origin_row_index(),
+                               *ar->_ownerInfo);
     if (info) {
         NSIndexSet *indexes = is();
         info->willChange(ar->_key, kind, indexes);
@@ -243,8 +243,8 @@ static void changeArray(__unsafe_unretained RLMManagedArray *const ar, NSKeyValu
 }
 
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(__unused __unsafe_unretained id [])buffer
-                                    count:(NSUInteger)len {
+    objects:(__unused __unsafe_unretained id [])buffer
+    count:(NSUInteger)len {
     return RLMFastEnumerate(state, len, self);
 }
 
@@ -261,7 +261,7 @@ static void RLMInsertObject(RLMManagedArray *ar, id object, NSUInteger index) {
         index = translateErrors([&] { return ar->_backingList.size(); });
     }
 
-    changeArray(ar, NSKeyValueChangeInsertion, index, ^{
+    changeArray(ar, NSKeyValueChangeInsertion, index, ^ {
         RLMAccessorContext context(*ar->_objectInfo);
         ar->_backingList.insert(context, index, object);
     });
@@ -276,7 +276,7 @@ static void RLMInsertObject(RLMManagedArray *ar, id object, NSUInteger index) {
 }
 
 - (void)insertObjects:(id<NSFastEnumeration>)objects atIndexes:(NSIndexSet *)indexes {
-    changeArray(self, NSKeyValueChangeInsertion, indexes, ^{
+    changeArray(self, NSKeyValueChangeInsertion, indexes, ^ {
         NSUInteger index = [indexes firstIndex];
         RLMAccessorContext context(*_objectInfo);
         for (id obj in objects) {
@@ -289,21 +289,21 @@ static void RLMInsertObject(RLMManagedArray *ar, id object, NSUInteger index) {
 
 
 - (void)removeObjectAtIndex:(NSUInteger)index {
-    changeArray(self, NSKeyValueChangeRemoval, index, ^{
+    changeArray(self, NSKeyValueChangeRemoval, index, ^ {
         _backingList.remove(index);
     });
 }
 
 - (void)removeObjectsAtIndexes:(NSIndexSet *)indexes {
-    changeArray(self, NSKeyValueChangeRemoval, indexes, ^{
+    changeArray(self, NSKeyValueChangeRemoval, indexes, ^ {
         [indexes enumerateIndexesWithOptions:NSEnumerationReverse usingBlock:^(NSUInteger idx, BOOL *) {
-            _backingList.remove(idx);
-        }];
+                    _backingList.remove(idx);
+                }];
     });
 }
 
 - (void)addObjectsFromArray:(NSArray *)array {
-    changeArray(self, NSKeyValueChangeInsertion, NSMakeRange(self.count, array.count), ^{
+    changeArray(self, NSKeyValueChangeInsertion, NSMakeRange(self.count, array.count), ^ {
         RLMAccessorContext context(*_objectInfo);
         for (id obj in array) {
             RLMArrayValidateMatchingObjectType(self, obj);
@@ -313,14 +313,14 @@ static void RLMInsertObject(RLMManagedArray *ar, id object, NSUInteger index) {
 }
 
 - (void)removeAllObjects {
-    changeArray(self, NSKeyValueChangeRemoval, NSMakeRange(0, self.count), ^{
+    changeArray(self, NSKeyValueChangeRemoval, NSMakeRange(0, self.count), ^ {
         _backingList.remove_all();
     });
 }
 
 - (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)object {
     RLMArrayValidateMatchingObjectType(self, object);
-    changeArray(self, NSKeyValueChangeReplacement, index, ^{
+    changeArray(self, NSKeyValueChangeReplacement, index, ^ {
         RLMAccessorContext context(*_objectInfo);
         _backingList.set(context, index, object);
     });
@@ -329,13 +329,13 @@ static void RLMInsertObject(RLMManagedArray *ar, id object, NSUInteger index) {
 - (void)moveObjectAtIndex:(NSUInteger)sourceIndex toIndex:(NSUInteger)destinationIndex {
     auto start = std::min(sourceIndex, destinationIndex);
     auto len = std::max(sourceIndex, destinationIndex) - start + 1;
-    changeArray(self, NSKeyValueChangeReplacement, {start, len}, ^{
+    changeArray(self, NSKeyValueChangeReplacement, {start, len}, ^ {
         _backingList.move(sourceIndex, destinationIndex);
     });
 }
 
 - (void)exchangeObjectAtIndex:(NSUInteger)index1 withObjectAtIndex:(NSUInteger)index2 {
-    changeArray(self, NSKeyValueChangeReplacement, ^{
+    changeArray(self, NSKeyValueChangeReplacement, ^ {
         _backingList.swap(index1, index2);
     }, [=] {
         NSMutableIndexSet *set = [[NSMutableIndexSet alloc] initWithIndex:index1];
@@ -439,7 +439,7 @@ static void RLMInsertObject(RLMManagedArray *ar, id object, NSUInteger index) {
         @throw RLMException(@"Cannot delete objects from RLMArray<%@>: only RLMObjects can be deleted.", RLMTypeToString(_type));
     }
     // delete all target rows from the realm
-    RLMTrackDeletions(_realm, ^{
+    RLMTrackDeletions(_realm, ^ {
         translateErrors([&] { _backingList.delete_all(); });
     });
 }
@@ -447,7 +447,7 @@ static void RLMInsertObject(RLMManagedArray *ar, id object, NSUInteger index) {
 - (RLMResults *)sortedResultsUsingDescriptors:(NSArray<RLMSortDescriptor *> *)properties {
     return translateErrors([&] {
         return [RLMResults resultsWithObjectInfo:*_objectInfo
-                                         results:_backingList.sort(RLMSortDescriptorsToKeypathArray(properties))];
+                           results:_backingList.sort(RLMSortDescriptorsToKeypathArray(properties))];
     });
 }
 
@@ -465,7 +465,7 @@ static void RLMInsertObject(RLMManagedArray *ar, id object, NSUInteger index) {
         @throw RLMException(@"Querying is currently only implemented for arrays of Realm Objects");
     }
     realm::Query query = RLMPredicateToQuery(predicate, _objectInfo->rlmObjectSchema,
-                                             _realm.schema, _realm.group);
+                         _realm.schema, _realm.group);
 
     return translateErrors([&] {
         return RLMConvertNotFound(_backingList.find(std::move(query)));
@@ -479,9 +479,9 @@ static void RLMInsertObject(RLMManagedArray *ar, id object, NSUInteger index) {
 }
 
 - (void)addObserver:(id)observer
-         forKeyPath:(NSString *)keyPath
-            options:(NSKeyValueObservingOptions)options
-            context:(void *)context {
+    forKeyPath:(NSString *)keyPath
+    options:(NSKeyValueObservingOptions)options
+    context:(void *)context {
     RLMEnsureArrayObservationInfo(_observationInfo, keyPath, self, self);
     [super addObserver:observer forKeyPath:keyPath options:options context:context];
 }
@@ -493,7 +493,7 @@ static void RLMInsertObject(RLMManagedArray *ar, id object, NSUInteger index) {
 - (RLMFastEnumerator *)fastEnumerator {
     return translateErrors([&] {
         return [[RLMFastEnumerator alloc] initWithList:_backingList collection:self
-                                             classInfo:*_objectInfo];
+                                          classInfo:*_objectInfo];
     });
 }
 
@@ -524,8 +524,8 @@ static void RLMInsertObject(RLMManagedArray *ar, id object, NSUInteger index) {
 }
 
 + (instancetype)objectWithThreadSafeReference:(std::unique_ptr<realm::ThreadSafeReferenceBase>)reference
-                                     metadata:(RLMManagedArrayHandoverMetadata *)metadata
-                                        realm:(RLMRealm *)realm {
+    metadata:(RLMManagedArrayHandoverMetadata *)metadata
+    realm:(RLMRealm *)realm {
     REALM_ASSERT_DEBUG(dynamic_cast<realm::ThreadSafeReference<realm::List> *>(reference.get()));
     auto list_reference = static_cast<realm::ThreadSafeReference<realm::List> *>(reference.get());
 
@@ -535,8 +535,8 @@ static void RLMInsertObject(RLMManagedArray *ar, id object, NSUInteger index) {
     }
     RLMClassInfo *parentInfo = &realm->_info[metadata.parentClassName];
     return [[RLMManagedArray alloc] initWithList:std::move(list)
-                                       parentInfo:parentInfo
-                                         property:parentInfo->rlmObjectSchema[metadata.key]];
+                                    parentInfo:parentInfo
+                                    property:parentInfo->rlmObjectSchema[metadata.key]];
 }
 
 @end

@@ -109,7 +109,7 @@ static inline bool checkArrayType(__unsafe_unretained RLMArray *const array,
                                   RLMPropertyType type, bool optional,
                                   __unsafe_unretained NSString *const objectClassName) {
     return array.type == type && array.optional == optional
-        && (type != RLMPropertyTypeObject || [array.objectClassName isEqualToString:objectClassName]);
+           && (type != RLMPropertyTypeObject || [array.objectClassName isEqualToString:objectClassName]);
 }
 
 id (*RLMSwiftAsFastEnumeration)(id);
@@ -152,42 +152,42 @@ BOOL RLMValidateValue(__unsafe_unretained id const value,
     }
 
     switch (type) {
-        case RLMPropertyTypeString:
-            return [value isKindOfClass:[NSString class]];
-        case RLMPropertyTypeBool:
-            if ([value isKindOfClass:[NSNumber class]]) {
-                return numberIsBool(value);
-            }
-            return NO;
-        case RLMPropertyTypeDate:
-            return [value isKindOfClass:[NSDate class]];
-        case RLMPropertyTypeInt:
-            if (NSNumber *number = RLMDynamicCast<NSNumber>(value)) {
-                return numberIsInteger(number);
-            }
-            return NO;
-        case RLMPropertyTypeFloat:
-            if (NSNumber *number = RLMDynamicCast<NSNumber>(value)) {
-                return numberIsFloat(number);
-            }
-            return NO;
-        case RLMPropertyTypeDouble:
-            if (NSNumber *number = RLMDynamicCast<NSNumber>(value)) {
-                return numberIsDouble(number);
-            }
-            return NO;
-        case RLMPropertyTypeData:
-            return [value isKindOfClass:[NSData class]];
-        case RLMPropertyTypeAny:
-            return NO;
-        case RLMPropertyTypeLinkingObjects:
-            return YES;
-        case RLMPropertyTypeObject: {
-            // only NSNull, nil, or objects which derive from RLMObject and match the given
-            // object class are valid
-            RLMObjectBase *objBase = RLMDynamicCast<RLMObjectBase>(value);
-            return objBase && [objBase->_objectSchema.className isEqualToString:objectClassName];
+    case RLMPropertyTypeString:
+        return [value isKindOfClass:[NSString class]];
+    case RLMPropertyTypeBool:
+        if ([value isKindOfClass:[NSNumber class]]) {
+            return numberIsBool(value);
         }
+        return NO;
+    case RLMPropertyTypeDate:
+        return [value isKindOfClass:[NSDate class]];
+    case RLMPropertyTypeInt:
+        if (NSNumber *number = RLMDynamicCast<NSNumber>(value)) {
+            return numberIsInteger(number);
+        }
+        return NO;
+    case RLMPropertyTypeFloat:
+        if (NSNumber *number = RLMDynamicCast<NSNumber>(value)) {
+            return numberIsFloat(number);
+        }
+        return NO;
+    case RLMPropertyTypeDouble:
+        if (NSNumber *number = RLMDynamicCast<NSNumber>(value)) {
+            return numberIsDouble(number);
+        }
+        return NO;
+    case RLMPropertyTypeData:
+        return [value isKindOfClass:[NSData class]];
+    case RLMPropertyTypeAny:
+        return NO;
+    case RLMPropertyTypeLinkingObjects:
+        return YES;
+    case RLMPropertyTypeObject: {
+        // only NSNull, nil, or objects which derive from RLMObject and match the given
+        // object class are valid
+        RLMObjectBase *objBase = RLMDynamicCast<RLMObjectBase>(value);
+        return objBase && [objBase->_objectSchema.className isEqualToString:objectClassName];
+    }
     }
     @throw RLMException(@"Invalid RLMPropertyType specified");
 }
@@ -283,21 +283,24 @@ NSDictionary *RLMDefaultValuesForObjectSchema(__unsafe_unretained RLMObjectSchem
 }
 
 static NSException *RLMException(NSString *reason, NSDictionary *additionalUserInfo) {
-    NSMutableDictionary *userInfo = @{RLMRealmVersionKey: REALM_COCOA_VERSION,
-                                      RLMRealmCoreVersionKey: @REALM_VERSION}.mutableCopy;
+    NSMutableDictionary *userInfo = @ {RLMRealmVersionKey:
+                                       REALM_COCOA_VERSION,
+                                       RLMRealmCoreVersionKey:
+                                       @REALM_VERSION
+                                      }.mutableCopy;
     if (additionalUserInfo != nil) {
         [userInfo addEntriesFromDictionary:additionalUserInfo];
     }
     NSException *e = [NSException exceptionWithName:RLMExceptionName
-                                             reason:reason
-                                           userInfo:userInfo];
+                                  reason:reason
+                                  userInfo:userInfo];
     return e;
 }
 
 NSException *RLMException(NSString *fmt, ...) {
     va_list args;
     va_start(args, fmt);
-    NSException *e = RLMException([[NSString alloc] initWithFormat:fmt arguments:args], @{});
+    NSException *e = RLMException([[NSString alloc] initWithFormat:fmt arguments:args], @ {});
     va_end(args);
     return e;
 }
@@ -308,27 +311,30 @@ NSException *RLMException(std::exception const& exception) {
 
 NSError *RLMMakeError(RLMError code, std::exception const& exception) {
     return [NSError errorWithDomain:RLMErrorDomain
-                               code:code
-                           userInfo:@{NSLocalizedDescriptionKey: @(exception.what()),
-                                      @"Error Code": @(code)}];
+                    code:code
+                    userInfo:@ {NSLocalizedDescriptionKey: @(exception.what()),
+                        @"Error Code": @(code)
+                       }];
 }
 
 NSError *RLMMakeError(RLMError code, const realm::util::File::AccessError& exception) {
     return [NSError errorWithDomain:RLMErrorDomain
-                               code:code
-                           userInfo:@{NSLocalizedDescriptionKey: @(exception.what()),
-                                      NSFilePathErrorKey: @(exception.get_path().c_str()),
-                                      @"Error Code": @(code)}];
+                    code:code
+                    userInfo:@ {NSLocalizedDescriptionKey: @(exception.what()),
+                        NSFilePathErrorKey: @(exception.get_path().c_str()),
+                        @"Error Code": @(code)
+                       }];
 }
 
 NSError *RLMMakeError(RLMError code, const realm::RealmFileException& exception) {
     NSString *underlying = @(exception.underlying().c_str());
     return [NSError errorWithDomain:RLMErrorDomain
-                               code:code
-                           userInfo:@{NSLocalizedDescriptionKey: @(exception.what()),
-                                      NSFilePathErrorKey: @(exception.path().c_str()),
-                                      @"Error Code": @(code),
-                                      @"Underlying": underlying.length == 0 ? @"n/a" : underlying}];
+                    code:code
+                    userInfo:@ {NSLocalizedDescriptionKey: @(exception.what()),
+                        NSFilePathErrorKey: @(exception.path().c_str()),
+                        @"Error Code": @(code),
+                        @"Underlying": underlying.length == 0 ? @"n/a" : underlying
+                       }];
 }
 
 NSError *RLMMakeError(std::system_error const& exception) {
@@ -349,9 +355,10 @@ NSError *RLMMakeError(std::system_error const& exception) {
 #endif
 
     return [NSError errorWithDomain:errorDomain code:code
-                           userInfo:@{NSLocalizedDescriptionKey: @(exception.what()),
-                                      @"Error Code": @(exception.code().value()),
-                                      @"Category": category}];
+                    userInfo:@ {NSLocalizedDescriptionKey: @(exception.what()),
+                        @"Error Code": @(exception.code().value()),
+                        @"Category": category
+                       }];
 }
 
 void RLMSetErrorOrThrow(NSError *error, NSError **outError) {
@@ -363,7 +370,7 @@ void RLMSetErrorOrThrow(NSError *error, NSError **outError) {
         if (error.userInfo[NSFilePathErrorKey]) {
             msg = [NSString stringWithFormat:@"%@: %@", error.userInfo[NSFilePathErrorKey], error.localizedDescription];
         }
-        @throw RLMException(msg, @{NSUnderlyingErrorKey: error});
+        @throw RLMException(msg, @ {NSUnderlyingErrorKey: error});
     }
 }
 
@@ -392,24 +399,24 @@ BOOL RLMIsRunningInPlayground() {
 
 id RLMMixedToObjc(realm::Mixed const& mixed) {
     switch (mixed.get_type()) {
-        case realm::type_String:
-            return RLMStringDataToNSString(mixed.get_string());
-        case realm::type_Int:
-            return @(mixed.get_int());
-        case realm::type_Float:
-            return @(mixed.get_float());
-        case realm::type_Double:
-            return @(mixed.get_double());
-        case realm::type_Bool:
-            return @(mixed.get_bool());
-        case realm::type_Timestamp:
-            return RLMTimestampToNSDate(mixed.get_timestamp());
-        case realm::type_Binary:
-            return RLMBinaryDataToNSData(mixed.get_binary());
-        case realm::type_Link:
-        case realm::type_LinkList:
-        default:
-            @throw RLMException(@"Invalid data type for RLMPropertyTypeAny property.");
+    case realm::type_String:
+        return RLMStringDataToNSString(mixed.get_string());
+    case realm::type_Int:
+        return @(mixed.get_int());
+    case realm::type_Float:
+        return @(mixed.get_float());
+    case realm::type_Double:
+        return @(mixed.get_double());
+    case realm::type_Bool:
+        return @(mixed.get_bool());
+    case realm::type_Timestamp:
+        return RLMTimestampToNSDate(mixed.get_timestamp());
+    case realm::type_Binary:
+        return RLMBinaryDataToNSData(mixed.get_binary());
+    case realm::type_Link:
+    case realm::type_LinkList:
+    default:
+        @throw RLMException(@"Invalid data type for RLMPropertyTypeAny property.");
     }
 }
 
@@ -439,9 +446,9 @@ NSString *RLMDefaultDirectoryForBundleIdentifier(NSString *bundleIdentifier) {
 
         // create directory
         [[NSFileManager defaultManager] createDirectoryAtPath:path
-                                  withIntermediateDirectories:YES
-                                                   attributes:nil
-                                                        error:nil];
+                                        withIntermediateDirectories:YES
+                                        attributes:nil
+                                        error:nil];
     }
     return path;
 #endif

@@ -65,7 +65,9 @@ RLM_ARRAY_TYPE(Group)
     // will continue to work
     if (self.entry == nil) {
         RAC(self.textLabel, text) = RACObserve(self, entry.title);
-        RAC(self.detailTextLabel, text) = [RACObserve(self, entry.date) map:^(NSDate *date) { return date.description; }];
+        RAC(self.detailTextLabel, text) = [RACObserve(self, entry.date) map:^(NSDate *date) {
+                             return date.description;
+                         }];
     }
     self.entry = entry;
 }
@@ -90,9 +92,9 @@ RLM_ARRAY_TYPE(Group)
     if (!self.parent) {
         self.parent = [GroupParent new];
         RLMRealm *realm = RLMRealm.defaultRealm;
-        [realm transactionWithBlock:^{
-            [realm addObject:self.parent];
-        }];
+        [realm transactionWithBlock:^ {
+                  [realm addObject:self.parent];
+              }];
     }
 
     [self setupUI];
@@ -106,55 +108,55 @@ RLM_ARRAY_TYPE(Group)
     self.title = @"ReactiveCocoa GroupedTableView";
 
     RACCommand *addGroup = [[RACCommand alloc] initWithSignalBlock:^(id unused) {
-        [self modifyInBackground:^(RLMArray *groups) {
-            NSString *name = [NSString stringWithFormat:@"Group %d", (int)arc4random()];
+                           [self modifyInBackground:^(RLMArray *groups) {
+                               NSString *name = [NSString stringWithFormat:@"Group %d", (int)arc4random()];
             [groups addObject:[Group createInDefaultRealmWithValue:@[name, @[]]]];
         }];
         return [RACSignal empty];
     }];
 
     RACCommand *addEntry = [[RACCommand alloc]
-                            initWithEnabled:[RACObserve(self.parent, groups) map:^(RLMArray *groups) {
-                                                return @(groups.count > 0);
-                                             }]
-                            signalBlock:^(id unused) {
-                                [self modifyInBackground:^(RLMArray *groups) {
-                                    Group *group = groups[arc4random_uniform((uint32_t)groups.count)];
-                                    NSString *name = [NSString stringWithFormat:@"Entry %d", (int)arc4random()];
-                                    [group.entries addObject:[Entry createInDefaultRealmWithValue:@[name, NSDate.date]]];
-                                }];
-                                return [RACSignal empty];
-                            }];
+    initWithEnabled:[RACObserve(self.parent, groups) map:^(RLMArray *groups) {
+        return @(groups.count > 0);
+    }]
+    signalBlock:^(id unused) {
+        [self modifyInBackground:^(RLMArray *groups) {
+                 Group *group = groups[arc4random_uniform((uint32_t)groups.count)];
+            NSString *name = [NSString stringWithFormat:@"Entry %d", (int)arc4random()];
+            [group.entries addObject:[Entry createInDefaultRealmWithValue:@[name, NSDate.date]]];
+        }];
+        return [RACSignal empty];
+    }];
 
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Add Group"
-                                                                             style:UIBarButtonItemStylePlain
-                                                                            target:nil action:nil];
+                                                                    style:UIBarButtonItemStylePlain
+                                                                    target:nil action:nil];
     self.navigationItem.leftBarButtonItem.rac_command = addGroup;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-                                                                                           target:nil action:nil];
+                                    target:nil action:nil];
     self.navigationItem.rightBarButtonItem.rac_command = addEntry;
 
     // Subscribe to changes to the list of groups, telling the TableView to
     // insert new sections when new groups are added to the list
     @weakify(self);
     [[self.parent rac_valuesAndChangesForKeyPath:@"groups" options:0 observer:self]
-     subscribeNext:^(RACTuple *info) { // tuple is value, change dictionary
-         @strongify(self);
-         NSDictionary *change = info.second;
-         NSKeyValueChange kind = [change[NSKeyValueChangeKindKey] intValue];
-         NSIndexSet *indexes = change[NSKeyValueChangeIndexesKey];
-         if (indexes && kind == NSKeyValueChangeInsertion) {
-             [self.tableView insertSections:indexes withRowAnimation:UITableViewRowAnimationAutomatic];
-             [self bindGroup:self.parent.groups.lastObject];
-         }
-         else {
-             [self.tableView reloadData];
-         }
-     }];
+    subscribeNext:^(RACTuple *info) { // tuple is value, change dictionary
+        @strongify(self);
+        NSDictionary *change = info.second;
+        NSKeyValueChange kind = [change[NSKeyValueChangeKindKey] intValue];
+        NSIndexSet *indexes = change[NSKeyValueChangeIndexesKey];
+        if (indexes && kind == NSKeyValueChangeInsertion) {
+            [self.tableView insertSections:indexes withRowAnimation:UITableViewRowAnimationAutomatic];
+            [self bindGroup:self.parent.groups.lastObject];
+        }
+        else {
+            [self.tableView reloadData];
+        }
+    }];
 
-     for (Group *group in self.parent.groups) {
-         [self bindGroup:group];
-     }
+    for (Group *group in self.parent.groups) {
+        [self bindGroup:group];
+    }
 }
 
 #pragma mark - UITableViewDataSource
@@ -190,9 +192,9 @@ RLM_ARRAY_TYPE(Group)
     // Update the date of any row selected in the UI. The display of the date
     // in the UI is automatically updated by the binding estabished in Cell.attach
     RLMRealm *realm = RLMRealm.defaultRealm;
-    [realm transactionWithBlock:^{
-        [self objectForIndexPath:indexPath].date = NSDate.date;
-    }];
+    [realm transactionWithBlock:^ {
+              [self objectForIndexPath:indexPath].date = NSDate.date;
+          }];
 }
 
 #pragma - Helpers
@@ -214,7 +216,7 @@ RLM_ARRAY_TYPE(Group)
 }
 
 - (void)modifyInBackground:(void (^)(RLMArray *))block {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
         @autoreleasepool {
             GroupParent *parent = GroupParent.allObjects.firstObject;
             [parent.realm beginWriteTransaction];
@@ -229,28 +231,28 @@ RLM_ARRAY_TYPE(Group)
 - (void)bindGroup:(Group *)group {
     @weakify(self);
     [[group rac_valuesAndChangesForKeyPath:@"entries" options:0 observer:self]
-     subscribeNext:^(RACTuple *info) { // tuple is value, change dictionary
-         @strongify(self);
-         NSDictionary *change = info.second;
-         NSKeyValueChange kind = [change[NSKeyValueChangeKindKey] intValue];
-         NSIndexSet *indexes = change[NSKeyValueChangeIndexesKey];
+    subscribeNext:^(RACTuple *info) { // tuple is value, change dictionary
+        @strongify(self);
+        NSDictionary *change = info.second;
+        NSKeyValueChange kind = [change[NSKeyValueChangeKindKey] intValue];
+        NSIndexSet *indexes = change[NSKeyValueChangeIndexesKey];
 
-         if (indexes) {
-             NSInteger section = [self.parent.groups indexOfObject:group];
-             NSArray *paths = [self indexSetToIndexPathArray:indexes section:section];
-             if (kind == NSKeyValueChangeInsertion) {
-                 [self.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationAutomatic];
-             }
-             else if (kind == NSKeyValueChangeRemoval) {
-                 [self.tableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationAutomatic];
-             }
-             else {
-                 [self.tableView reloadData];
-             }
-         }
-         else {
-             [self.tableView reloadData];
-         }
-     }];
+        if (indexes) {
+            NSInteger section = [self.parent.groups indexOfObject:group];
+            NSArray *paths = [self indexSetToIndexPathArray:indexes section:section];
+            if (kind == NSKeyValueChangeInsertion) {
+                [self.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationAutomatic];
+            }
+            else if (kind == NSKeyValueChangeRemoval) {
+                [self.tableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationAutomatic];
+            }
+            else {
+                [self.tableView reloadData];
+            }
+        }
+        else {
+            [self.tableView reloadData];
+        }
+    }];
 }
 @end

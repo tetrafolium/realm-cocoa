@@ -59,17 +59,19 @@ void RLMValidateSwiftPropertyName(NSString *name) {
 
     // Note that "init" is deliberately not in this list because Swift does not
     // infer family membership for it.
-    for (auto family : {"alloc", "new", "copy", "mutableCopy"}) {
+    for (auto family : {
+                "alloc", "new", "copy", "mutableCopy"
+            }) {
         auto familySize = strlen(family);
         if (nameSize < familySize || !std::equal(str, str + familySize, family)) {
             continue;
         }
         if (familySize == nameSize || !islower(str[familySize])) {
             @throw RLMException(@"Property names beginning with '%s' are not "
-                                 "supported. Swift follows ARC's ownership "
-                                 "rules for methods based on their name, which "
-                                 "results in memory leaks when accessing "
-                                 "properties which return retained values via KVC.",
+                                "supported. Swift follows ARC's ownership "
+                                "rules for methods based on their name, which "
+                                "results in memory leaks when accessing "
+                                "properties which return retained values via KVC.",
                                 family);
         }
         return;
@@ -84,11 +86,11 @@ static bool rawTypeShouldBeTreatedAsComputedProperty(NSString *rawType) {
 
 + (instancetype)propertyForObjectStoreProperty:(const realm::Property &)prop {
     auto ret = [[RLMProperty alloc] initWithName:@(prop.name.c_str())
-                                            type:static_cast<RLMPropertyType>(prop.type & ~realm::PropertyType::Flags)
-                                 objectClassName:prop.object_type.length() ? @(prop.object_type.c_str()) : nil
-                          linkOriginPropertyName:prop.link_origin_property_name.length() ? @(prop.link_origin_property_name.c_str()) : nil
-                                         indexed:prop.is_indexed
-                                        optional:is_nullable(prop.type)];
+                                    type:static_cast<RLMPropertyType>(prop.type & ~realm::PropertyType::Flags)
+                                    objectClassName:prop.object_type.length() ? @(prop.object_type.c_str()) : nil
+                                    linkOriginPropertyName:prop.link_origin_property_name.length() ? @(prop.link_origin_property_name.c_str()) : nil
+                                    indexed:prop.is_indexed
+                                    optional:is_nullable(prop.type)];
     if (is_array(prop.type)) {
         ret->_array = true;
     }
@@ -100,11 +102,11 @@ static bool rawTypeShouldBeTreatedAsComputedProperty(NSString *rawType) {
 }
 
 - (instancetype)initWithName:(NSString *)name
-                        type:(RLMPropertyType)type
-             objectClassName:(NSString *)objectClassName
-      linkOriginPropertyName:(NSString *)linkOriginPropertyName
-                     indexed:(BOOL)indexed
-                    optional:(BOOL)optional {
+    type:(RLMPropertyType)type
+    objectClassName:(NSString *)objectClassName
+    linkOriginPropertyName:(NSString *)linkOriginPropertyName
+    indexed:(BOOL)indexed
+    optional:(BOOL)optional {
     self = [super init];
     if (self) {
         _name = name;
@@ -175,26 +177,26 @@ static realm::util::Optional<RLMPropertyType> typeFromProtocolString(const char 
 - (BOOL)setTypeFromRawType:(NSString *)rawType {
     const char *code = rawType.UTF8String;
     switch (*code) {
-        case 's':   // short
-        case 'i':   // int
-        case 'l':   // long
-        case 'q':   // long long
-            _type = RLMPropertyTypeInt;
-            return YES;
-        case 'f':
-            _type = RLMPropertyTypeFloat;
-            return YES;
-        case 'd':
-            _type = RLMPropertyTypeDouble;
-            return YES;
-        case 'c':   // BOOL is stored as char - since rlm has no char type this is ok
-        case 'B':
-            _type = RLMPropertyTypeBool;
-            return YES;
-        case '@':
-            break;
-        default:
-            return NO;
+    case 's':   // short
+    case 'i':   // int
+    case 'l':   // long
+    case 'q':   // long long
+        _type = RLMPropertyTypeInt;
+        return YES;
+    case 'f':
+        _type = RLMPropertyTypeFloat;
+        return YES;
+    case 'd':
+        _type = RLMPropertyTypeDouble;
+        return YES;
+    case 'c':   // BOOL is stored as char - since rlm has no char type this is ok
+    case 'B':
+        _type = RLMPropertyTypeBool;
+        return YES;
+    case '@':
+        break;
+    default:
+        return NO;
     }
 
     _optional = true;
@@ -225,8 +227,8 @@ static realm::util::Optional<RLMPropertyType> typeFromProtocolString(const char 
 
         // get object class from type string - @"RLMArray<objectClassName>"
         _objectClassName = [[NSString alloc] initWithBytes:code + arrayPrefixLen
-                                                    length:strlen(code + arrayPrefixLen) - 2 // drop trailing >"
-                                                  encoding:NSUTF8StringEncoding];
+                                             length:strlen(code + arrayPrefixLen) - 2 // drop trailing >"
+                                             encoding:NSUTF8StringEncoding];
 
         if ([RLMSchema classForString:_objectClassName]) {
             _optional = false;
@@ -262,8 +264,8 @@ static realm::util::Optional<RLMPropertyType> typeFromProtocolString(const char 
         // the class from the dictionary returned by +linkingObjectsProperties.
         if (code[linkingObjectsPrefixLen] == '<') {
             NSString *classNameFromProtocol = [[NSString alloc] initWithBytes:code + linkingObjectsPrefixLen + 1
-                                                                       length:strlen(code + linkingObjectsPrefixLen) - 3 // drop trailing >"
-                                                                     encoding:NSUTF8StringEncoding];
+                                                                length:strlen(code + linkingObjectsPrefixLen) - 3 // drop trailing >"
+                                                                encoding:NSUTF8StringEncoding];
             if (![_objectClassName isEqualToString:classNameFromProtocol]) {
                 @throw RLMException(@"Property '%@' was declared with type RLMLinkingObjects<%@>, but a conflicting "
                                     "class name of '%@' was returned by +linkingObjectsProperties.", _name,
@@ -303,61 +305,61 @@ static realm::util::Optional<RLMPropertyType> typeFromProtocolString(const char 
 }
 
 - (void)parseObjcProperty:(objc_property_t)property
-                 readOnly:(bool *)readOnly
-                 computed:(bool *)computed
-                  rawType:(NSString **)rawType {
+    readOnly:(bool *)readOnly
+    computed:(bool *)computed
+    rawType:(NSString **)rawType {
     unsigned int count;
     objc_property_attribute_t *attrs = property_copyAttributeList(property, &count);
 
     *computed = true;
     for (size_t i = 0; i < count; ++i) {
         switch (*attrs[i].name) {
-            case 'T':
-                *rawType = @(attrs[i].value);
-                break;
-            case 'R':
-                *readOnly = true;
-                break;
-            case 'G':
-                _getterName = @(attrs[i].value);
-                break;
-            case 'S':
-                _setterName = @(attrs[i].value);
-                break;
-            case 'V': // backing ivar name
-                *computed = false;
-                break;
+        case 'T':
+            *rawType = @(attrs[i].value);
+            break;
+        case 'R':
+            *readOnly = true;
+            break;
+        case 'G':
+            _getterName = @(attrs[i].value);
+            break;
+        case 'S':
+            _setterName = @(attrs[i].value);
+            break;
+        case 'V': // backing ivar name
+            *computed = false;
+            break;
 
-            case '&':
-                // retain/assign
-                break;
-            case 'C':
-                // copy
-                break;
-            case 'D':
-                // dynamic
-                break;
-            case 'N':
-                // nonatomic
-                break;
-            case 'P':
-                // GC'able
-                break;
-            case 'W':
-                // weak
-                break;
-            default:
-                break;
+        case '&':
+            // retain/assign
+            break;
+        case 'C':
+            // copy
+            break;
+        case 'D':
+            // dynamic
+            break;
+        case 'N':
+            // nonatomic
+            break;
+        case 'P':
+            // GC'able
+            break;
+        case 'W':
+            // weak
+            break;
+        default:
+            break;
         }
     }
     free(attrs);
 }
 
 - (instancetype)initSwiftPropertyWithName:(NSString *)name
-                                  indexed:(BOOL)indexed
-                   linkPropertyDescriptor:(RLMPropertyDescriptor *)linkPropertyDescriptor
-                                 property:(objc_property_t)property
-                                 instance:(RLMObject *)obj {
+    indexed:(BOOL)indexed
+    linkPropertyDescriptor:(RLMPropertyDescriptor *)linkPropertyDescriptor
+    property:(objc_property_t)property
+    instance:(RLMObject *)obj {
     self = [super init];
     if (!self) {
         return nil;
@@ -440,20 +442,23 @@ static realm::util::Optional<RLMPropertyType> typeFromProtocolString(const char 
         }
         _optional = true;
         switch (*numberType) {
-            case 'i': case 'l': case 'q':
-                _type = RLMPropertyTypeInt;
-                break;
-            case 'f':
-                _type = RLMPropertyTypeFloat;
-                break;
-            case 'd':
-                _type = RLMPropertyTypeDouble;
-                break;
-            case 'B': case 'c':
-                _type = RLMPropertyTypeBool;
-                break;
-            default:
-                @throw RLMException(@"Can't persist NSNumber of type '%s': only integers, floats, doubles, and bools are currently supported.", numberType);
+        case 'i':
+        case 'l':
+        case 'q':
+            _type = RLMPropertyTypeInt;
+            break;
+        case 'f':
+            _type = RLMPropertyTypeFloat;
+            break;
+        case 'd':
+            _type = RLMPropertyTypeDouble;
+            break;
+        case 'B':
+        case 'c':
+            _type = RLMPropertyTypeBool;
+            break;
+        default:
+            @throw RLMException(@"Can't persist NSNumber of type '%s': only integers, floats, doubles, and bools are currently supported.", numberType);
         }
     }
     else if (![self setTypeFromRawType:rawType]) {
@@ -477,9 +482,9 @@ static realm::util::Optional<RLMPropertyType> typeFromProtocolString(const char 
 }
 
 - (instancetype)initWithName:(NSString *)name
-                     indexed:(BOOL)indexed
-      linkPropertyDescriptor:(RLMPropertyDescriptor *)linkPropertyDescriptor
-                    property:(objc_property_t)property
+    indexed:(BOOL)indexed
+    linkPropertyDescriptor:(RLMPropertyDescriptor *)linkPropertyDescriptor
+    property:(objc_property_t)property
 {
     self = [super init];
     if (!self) {
@@ -505,7 +510,7 @@ static realm::util::Optional<RLMPropertyType> typeFromProtocolString(const char 
 
     if (![self setTypeFromRawType:rawType]) {
         @throw RLMException(@"Can't persist property '%@' with incompatible type. "
-                             "Add to ignoredPropertyNames: method to ignore.", self.name);
+                            "Add to ignoredPropertyNames: method to ignore.", self.name);
     }
 
     if (!isReadOnly && shouldBeTreatedAsComputedProperty) {
@@ -554,32 +559,32 @@ static realm::util::Optional<RLMPropertyType> typeFromProtocolString(const char 
 
 - (BOOL)isEqualToProperty:(RLMProperty *)property {
     return _type == property->_type
-        && _indexed == property->_indexed
-        && _isPrimary == property->_isPrimary
-        && _optional == property->_optional
-        && [_name isEqualToString:property->_name]
-        && (_objectClassName == property->_objectClassName  || [_objectClassName isEqualToString:property->_objectClassName])
-        && (_linkOriginPropertyName == property->_linkOriginPropertyName ||
-            [_linkOriginPropertyName isEqualToString:property->_linkOriginPropertyName]);
+           && _indexed == property->_indexed
+           && _isPrimary == property->_isPrimary
+           && _optional == property->_optional
+           && [_name isEqualToString:property->_name]
+           && (_objectClassName == property->_objectClassName  || [_objectClassName isEqualToString:property->_objectClassName])
+           && (_linkOriginPropertyName == property->_linkOriginPropertyName ||
+               [_linkOriginPropertyName isEqualToString:property->_linkOriginPropertyName]);
 }
 
 - (NSString *)description {
     return [NSString stringWithFormat:
-            @"%@ {\n"
-             "\ttype = %@;\n"
-             "\tobjectClassName = %@;\n"
-             "\tlinkOriginPropertyName = %@;\n"
-             "\tindexed = %@;\n"
-             "\tisPrimary = %@;\n"
-             "\tarray = %@;\n"
-             "\toptional = %@;\n"
-             "}",
-            self.name, RLMTypeToString(self.type), self.objectClassName,
-            self.linkOriginPropertyName,
-            self.indexed ? @"YES" : @"NO",
-            self.isPrimary ? @"YES" : @"NO",
-            self.array ? @"YES" : @"NO",
-            self.optional ? @"YES" : @"NO"];
+                     @"%@ {\n"
+                     "\ttype = %@;\n"
+                     "\tobjectClassName = %@;\n"
+                     "\tlinkOriginPropertyName = %@;\n"
+                     "\tindexed = %@;\n"
+                     "\tisPrimary = %@;\n"
+                     "\tarray = %@;\n"
+                     "\toptional = %@;\n"
+                     "}",
+                     self.name, RLMTypeToString(self.type), self.objectClassName,
+                     self.linkOriginPropertyName,
+                     self.indexed ? @"YES" : @"NO",
+                     self.isPrimary ? @"YES" : @"NO",
+                     self.array ? @"YES" : @"NO",
+                     self.optional ? @"YES" : @"NO"];
 }
 
 - (NSString *)columnName {

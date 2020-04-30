@@ -39,7 +39,7 @@ RLM_ARRAY_TYPE(Dog)
 + (NSDictionary *)linkingObjectsProperties
 {
     // Define "owners" as the inverse relationship to Person.dogs
-    return @{ @"owners": [RLMPropertyDescriptor descriptorWithClass:Person.class propertyName:@"dogs"] };
+    return @ { @"owners": [RLMPropertyDescriptor descriptorWithClass:Person.class propertyName:@"dogs"] };
 }
 @end
 
@@ -54,8 +54,8 @@ RLM_ARRAY_TYPE(Dog)
     [[NSFileManager defaultManager] removeItemAtURL:[RLMRealmConfiguration defaultConfiguration].fileURL error:nil];
 
     RLMRealm *realm = [RLMRealm defaultRealm];
-    [realm transactionWithBlock:^{
-        [Person createInRealm:realm withValue:@[@"John", @[@[@"Fido", @1]]]];
+    [realm transactionWithBlock:^ {
+              [Person createInRealm:realm withValue:@[@"John", @[@[@"Fido", @1]]]];
         [Person createInRealm:realm withValue:@[@"Mary", @[@[@"Rex", @2]]]];
     }];
 

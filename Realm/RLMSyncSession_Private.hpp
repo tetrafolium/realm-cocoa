@@ -31,7 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface RLMSyncSession () {
 @public     // So it's visible to tests
     std::weak_ptr<realm::SyncSession> _session;
-} RLM_SYNC_UNINITIALIZABLE
+}
+RLM_SYNC_UNINITIALIZABLE
 
 - (instancetype)initWithSyncSession:(std::shared_ptr<realm::SyncSession> const&)session;
 

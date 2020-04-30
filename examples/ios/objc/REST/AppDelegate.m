@@ -54,12 +54,12 @@ NSString *clientSecret = @"YOUR CLIENT SECRET";
     // but you could use anything that will allow you to call the API and serialize
     // the response as an NSDictionary or NSArray
     NSData *apiResponse = [[NSData alloc] initWithContentsOfURL:
-                           [NSURL URLWithString:[NSString stringWithFormat:@"https://api.foursquare.com/v2/venues/search?near=San%@Francisco&client_id=%@&client_secret=%@&v=20140101&limit=50", @"%20", clientID, clientSecret]]];
+                                          [NSURL URLWithString:[NSString stringWithFormat:@"https://api.foursquare.com/v2/venues/search?near=San%@Francisco&client_id=%@&client_secret=%@&v=20140101&limit=50", @"%20", clientID, clientSecret]]];
 
     // Serialize the NSData object from the response into an NSDictionary
     NSDictionary *serializedResponse = [[NSJSONSerialization JSONObjectWithData:apiResponse
-                                                                        options:kNilOptions
-                                                                          error:nil]
+                                         options:kNilOptions
+                                         error:nil]
                                         objectForKey:@"response"];
 
     // Extract the venues from the response as an NSDictionary
@@ -68,7 +68,7 @@ NSString *clientSecret = @"YOUR CLIENT SECRET";
 
 - (void)persistToDefaultRealm:(NSDictionary*)foursquareVenues
 {
-   // Open the default Realm file
+    // Open the default Realm file
     RLMRealm *defaultRealm = [RLMRealm defaultRealm];
 
     // Begin a write transaction to save to the default Realm

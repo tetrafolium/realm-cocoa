@@ -46,8 +46,8 @@ static const NSUInteger count = 1000;
         RLMRealm *realm = self.realmWithTestPath;
         NSString *uuid = [[NSUUID UUID] UUIDString];
         [realm transactionWithBlock:^{
-            [StringObject createInRealm:realm withValue:@[@"A"]];
-            for (NSUInteger i = 0; i < count; ++i) {
+                  [StringObject createInRealm:realm withValue:@[@"A"]];
+                  for (NSUInteger i = 0; i < count; ++i) {
                 [StringObject createInRealm:realm withValue:@[uuid]];
             }
             [StringObject createInRealm:realm withValue:@[@"B"]];
@@ -78,7 +78,7 @@ static const NSUInteger count = 1000;
     // Configure the Realm to compact on launch
     RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
     configuration.fileURL = RLMTestRealmURL();
-    configuration.shouldCompactOnLaunch = ^BOOL(NSUInteger totalBytes, NSUInteger usedBytes){
+    configuration.shouldCompactOnLaunch = ^BOOL(NSUInteger totalBytes, NSUInteger usedBytes) {
         // Confirm expected sizes
         XCTAssertEqual(totalBytes, _expectedTotalBytesBefore);
         XCTAssertTrue((usedBytes < totalBytes) && (usedBytes > expectedUsedBytesBeforeMin));
@@ -125,7 +125,7 @@ static const NSUInteger count = 1000;
     // Configure the Realm to compact on launch
     RLMRealmConfiguration *configurationWithCompactBlock = [configuration copy];
     __block BOOL compactBlockInvoked = NO;
-    configurationWithCompactBlock.shouldCompactOnLaunch = ^BOOL(__unused NSUInteger totalBytes, __unused NSUInteger usedBytes){
+    configurationWithCompactBlock.shouldCompactOnLaunch = ^BOOL(__unused NSUInteger totalBytes, __unused NSUInteger usedBytes) {
         compactBlockInvoked = YES;
         // Always attempt to compact
         return YES;
@@ -153,9 +153,9 @@ static const NSUInteger count = 1000;
     dispatch_semaphore_t bgRealmClosedSema = dispatch_semaphore_create(0);
 
     XCTestExpectation *realmOpenedExpectation = [self expectationWithDescription:@"Realm was opened on background thread"];
-    [self dispatchAsync:^{
-        @autoreleasepool {
-            __unused RLMRealm *firstRealm = [RLMRealm realmWithConfiguration:configuration error:nil];
+    [self dispatchAsync:^ {
+             @autoreleasepool {
+                 __unused RLMRealm *firstRealm = [RLMRealm realmWithConfiguration:configuration error:nil];
             [realmOpenedExpectation fulfill];
             dispatch_semaphore_wait(failedCompactTestCompleteSema, DISPATCH_TIME_FOREVER);
         }
@@ -168,7 +168,7 @@ static const NSUInteger count = 1000;
         RLMRealmConfiguration *configurationWithCompactBlock = [configuration copy];
         __block BOOL compactBlockInvoked = NO;
 
-        configurationWithCompactBlock.shouldCompactOnLaunch = ^BOOL(__unused NSUInteger totalBytes, __unused NSUInteger usedBytes){
+        configurationWithCompactBlock.shouldCompactOnLaunch = ^BOOL(__unused NSUInteger totalBytes, __unused NSUInteger usedBytes) {
             compactBlockInvoked = YES;
             // Always attempt to compact
             return YES;
@@ -188,7 +188,7 @@ static const NSUInteger count = 1000;
     RLMRealmConfiguration *configurationWithCompactBlock = [configuration copy];
     __block BOOL compactBlockInvoked = NO;
 
-    configurationWithCompactBlock.shouldCompactOnLaunch = ^BOOL(NSUInteger totalBytes, NSUInteger usedBytes){
+    configurationWithCompactBlock.shouldCompactOnLaunch = ^BOOL(NSUInteger totalBytes, NSUInteger usedBytes) {
         // Confirm expected sizes
         XCTAssertEqual(totalBytes, _expectedTotalBytesBefore);
         XCTAssertTrue((usedBytes < totalBytes) && (usedBytes > expectedUsedBytesBeforeMin));
@@ -217,7 +217,7 @@ static const NSUInteger count = 1000;
     // Configure the Realm to compact on launch
     RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
     configuration.fileURL = RLMTestRealmURL();
-    configuration.shouldCompactOnLaunch = ^BOOL(NSUInteger totalBytes, NSUInteger usedBytes){
+    configuration.shouldCompactOnLaunch = ^BOOL(NSUInteger totalBytes, NSUInteger usedBytes) {
         // Confirm expected sizes
         XCTAssertEqual(totalBytes, _expectedTotalBytesBefore);
         XCTAssertTrue((usedBytes < totalBytes) && (usedBytes > expectedUsedBytesBeforeMin));
@@ -241,7 +241,7 @@ static const NSUInteger count = 1000;
     RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
     configuration.readOnly = YES;
 
-    BOOL (^compactBlock)(NSUInteger, NSUInteger) = ^BOOL(__unused NSUInteger totalBytes, __unused NSUInteger usedBytes){
+    BOOL (^compactBlock)(NSUInteger, NSUInteger) = ^BOOL(__unused NSUInteger totalBytes, __unused NSUInteger usedBytes) {
         return NO;
     };
     RLMAssertThrowsWithReasonMatching(configuration.shouldCompactOnLaunch = compactBlock,
@@ -256,15 +256,15 @@ static const NSUInteger count = 1000;
 - (void)testAccessDeniedOnTemporaryFile {
     RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
     configuration.fileURL = RLMTestRealmURL();
-    configuration.shouldCompactOnLaunch = ^(__unused NSUInteger totalBytes, __unused NSUInteger usedBytes){
+    configuration.shouldCompactOnLaunch = ^(__unused NSUInteger totalBytes, __unused NSUInteger usedBytes) {
         return YES;
     };
     NSURL *tmpURL = [configuration.fileURL URLByAppendingPathExtension:@"tmp_compaction_space"];
     [NSData.data writeToURL:tmpURL atomically:NO];
-    [NSFileManager.defaultManager setAttributes:@{NSFileImmutable: @YES} ofItemAtPath:tmpURL.path error:nil];
+    [NSFileManager.defaultManager setAttributes:@ {NSFileImmutable: @YES} ofItemAtPath:tmpURL.path error:nil];
     RLMAssertThrowsWithReason([RLMRealm realmWithConfiguration:configuration error:nil],
                               @"unlink() failed: Operation not permitted");
-    [NSFileManager.defaultManager setAttributes:@{NSFileImmutable: @NO} ofItemAtPath:tmpURL.path error:nil];
+    [NSFileManager.defaultManager setAttributes:@ {NSFileImmutable: @NO} ofItemAtPath:tmpURL.path error:nil];
     XCTAssertNoThrow([RLMRealm realmWithConfiguration:configuration error:nil]);
 }
 

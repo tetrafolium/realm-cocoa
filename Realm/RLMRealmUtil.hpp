@@ -22,7 +22,7 @@
 @class RLMRealm;
 
 namespace realm {
-    class BindingContext;
+class BindingContext;
 }
 
 // Add a Realm to the weak cache

@@ -200,10 +200,10 @@ static void RLMRegisterClassLocalNames(Class *classes, NSUInteger count) {
     NSMutableArray *errors = [NSMutableArray new];
     // Verify that all of the targets of links are included in the class list
     [schema->_objectSchemaByName enumerateKeysAndObjectsUsingBlock:^(id, RLMObjectSchema *objectSchema, BOOL *) {
-        for (RLMProperty *prop in objectSchema.properties) {
-            if (prop.type != RLMPropertyTypeObject) {
-                continue;
-            }
+                                    for (RLMProperty *prop in objectSchema.properties) {
+                                        if (prop.type != RLMPropertyTypeObject) {
+                                            continue;
+                                        }
             if (!schema->_objectSchemaByName[prop.objectClassName]) {
                 [errors addObject:[NSString stringWithFormat:@"- '%@.%@' links to class '%@', which is missing from the list of classes managed by the Realm", objectSchema.className, prop.name, prop.objectClassName]];
             }
@@ -265,8 +265,8 @@ static void RLMRegisterClassLocalNames(Class *classes, NSUInteger count) {
             }
 
             [s_localNameToClass enumerateKeysAndObjectsUsingBlock:^(NSString *, Class cls, BOOL *) {
-                RLMRegisterClass(cls);
-            }];
+                                   RLMRegisterClass(cls);
+                               }];
         }
         catch (...) {
             s_sharedSchemaState = SharedSchemaState::Uninitialized;
@@ -275,7 +275,7 @@ static void RLMRegisterClassLocalNames(Class *classes, NSUInteger count) {
 
         // Replace this method with one that doesn't need to acquire a lock
         Class metaClass = objc_getMetaClass(class_getName(self));
-        IMP imp = imp_implementationWithBlock(^{ return s_sharedSchema; });
+        IMP imp = imp_implementationWithBlock(^ { return s_sharedSchema; });
         class_replaceMethod(metaClass, @selector(sharedSchema), imp, "@@:");
 
         s_sharedSchemaState = SharedSchemaState::Initialized;
@@ -332,11 +332,11 @@ static void RLMRegisterClassLocalNames(Class *classes, NSUInteger count) {
     }
     __block BOOL matches = YES;
     [_objectSchemaByName enumerateKeysAndObjectsUsingBlock:^(NSString *name, RLMObjectSchema *objectSchema, BOOL *stop) {
-        if (![schema->_objectSchemaByName[name] isEqualToObjectSchema:objectSchema]) {
-            *stop = YES;
-            matches = NO;
-        }
-    }];
+                            if (![schema->_objectSchemaByName[name] isEqualToObjectSchema:objectSchema]) {
+                                *stop = YES;
+                                matches = NO;
+                            }
+                        }];
     return matches;
 }
 
@@ -345,7 +345,7 @@ static void RLMRegisterClassLocalNames(Class *classes, NSUInteger count) {
     NSArray *sort = @[[NSSortDescriptor sortDescriptorWithKey:@"className" ascending:YES]];
     for (RLMObjectSchema *objectSchema in [self.objectSchema sortedArrayUsingDescriptors:sort]) {
         [objectSchemaString appendFormat:@"\t%@\n",
-         [objectSchema.description stringByReplacingOccurrencesOfString:@"\n" withString:@"\n\t"]];
+                            [objectSchema.description stringByReplacingOccurrencesOfString:@"\n" withString:@"\n\t"]];
     }
     return [NSString stringWithFormat:@"Schema {\n%@}", objectSchemaString];
 }
@@ -355,12 +355,14 @@ static void RLMRegisterClassLocalNames(Class *classes, NSUInteger count) {
         std::vector<realm::ObjectSchema> schema;
         schema.reserve(_objectSchemaByName.count);
         [_objectSchemaByName enumerateKeysAndObjectsUsingBlock:[&](NSString *, RLMObjectSchema *objectSchema, BOOL *) {
-            schema.push_back([objectSchema objectStoreCopy:self]);
-        }];
+                                schema.push_back([objectSchema objectStoreCopy:self]);
+                            }];
 
         // Having both obj-c and Swift classes for the same tables results in
         // duplicate ObjectSchemas that we need to filter out
-        std::sort(begin(schema), end(schema), [](auto&& a, auto&& b) { return a.name < b.name; });
+        std::sort(begin(schema), end(schema), [](auto&& a, auto&& b) {
+            return a.name < b.name;
+        });
         schema.erase(std::unique(begin(schema), end(schema), [](auto&& a, auto&& b) {
             if (a.name == b.name) {
                 // If we make _realmObjectName public this needs to be turned into an exception

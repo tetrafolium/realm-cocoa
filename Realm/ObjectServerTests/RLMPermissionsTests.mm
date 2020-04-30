@@ -61,15 +61,15 @@
     NSString *accountNameBase = [[NSUUID UUID] UUIDString];
     NSString *userNameA = [accountNameBase stringByAppendingString:@"a"];
     self.userA = [self logInUserForCredentials:[RLMSyncTestCase basicCredentialsWithName:userNameA register:YES]
-                                        server:[RLMSyncTestCase authServerURL]];
+                       server:[RLMSyncTestCase authServerURL]];
 
     NSString *userNameB = [accountNameBase stringByAppendingString:@"b"];
     self.userB = [self logInUserForCredentials:[RLMSyncTestCase basicCredentialsWithName:userNameB register:YES]
-                                        server:[RLMSyncTestCase authServerURL]];
+                       server:[RLMSyncTestCase authServerURL]];
 
     NSString *userNameC = [accountNameBase stringByAppendingString:@"c"];
     self.userC = [self logInUserForCredentials:[RLMSyncTestCase basicCredentialsWithName:userNameC register:YES]
-                                        server:[RLMSyncTestCase authServerURL]];
+                       server:[RLMSyncTestCase authServerURL]];
 
     RLMSyncManager.sharedManager.errorHandler = ^(NSError *error, __unused RLMSyncSession *session) {
         if (self.errorBlock) {
@@ -105,7 +105,7 @@
 - (NSURL *)createRealmWithName:(SEL)sel permissions:(void (^)(RLMRealm *realm))block {
     // Create a new Realm with an admin user
     RLMSyncUser *admin = [self createAdminUserForURL:[RLMSyncTestCase authServerURL]
-                                            username:[[NSUUID UUID] UUIDString]];
+                               username:[[NSUUID UUID] UUIDString]];
 
     auto url = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"realm://127.0.0.1:9080/%@", NSStringFromSelector(sel)]];
     RLMRealm *adminRealm = [self openRealmForURL:url user:admin];
@@ -121,18 +121,18 @@
     CHECK_COUNT(3, SyncObject, adminRealm);
 
     // Set up permissions on the Realm
-    [adminRealm transactionWithBlock:^{ block(adminRealm); }];
+    [adminRealm transactionWithBlock:^ { block(adminRealm); }];
 
     // FIXME: we currently need to also add the old realm-level permissions
     RLMSyncPermission *p = [[RLMSyncPermission alloc] initWithRealmPath:[url path]
-                                                               identity:self.userA.identity
-                                                            accessLevel:RLMSyncAccessLevelRead];
+                                                      identity:self.userA.identity
+                                                      accessLevel:RLMSyncAccessLevelRead];
     APPLY_PERMISSION(p, admin);
     p = [[RLMSyncPermission alloc] initWithRealmPath:[url path] identity:self.userB.identity
-                                         accessLevel:RLMSyncAccessLevelRead];
+                                   accessLevel:RLMSyncAccessLevelRead];
     APPLY_PERMISSION(p, admin);
     p = [[RLMSyncPermission alloc] initWithRealmPath:[url path] identity:self.userC.identity
-                                         accessLevel:RLMSyncAccessLevelRead];
+                                   accessLevel:RLMSyncAccessLevelRead];
     APPLY_PERMISSION(p, admin);
     [self waitForSync:adminRealm];
 
@@ -148,7 +148,7 @@
 #pragma mark - Permissions
 
 static RLMPermissionRole *getRole(RLMRealm *realm, NSString *roleName) {
-    return [RLMPermissionRole createOrUpdateInRealm:realm withValue:@{@"name": roleName}];
+    return [RLMPermissionRole createOrUpdateInRealm:realm withValue:@ {@"name": roleName}];
 }
 
 static void addUserToRole(RLMRealm *realm, NSString *roleName, NSString *user) {
@@ -208,8 +208,8 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
 
 - (void)testRealmReadAccess {
     NSURL *url = [self createRealmWithName:_cmd permissions:^(RLMRealm *realm) {
-        createPermissions([RLMRealmPermission objectInRealm:realm].permissions);
-        addUserToRole(realm, @"reader", self.userA.identity);
+             createPermissions([RLMRealmPermission objectInRealm:realm].permissions);
+             addUserToRole(realm, @"reader", self.userA.identity);
     }];
 
     // userA should now be able to open the Realm and see objects
@@ -236,9 +236,9 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
 
 - (void)testRealmWriteAccess {
     NSURL *url = [self createRealmWithName:_cmd permissions:^(RLMRealm *realm) {
-        createPermissions([RLMRealmPermission objectInRealm:realm].permissions);
+             createPermissions([RLMRealmPermission objectInRealm:realm].permissions);
 
-        addUserToRole(realm, @"reader", self.userA.identity);
+             addUserToRole(realm, @"reader", self.userA.identity);
         addUserToRole(realm, @"writer", self.userA.identity);
 
         addUserToRole(realm, @"reader", self.userB.identity);
@@ -276,9 +276,9 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
     // FIXME: this test is wrong; setPermission doesn't govern adding users to roles
 #if 0
     NSURL *url = [self createRealmWithName:_cmd permissions:^(RLMRealm *realm) {
-        createPermissions([RLMRealmPermission objectInRealm:realm].permissions);
+             createPermissions([RLMRealmPermission objectInRealm:realm].permissions);
 
-        addUserToRole(realm, @"reader", self.userA.identity);
+             addUserToRole(realm, @"reader", self.userA.identity);
         addUserToRole(realm, @"writer", self.userA.identity);
         addUserToRole(realm, @"admin", self.userA.identity);
 
@@ -303,9 +303,9 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
     CHECK_COUNT(3, SyncObject, userCRealm);
 
     // userB should not be able to grant write permissions to userC
-    [userBRealm transactionWithBlock:^{
-        addUserToRole(userBRealm, @"writer", self.userC.identity);
-    }];
+    [userBRealm transactionWithBlock:^ {
+                   addUserToRole(userBRealm, @"writer", self.userC.identity);
+               }];
     [self waitForSync:userBRealm];
     [self waitForSync:userCRealm];
 
@@ -317,9 +317,9 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
     CHECK_COUNT(3, SyncObject, userCRealm);
 
     // userA should be able to grant write permissions to userC
-    [userARealm transactionWithBlock:^{
-        addUserToRole(userARealm, @"writer", self.userC.identity);
-    }];
+    [userARealm transactionWithBlock:^ {
+                   addUserToRole(userARealm, @"writer", self.userC.identity);
+               }];
     [self waitForSync:userARealm];
     [self waitForSync:userCRealm];
 
@@ -339,8 +339,8 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
 
 - (void)testClassRead {
     NSURL *url = [self createRealmWithName:_cmd permissions:^(RLMRealm *realm) {
-        createPermissions([RLMClassPermission objectInRealm:realm forClass:SyncObject.class].permissions);
-        addUserToRole(realm, @"reader", self.userA.identity);
+             createPermissions([RLMClassPermission objectInRealm:realm forClass:SyncObject.class].permissions);
+             addUserToRole(realm, @"reader", self.userA.identity);
     }];
 
     // userA should now be able to open the Realm and see objects
@@ -367,9 +367,9 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
 
 - (void)testClassUpdate {
     NSURL *url = [self createRealmWithName:_cmd permissions:^(RLMRealm *realm) {
-        createPermissions([RLMClassPermission objectInRealm:realm forClass:SyncObject.class].permissions);
+             createPermissions([RLMClassPermission objectInRealm:realm forClass:SyncObject.class].permissions);
 
-        addUserToRole(realm, @"reader", self.userA.identity);
+             addUserToRole(realm, @"reader", self.userA.identity);
         addUserToRole(realm, @"writer", self.userA.identity);
 
         addUserToRole(realm, @"reader", self.userB.identity);
@@ -383,9 +383,9 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
     CHECK_OBJECT_PRIVILEGE(userARealm, .read = true, .update = true, .del = true, .setPermissions = true);
 
     SyncObject *objA = [SyncObject allObjectsInRealm:userARealm].firstObject;
-    [userARealm transactionWithBlock:^{
-        objA.stringProp = @"new value";
-    }];
+    [userARealm transactionWithBlock:^ {
+                   objA.stringProp = @"new value";
+               }];
     [self waitForSync:userARealm];
     XCTAssertEqualObjects(objA.stringProp, @"new value");
 
@@ -397,9 +397,9 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
     CHECK_OBJECT_PRIVILEGE(userBRealm, .read = true);
 
     SyncObject *objB = [SyncObject allObjectsInRealm:userBRealm].firstObject;
-    [userBRealm transactionWithBlock:^{
-        objB.stringProp = @"new value 2";
-    }];
+    [userBRealm transactionWithBlock:^ {
+                   objB.stringProp = @"new value 2";
+               }];
     XCTAssertEqualObjects(objB.stringProp, @"new value 2");
     [self waitForSync:userBRealm];
     XCTAssertEqualObjects(objB.stringProp, @"new value");
@@ -407,9 +407,9 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
 
 - (void)testClassCreate {
     NSURL *url = [self createRealmWithName:_cmd permissions:^(RLMRealm *realm) {
-        createPermissions([RLMClassPermission objectInRealm:realm forClass:SyncObject.class].permissions);
+             createPermissions([RLMClassPermission objectInRealm:realm forClass:SyncObject.class].permissions);
 
-        addUserToRole(realm, @"reader", self.userA.identity);
+             addUserToRole(realm, @"reader", self.userA.identity);
         addUserToRole(realm, @"writer", self.userA.identity);
 
         addUserToRole(realm, @"reader", self.userB.identity);
@@ -444,9 +444,9 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
 
 - (void)testClassSetPermissions {
     NSURL *url = [self createRealmWithName:_cmd permissions:^(RLMRealm *realm) {
-        createPermissions([RLMClassPermission objectInRealm:realm forClass:SyncObject.class].permissions);
+             createPermissions([RLMClassPermission objectInRealm:realm forClass:SyncObject.class].permissions);
 
-        addUserToRole(realm, @"reader", self.userA.identity);
+             addUserToRole(realm, @"reader", self.userA.identity);
         addUserToRole(realm, @"writer", self.userA.identity);
         addUserToRole(realm, @"admin", self.userA.identity);
 
@@ -459,12 +459,12 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
     // Despite having write access userB should not be able to add "update" access to "reader"
     RLMRealm *userBRealm = [self openRealmForURL:url user:self.userB];
     [self subscribeToRealm:userBRealm type:[SyncObject class] where:@"TRUEPREDICATE"];
-    [userBRealm transactionWithBlock:^{
-        auto permission = [RLMPermission permissionForRoleNamed:@"reader" onClass:SyncObject.class realm:userBRealm];
-        permission.canCreate = true;
-        permission.canUpdate = true;
+    [userBRealm transactionWithBlock:^ {
+                   auto permission = [RLMPermission permissionForRoleNamed:@"reader" onClass:SyncObject.class realm:userBRealm];
+                   permission.canCreate = true;
+                   permission.canUpdate = true;
 
-    }];
+               }];
     [self waitForSync:userBRealm];
 
     // userC should be unable to create objects
@@ -482,11 +482,11 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
     // userA should able to add "update" access to "reader"
     RLMRealm *userARealm = [self openRealmForURL:url user:self.userA];
     [self subscribeToRealm:userARealm type:[SyncObject class] where:@"TRUEPREDICATE"];
-    [userARealm transactionWithBlock:^{
-        auto permission = [RLMPermission permissionForRoleNamed:@"reader" onClass:SyncObject.class realm:userARealm];
-        permission.canCreate = true;
-        permission.canUpdate = true;
-    }];
+    [userARealm transactionWithBlock:^ {
+                   auto permission = [RLMPermission permissionForRoleNamed:@"reader" onClass:SyncObject.class realm:userARealm];
+                   permission.canCreate = true;
+                   permission.canUpdate = true;
+               }];
     [self waitForSync:userARealm];
 
     // userC should now be able to create objects
@@ -502,7 +502,7 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
 
 - (void)testObjectRead {
     NSURL *url = [self createRealmWithName:_cmd permissions:^(RLMRealm *realm) {
-        addUserToRole(realm, @"reader", self.userA.identity);
+             addUserToRole(realm, @"reader", self.userA.identity);
         auto obj1 = [ObjectWithPermissions createInRealm:realm withValue:@[@1]];
         createPermissions(obj1.permissions);
         [ObjectWithPermissions createInRealm:realm withValue:@[@2]];
@@ -524,8 +524,8 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
 
 - (void)testObjectUpdate {
     NSURL *url = [self createRealmWithName:_cmd permissions:^(RLMRealm *realm) {
-        addUserToRole(realm, @"reader", self.userA.identity);
-        addUserToRole(realm, @"reader", self.userB.identity);
+             addUserToRole(realm, @"reader", self.userA.identity);
+             addUserToRole(realm, @"reader", self.userB.identity);
         addUserToRole(realm, @"writer", self.userB.identity);
         auto obj1 = [ObjectWithPermissions createInRealm:realm withValue:@[@1]];
         createPermissions(obj1.permissions);
@@ -534,18 +534,18 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
     RLMRealm *userARealm = [self openRealmForURL:url user:self.userA];
     [self subscribeToRealm:userARealm type:[ObjectWithPermissions class] where:@"TRUEPREDICATE"];
     ObjectWithPermissions *objA = [ObjectWithPermissions allObjectsInRealm:userARealm].firstObject;
-    [userARealm transactionWithBlock:^{
-        objA.value = 3;
-    }];
+    [userARealm transactionWithBlock:^ {
+                   objA.value = 3;
+               }];
     [self waitForSync:userARealm];
     XCTAssertEqual(objA.value, 1);
 
     RLMRealm *userBRealm = [self openRealmForURL:url user:self.userB];
     [self subscribeToRealm:userBRealm type:[ObjectWithPermissions class] where:@"TRUEPREDICATE"];
     ObjectWithPermissions *objB = [ObjectWithPermissions allObjectsInRealm:userBRealm].firstObject;
-    [userBRealm transactionWithBlock:^{
-        objB.value = 3;
-    }];
+    [userBRealm transactionWithBlock:^ {
+                   objB.value = 3;
+               }];
     [self waitForSync:userBRealm];
     [self waitForSync:userARealm];
 
@@ -555,8 +555,8 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
 
 - (void)testObjectDelete {
     NSURL *url = [self createRealmWithName:_cmd permissions:^(RLMRealm *realm) {
-        addUserToRole(realm, @"reader", self.userA.identity);
-        addUserToRole(realm, @"reader", self.userB.identity);
+             addUserToRole(realm, @"reader", self.userA.identity);
+             addUserToRole(realm, @"reader", self.userB.identity);
         addUserToRole(realm, @"writer", self.userB.identity);
         auto obj1 = [ObjectWithPermissions createInRealm:realm withValue:@[@1]];
         createPermissions(obj1.permissions);
@@ -565,9 +565,9 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
     RLMRealm *userARealm = [self openRealmForURL:url user:self.userA];
     [self subscribeToRealm:userARealm type:[ObjectWithPermissions class] where:@"TRUEPREDICATE"];
     ObjectWithPermissions *objA = [ObjectWithPermissions allObjectsInRealm:userARealm].firstObject;
-    [userARealm transactionWithBlock:^{
-        [userARealm deleteObject:objA];
-    }];
+    [userARealm transactionWithBlock:^ {
+                   [userARealm deleteObject:objA];
+               }];
     CHECK_COUNT(0, ObjectWithPermissions, userARealm);
     [self waitForSync:userARealm];
     CHECK_COUNT(1, ObjectWithPermissions, userARealm);
@@ -576,9 +576,9 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
     RLMRealm *userBRealm = [self openRealmForURL:url user:self.userB];
     [self subscribeToRealm:userBRealm type:[ObjectWithPermissions class] where:@"TRUEPREDICATE"];
     ObjectWithPermissions *objB = [ObjectWithPermissions allObjectsInRealm:userBRealm].firstObject;
-    [userBRealm transactionWithBlock:^{
-        [userBRealm deleteObject:objB];
-    }];
+    [userBRealm transactionWithBlock:^ {
+                   [userBRealm deleteObject:objB];
+               }];
     [self waitForSync:userBRealm];
     [self waitForSync:userARealm];
 
@@ -593,8 +593,8 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
 
     RLMRealm *userARealm = [self openRealmForURL:url user:self.userA];
     [self subscribeToRealm:userARealm type:[ObjectWithPermissions class] where:@"TRUEPREDICATE"];
-    [userARealm transactionWithBlock:^{
-        auto obj = [ObjectWithPermissions createInRealm:userARealm withValue:@[@1]];
+    [userARealm transactionWithBlock:^ {
+                   auto obj = [ObjectWithPermissions createInRealm:userARealm withValue:@[@1]];
         auto permissions = [RLMPermission permissionForRoleNamed:@"foo" onObject:obj];
         permissions.canRead = true;
         addUserToRole(userARealm, @"foo", self.userB.identity);
@@ -611,8 +611,8 @@ static void createPermissions(RLMArray<RLMPermission> *permissions) {
 
 - (void)testRetrieveClassPermissionsForRenamedClass {
     [self createRealmWithName:_cmd permissions:^(RLMRealm *realm) {
-        XCTAssertNotNil([RLMClassPermission objectInRealm:realm forClass:RLMPermissionRole.class]);
-    }];
+             XCTAssertNotNil([RLMClassPermission objectInRealm:realm forClass:RLMPermissionRole.class]);
+         }];
 }
 
 @end

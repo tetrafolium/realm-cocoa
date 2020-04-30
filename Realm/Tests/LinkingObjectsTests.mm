@@ -84,7 +84,7 @@
     XCTAssertEqual(NSNotFound, [don.parents indexOfObjectWhere:@"TRUEPREDICATE"]);
 
     RLMAssertThrowsWithReason(([don.parents addNotificationBlock:^(RLMResults *, RLMCollectionChange *, NSError *) { }]),
-                              @"Linking objects notifications are only supported on managed objects.");
+    @"Linking objects notifications are only supported on managed objects.");
 }
 
 - (void)testFilteredLinkingObjects {
@@ -125,8 +125,8 @@
 
     id expectation = [self expectationWithDescription:@""];
     RLMNotificationToken *token = [hannah.parents addNotificationBlock:^(RLMResults *linkingObjects, RLMCollectionChange *change, NSError *error) {
-        XCTAssertEqualObjects([linkingObjects valueForKeyPath:@"self"], (@[ mark ]));
-        XCTAssertNil(change);
+                       XCTAssertEqualObjects([linkingObjects valueForKeyPath:@"self"], (@[ mark ]));
+                       XCTAssertNil(change);
         XCTAssertNil(error);
         [expectation fulfill];
     }];
@@ -144,8 +144,8 @@
     __block bool first = true;
     __block id expectation = [self expectationWithDescription:@""];
     RLMNotificationToken *token = [hannah.parents addNotificationBlock:^(RLMResults *linkingObjects, RLMCollectionChange *change, NSError *error) {
-        XCTAssertNotNil(linkingObjects);
-        XCTAssert(first ? !change : !!change);
+                       XCTAssertNotNil(linkingObjects);
+                       XCTAssert(first ? !change : !!change);
         XCTAssertNil(error);
         first = false;
         [expectation fulfill];
@@ -153,11 +153,11 @@
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 
     expectation = [self expectationWithDescription:@""];
-    [self dispatchAsyncAndWait:^{
-        RLMRealm *realm = self.realmWithTestPath;
+    [self dispatchAsyncAndWait:^ {
+             RLMRealm *realm = self.realmWithTestPath;
         [realm transactionWithBlock:^{
-            [PersonObject createInRealm:realm withValue:@[ @"Mark",  @30, [PersonObject objectsInRealm:realm where:@"name == 'Hannah'"] ]];
-        }];
+                  [PersonObject createInRealm:realm withValue:@[ @"Mark",  @30, [PersonObject objectsInRealm:realm where:@"name == 'Hannah'"] ]];
+              }];
     }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 
@@ -172,17 +172,17 @@
 
     id expectation = [self expectationWithDescription:@""];
     RLMNotificationToken *token = [hannah.parents addNotificationBlock:^(RLMResults *, RLMCollectionChange *, NSError *) {
-        // will throw if it's incorrectly called a second time due to the
-        // unrelated write transaction
-        [expectation fulfill];
-    }];
+                       // will throw if it's incorrectly called a second time due to the
+                       // unrelated write transaction
+                       [expectation fulfill];
+                   }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 
     // All notification blocks are called as part of a single runloop event, so
     // waiting for this one also waits for the above one to get a chance to run
-    [self waitForNotification:RLMRealmDidChangeNotification realm:realm block:^{
-        [self dispatchAsyncAndWait:^{
-            [self.realmWithTestPath transactionWithBlock:^{ }];
+    [self waitForNotification:RLMRealmDidChangeNotification realm:realm block:^ {
+             [self dispatchAsyncAndWait:^{
+                 [self.realmWithTestPath transactionWithBlock:^{ }];
         }];
     }];
     [token invalidate];
@@ -196,8 +196,8 @@
 
     __block id expectation = [self expectationWithDescription:@""];
     RLMNotificationToken *token = [hannah.parents addNotificationBlock:^(RLMResults *linkingObjects, RLMCollectionChange *, NSError *error) {
-        XCTAssertNotNil(linkingObjects);
-        XCTAssertNil(error);
+                       XCTAssertNotNil(linkingObjects);
+                       XCTAssertNil(error);
         // will throw if it's called a second time before we create the new
         // expectation object immediately before manually refreshing
         [expectation fulfill];
@@ -209,12 +209,12 @@
 
     // All notification blocks are called as part of a single runloop event, so
     // waiting for this one also waits for the above one to get a chance to run
-    [self waitForNotification:RLMRealmRefreshRequiredNotification realm:realm block:^{
-        [self dispatchAsyncAndWait:^{
-            RLMRealm *realm = self.realmWithTestPath;
+    [self waitForNotification:RLMRealmRefreshRequiredNotification realm:realm block:^ {
+             [self dispatchAsyncAndWait:^{
+                 RLMRealm *realm = self.realmWithTestPath;
             [realm transactionWithBlock:^{
-                [PersonObject createInRealm:realm withValue:@[ @"Mark",  @30, [PersonObject objectsInRealm:realm where:@"name == 'Hannah'"] ]];
-            }];
+                      [PersonObject createInRealm:realm withValue:@[ @"Mark",  @30, [PersonObject objectsInRealm:realm where:@"name == 'Hannah'"] ]];
+                  }];
         }];
     }];
 
@@ -234,8 +234,8 @@
 
     __block id expectation = [self expectationWithDescription:@""];
     RLMNotificationToken *token = [hannah.parents addNotificationBlock:^(RLMResults *linkingObjects, RLMCollectionChange *, NSError *error) {
-        XCTAssertNotNil(linkingObjects);
-        XCTAssertNil(error);
+                       XCTAssertNotNil(linkingObjects);
+                       XCTAssertNil(error);
         [expectation fulfill];
     }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];

@@ -26,7 +26,7 @@
 #import <realm/table_ref.hpp>
 
 namespace realm {
-    class Results;
+class Results;
 }
 
 @class RLMObjectBase, RLMObjectSchema, RLMProperty;
@@ -48,8 +48,8 @@ class RLMObservationInfo;
 @interface RLMManagedArray : RLMArray <RLMFastEnumerable>
 - (instancetype)initWithParent:(RLMObjectBase *)parentObject property:(RLMProperty *)property;
 - (RLMManagedArray *)initWithList:(realm::List)list
-                       parentInfo:(RLMClassInfo *)parentInfo
-                         property:(__unsafe_unretained RLMProperty *const)property;
+    parentInfo:(RLMClassInfo *)parentInfo
+    property:(__unsafe_unretained RLMProperty *const)property;
 
 - (bool)isBackedByList:(realm::List const&)list;
 

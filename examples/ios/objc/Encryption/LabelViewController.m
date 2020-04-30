@@ -55,7 +55,7 @@
         RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
         configuration.encryptionKey = [self getKey];
         RLMRealm *realm = [RLMRealm realmWithConfiguration:configuration
-                                                     error:nil];
+                                    error:nil];
 
         // Add an object
         [realm beginWriteTransaction];
@@ -76,7 +76,7 @@
         RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
         configuration.encryptionKey = [[NSData alloc] initWithBytes:buffer length:sizeof(buffer)];
         [RLMRealm realmWithConfiguration:configuration
-                                   error:&error];
+                  error:&error];
         [self log:@"Open with wrong key: %@", error];
     }
 
@@ -92,7 +92,7 @@
         RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
         configuration.encryptionKey = [self getKey];
         RLMRealm *realm = [RLMRealm realmWithConfiguration:configuration
-                                                     error:nil];
+                                    error:nil];
 
         [self log:@"Saved object: %@", [[[StringObject allObjectsInRealm:realm] firstObject] stringProp]];
     }
@@ -106,21 +106,26 @@
     va_end(args);
     self.textView.text = [[self.textView.text
                            stringByAppendingString:str]
-                           stringByAppendingString:@"\n\n"];
+                          stringByAppendingString:@"\n\n"];
 }
 
 - (NSData *)getKey {
     // Identifier for our keychain entry - should be unique for your application
     static const uint8_t kKeychainIdentifier[] = "io.Realm.EncryptionExampleKey";
     NSData *tag = [[NSData alloc] initWithBytesNoCopy:(void *)kKeychainIdentifier
-                                               length:sizeof(kKeychainIdentifier)
-                                         freeWhenDone:NO];
+                                  length:sizeof(kKeychainIdentifier)
+                                  freeWhenDone:NO];
 
     // First check in the keychain for an existing key
-    NSDictionary *query = @{(__bridge id)kSecClass: (__bridge id)kSecClassKey,
-                            (__bridge id)kSecAttrApplicationTag: tag,
-                            (__bridge id)kSecAttrKeySizeInBits: @512,
-                            (__bridge id)kSecReturnData: @YES};
+    NSDictionary *query = @ {(__bridge id)kSecClass:
+                             (__bridge id)kSecClassKey,
+                             (__bridge id)kSecAttrApplicationTag:
+                             tag,
+                             (__bridge id)kSecAttrKeySizeInBits:
+                             @512,
+                             (__bridge id)kSecReturnData:
+                             @YES
+                            };
 
     CFTypeRef dataRef = NULL;
     OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, &dataRef);
@@ -135,10 +140,15 @@
     NSData *keyData = [[NSData alloc] initWithBytes:buffer length:sizeof(buffer)];
 
     // Store the key in the keychain
-    query = @{(__bridge id)kSecClass: (__bridge id)kSecClassKey,
-              (__bridge id)kSecAttrApplicationTag: tag,
-              (__bridge id)kSecAttrKeySizeInBits: @512,
-              (__bridge id)kSecValueData: keyData};
+    query = @ {(__bridge id)kSecClass:
+               (__bridge id)kSecClassKey,
+               (__bridge id)kSecAttrApplicationTag:
+               tag,
+               (__bridge id)kSecAttrKeySizeInBits:
+               @512,
+               (__bridge id)kSecValueData:
+               keyData
+              };
 
     status = SecItemAdd((__bridge CFDictionaryRef)query, NULL);
     NSAssert(status == errSecSuccess, @"Failed to insert new key in the keychain");

@@ -34,13 +34,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Properties
 
-/**
- An `NSArray` containing `RLMObjectSchema`s for all object types in the Realm.
+    /**
+     An `NSArray` containing `RLMObjectSchema`s for all object types in the Realm.
 
- This property is intended to be used during migrations for dynamic introspection.
+     This property is intended to be used during migrations for dynamic introspection.
 
- @see `RLMObjectSchema`
- */
+     @see `RLMObjectSchema`
+     */
 @property (nonatomic, readonly, copy) NSArray<RLMObjectSchema *> *objectSchema;
 
 #pragma mark - Methods

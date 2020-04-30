@@ -55,8 +55,8 @@ static NSString * const kTableName = @"table";
     // Set realm notification block
     __weak typeof(self) weakSelf = self;
     self.notification = [RLMRealm.defaultRealm addNotificationBlock:^(NSString *note, RLMRealm *realm) {
-        [weakSelf.tableView reloadData];
-    }];
+                              [weakSelf.tableView reloadData];
+                          }];
     self.objectsBySection = [NSMutableArray arrayWithCapacity:3];
     for (NSString *section in self.sectionTitles) {
         RLMResults *unsortedObjects = [DemoObject objectsWhere:@"sectionTitle == %@", section];
@@ -72,14 +72,14 @@ static NSString * const kTableName = @"table";
 {
     self.title = @"GroupedTableView";
     self.navigationItem.leftBarButtonItem =
-    [[UIBarButtonItem alloc] initWithTitle:@"BG Add"
-                                     style:UIBarButtonItemStylePlain
-                                    target:self
-                                    action:@selector(backgroundAdd)];
+        [[UIBarButtonItem alloc] initWithTitle:@"BG Add"
+                                 style:UIBarButtonItemStylePlain
+                                 target:self
+                                 action:@selector(backgroundAdd)];
     self.navigationItem.rightBarButtonItem =
-    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-                                                  target:self
-                                                  action:@selector(add)];
+        [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                 target:self
+                                 action:@selector(add)];
 }
 
 #pragma mark - UITableViewDataSource
@@ -105,7 +105,7 @@ static NSString * const kTableName = @"table";
 
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                      reuseIdentifier:kCellID];
+                                        reuseIdentifier:kCellID];
     }
 
     DemoObject *object = [self objectsInSection:indexPath.section][indexPath.row];
@@ -116,7 +116,7 @@ static NSString * const kTableName = @"table";
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
-forRowAtIndexPath:(NSIndexPath *)indexPath
+    forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         RLMRealm *realm = RLMRealm.defaultRealm;
@@ -132,16 +132,18 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     // Import many items in a background thread
-    dispatch_async(queue, ^{
+    dispatch_async(queue, ^ {
         // Get new realm and table since we are in a new thread
         @autoreleasepool {
             RLMRealm *realm = [RLMRealm defaultRealm];
             [realm beginWriteTransaction];
             for (NSInteger index = 0; index < 5; index++) {
                 // Add row via dictionary. Order is ignored.
-                [DemoObject createInRealm:realm withValue:@{@"title": [self randomTitle],
-                                                             @"date": [NSDate date],
-                                                             @"sectionTitle": [self randomSectionTitle]}];
+                [DemoObject createInRealm:realm withValue:@ {
+           @"title": [self randomTitle],
+           @"date": [NSDate date],
+           @"sectionTitle": [self randomSectionTitle]
+                           }];
             }
             [realm commitWriteTransaction];
         }
@@ -150,9 +152,9 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)add
 {
-    [[RLMRealm defaultRealm] transactionWithBlock:^{
-        [DemoObject createInDefaultRealmWithValue:@[[self randomTitle], [NSDate date], [self randomSectionTitle]]];
-    }];
+    [[RLMRealm defaultRealm] transactionWithBlock:^ {
+                                [DemoObject createInDefaultRealmWithValue:@[[self randomTitle], [NSDate date], [self randomSectionTitle]]];
+                            }];
 }
 
 #pragma - Helpers

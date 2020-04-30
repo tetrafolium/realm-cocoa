@@ -48,8 +48,8 @@ static void deleteOrThrow(NSURL *fileURL) {
     if (![[NSFileManager defaultManager] removeItemAtURL:fileURL error:&error]) {
         if (error.code != NSFileNoSuchFileError) {
             @throw [NSException exceptionWithName:@"RLMTestException"
-                                           reason:[@"Unable to delete realm: " stringByAppendingString:error.description]
-                                         userInfo:nil];
+                                reason:[@"Unable to delete realm: " stringByAppendingString:error.description]
+                                userInfo:nil];
         }
     }
 }
@@ -63,7 +63,7 @@ NSData *RLMGenerateKey() {
 static BOOL encryptTests() {
     static BOOL encryptAll = NO;
     static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+    dispatch_once(&onceToken, ^ {
         if (getenv("REALM_ENCRYPT_ALL")) {
             encryptAll = YES;
         }
@@ -91,7 +91,7 @@ static BOOL encryptTests() {
     // Ensure the documents directory exists as it sometimes doesn't after
     // resetting the simulator
     [NSFileManager.defaultManager createDirectoryAtURL:RLMDefaultRealmURL().URLByDeletingLastPathComponent
-                           withIntermediateDirectories:YES attributes:nil error:nil];
+                                  withIntermediateDirectories:YES attributes:nil error:nil];
 }
 
 // This ensures the shared schema is initialized outside of of a test case,
@@ -141,7 +141,7 @@ static BOOL encryptTests() {
     }
     @autoreleasepool {
         if (_bgQueue) {
-            dispatch_sync(_bgQueue, ^{});
+            dispatch_sync(_bgQueue, ^ {});
             _bgQueue = nil;
         }
         [self deleteFiles];
@@ -178,8 +178,8 @@ static BOOL encryptTests() {
 - (void)waitForNotification:(NSString *)expectedNote realm:(RLMRealm *)realm block:(dispatch_block_t)block {
     XCTestExpectation *notificationFired = [self expectationWithDescription:@"notification fired"];
     __block RLMNotificationToken *token = [realm addNotificationBlock:^(NSString *note, RLMRealm *realm) {
-        XCTAssertNotNil(note, @"Note should not be nil");
-        XCTAssertNotNil(realm, @"Realm should not be nil");
+              XCTAssertNotNil(note, @"Note should not be nil");
+              XCTAssertNotNil(realm, @"Realm should not be nil");
         if (note == expectedNote) { // Check pointer equality to ensure we're using the interned string constant
             [notificationFired fulfill];
             [token invalidate];
@@ -187,7 +187,7 @@ static BOOL encryptTests() {
     }];
 
     dispatch_queue_t queue = dispatch_queue_create("background", 0);
-    dispatch_async(queue, ^{
+    dispatch_async(queue, ^ {
         @autoreleasepool {
             block();
         }
@@ -196,14 +196,14 @@ static BOOL encryptTests() {
     [self waitForExpectationsWithTimeout:10.0 handler:nil];
 
     // wait for queue to finish
-    dispatch_sync(queue, ^{});
+    dispatch_sync(queue, ^ {});
 }
 
 - (void)dispatchAsync:(dispatch_block_t)block {
     if (!_bgQueue) {
         _bgQueue = dispatch_queue_create("test background queue", 0);
     }
-    dispatch_async(_bgQueue, ^{
+    dispatch_async(_bgQueue, ^ {
         @autoreleasepool {
             block();
         }
@@ -212,7 +212,7 @@ static BOOL encryptTests() {
 
 - (void)dispatchAsyncAndWait:(dispatch_block_t)block {
     [self dispatchAsync:block];
-    dispatch_sync(_bgQueue, ^{});
+    dispatch_sync(_bgQueue, ^ {});
 }
 
 - (id)nonLiteralNil {

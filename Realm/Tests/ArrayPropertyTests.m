@@ -460,10 +460,10 @@
     RLMRealm *realm = [RLMRealm defaultRealm];
 
     [realm beginWriteTransaction];
-    EmployeeObject *po1 = [EmployeeObject createInRealm:realm withValue:@{@"name": @"Joe",  @"age": @40, @"hired": @YES}];
-    EmployeeObject *po2 = [EmployeeObject createInRealm:realm withValue:@{@"name": @"John", @"age": @30, @"hired": @NO}];
-    EmployeeObject *po3 = [EmployeeObject createInRealm:realm withValue:@{@"name": @"Jill", @"age": @25, @"hired": @YES}];
-    EmployeeObject *deleted = [EmployeeObject createInRealm:realm withValue:@{@"name": @"Jill", @"age": @25, @"hired": @YES}];
+    EmployeeObject *po1 = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Joe",  @"age": @40, @"hired": @YES}];
+    EmployeeObject *po2 = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"John", @"age": @30, @"hired": @NO}];
+    EmployeeObject *po3 = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Jill", @"age": @25, @"hired": @YES}];
+    EmployeeObject *deleted = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Jill", @"age": @25, @"hired": @YES}];
     EmployeeObject *indirectlyDeleted = [EmployeeObject allObjectsInRealm:realm].lastObject;
     [realm deleteObject:deleted];
 
@@ -506,10 +506,10 @@
     RLMRealm *realm = [RLMRealm defaultRealm];
 
     [realm beginWriteTransaction];
-    EmployeeObject *po1 = [EmployeeObject createInRealm:realm withValue:@{@"name": @"Joe",  @"age": @40, @"hired": @YES}];
-    [EmployeeObject createInRealm:realm withValue:@{@"name": @"John", @"age": @30, @"hired": @NO}];
-    EmployeeObject *po3 = [EmployeeObject createInRealm:realm withValue:@{@"name": @"Jill", @"age": @25, @"hired": @YES}];
-    EmployeeObject *po4 = [EmployeeObject createInRealm:realm withValue:@{@"name": @"Bill", @"age": @55, @"hired": @YES}];
+    EmployeeObject *po1 = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Joe",  @"age": @40, @"hired": @YES}];
+    [EmployeeObject createInRealm:realm withValue:@ {@"name": @"John", @"age": @30, @"hired": @NO}];
+    EmployeeObject *po3 = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Jill", @"age": @25, @"hired": @YES}];
+    EmployeeObject *po4 = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Bill", @"age": @55, @"hired": @YES}];
 
     // create company
     CompanyObject *company = [[CompanyObject alloc] init];
@@ -554,7 +554,7 @@
 
     [realm beginWriteTransaction];
     for (int i = 0; i < 30; ++i) {
-        EmployeeObject *eo = [EmployeeObject createInRealm:realm withValue:@{@"name": @"Joe",  @"age": @40, @"hired": @YES}];
+        EmployeeObject *eo = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Joe",  @"age": @40, @"hired": @YES}];
         [company.employees addObject:eo];
     }
     [realm commitWriteTransaction];
@@ -666,7 +666,7 @@
     [realm beginWriteTransaction];
     for (int i = 0; i < 30; ++i) {
         [ages addObject:@(i)];
-        EmployeeObject *eo = [EmployeeObject createInRealm:realm withValue:@{@"name": @"Joe",  @"age": @(i), @"hired": @YES}];
+        EmployeeObject *eo = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Joe",  @"age": @(i), @"hired": @YES}];
         [company.employees addObject:eo];
     }
     [realm commitWriteTransaction];
@@ -698,7 +698,7 @@
     ages = [NSMutableArray array];
     for (int i = 0; i < 30; ++i) {
         [ages addObject:@(i)];
-        EmployeeObject *eo = [[EmployeeObject alloc] initWithValue:@{@"name": @"Joe",  @"age": @(i), @"hired": @YES}];
+        EmployeeObject *eo = [[EmployeeObject alloc] initWithValue:@ {@"name": @"Joe",  @"age": @(i), @"hired": @YES}];
         [company.employees addObject:eo];
     }
 
@@ -739,7 +739,7 @@
     [realm beginWriteTransaction];
     for (int i = 0; i < 30; ++i) {
         [ages addObject:@(20)];
-        EmployeeObject *eo = [EmployeeObject createInRealm:realm withValue:@{@"name": @"Joe",  @"age": @(i), @"hired": @YES}];
+        EmployeeObject *eo = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Joe",  @"age": @(i), @"hired": @YES}];
         [company.employees addObject:eo];
     }
 
@@ -753,7 +753,7 @@
     ages = [NSMutableArray array];
     for (int i = 0; i < 30; ++i) {
         [ages addObject:@(20)];
-        EmployeeObject *eo = [[EmployeeObject alloc] initWithValue:@{@"name": @"Joe",  @"age": @(i), @"hired": @YES}];
+        EmployeeObject *eo = [[EmployeeObject alloc] initWithValue:@ {@"name": @"Joe",  @"age": @(i), @"hired": @YES}];
         [company.employees addObject:eo];
     }
 
@@ -774,8 +774,8 @@
     NSDate *dateMinInput = [NSDate date];
     NSDate *dateMaxInput = [dateMinInput dateByAddingTimeInterval:1000];
 
-    [realm transactionWithBlock:^{
-        [AggregateObject createInRealm:realm withValue:@[@0, @1.2f, @0.0, @YES, dateMinInput]];
+    [realm transactionWithBlock:^ {
+              [AggregateObject createInRealm:realm withValue:@[@0, @1.2f, @0.0, @YES, dateMinInput]];
         [AggregateObject createInRealm:realm withValue:@[@1, @0.0f, @2.5, @NO, dateMaxInput]];
         [AggregateObject createInRealm:realm withValue:@[@0, @1.2f, @0.0, @YES, dateMinInput]];
         [AggregateObject createInRealm:realm withValue:@[@1, @0.0f, @2.5, @NO, dateMaxInput]];
@@ -789,7 +789,7 @@
         [obj.array addObjects:[AggregateObject allObjectsInRealm:realm]];
     }];
 
-    void (^test)(void) = ^{
+    void (^test)(void) = ^ {
         RLMArray *array = obj.array;
 
         // SUM
@@ -826,7 +826,7 @@
     };
 
     test();
-    [realm transactionWithBlock:^{ [realm addObject:obj]; }];
+    [realm transactionWithBlock:^ { [realm addObject:obj]; }];
     test();
 }
 
@@ -840,8 +840,8 @@
     XCTAssertNil([obj.array maxOfProperty:@"propA"]);
     XCTAssertThrows([obj.array sumOfProperty:@"prop 1"]);
 
-    [realm transactionWithBlock:^{
-        [RenamedProperties1 createInRealm:realm withValue:@[@1, @""]];
+    [realm transactionWithBlock:^ {
+              [RenamedProperties1 createInRealm:realm withValue:@[@1, @""]];
         [RenamedProperties1 createInRealm:realm withValue:@[@2, @""]];
         [RenamedProperties1 createInRealm:realm withValue:@[@3, @""]];
 
@@ -853,7 +853,7 @@
     XCTAssertEqual(1, [[obj.array minOfProperty:@"propA"] intValue]);
     XCTAssertEqual(3, [[obj.array maxOfProperty:@"propA"] intValue]);
 
-    [realm transactionWithBlock:^{ [realm addObject:obj]; }];
+    [realm transactionWithBlock:^ { [realm addObject:obj]; }];
 
     XCTAssertEqual(6, [obj.array sumOfProperty:@"propA"].intValue);
     XCTAssertEqual(2.0, [obj.array averageOfProperty:@"propA"].doubleValue);
@@ -866,12 +866,12 @@
     RLMRealm *realm = [RLMRealm defaultRealm];
 
     [realm beginWriteTransaction];
-    EmployeeObject *e1 = [PrimaryEmployeeObject createInRealm:realm withValue:@{@"name": @"A", @"age": @20, @"hired": @YES}];
-    EmployeeObject *e2 = [PrimaryEmployeeObject createInRealm:realm withValue:@{@"name": @"B", @"age": @30, @"hired": @NO}];
-    EmployeeObject *e3 = [PrimaryEmployeeObject createInRealm:realm withValue:@{@"name": @"C", @"age": @40, @"hired": @YES}];
-    EmployeeObject *e4 = [PrimaryEmployeeObject createInRealm:realm withValue:@{@"name": @"D", @"age": @50, @"hired": @YES}];
-    PrimaryCompanyObject *c1 = [PrimaryCompanyObject createInRealm:realm withValue:@{@"name": @"ABC AG", @"employees": @[e1, e2, e3, e2]}];
-    PrimaryCompanyObject *c2 = [PrimaryCompanyObject createInRealm:realm withValue:@{@"name": @"ABC AG 2", @"employees": @[e1, e4]}];
+    EmployeeObject *e1 = [PrimaryEmployeeObject createInRealm:realm withValue:@ {@"name": @"A", @"age": @20, @"hired": @YES}];
+    EmployeeObject *e2 = [PrimaryEmployeeObject createInRealm:realm withValue:@ {@"name": @"B", @"age": @30, @"hired": @NO}];
+    EmployeeObject *e3 = [PrimaryEmployeeObject createInRealm:realm withValue:@ {@"name": @"C", @"age": @40, @"hired": @YES}];
+    EmployeeObject *e4 = [PrimaryEmployeeObject createInRealm:realm withValue:@ {@"name": @"D", @"age": @50, @"hired": @YES}];
+    PrimaryCompanyObject *c1 = [PrimaryCompanyObject createInRealm:realm withValue:@ {@"name": @"ABC AG", @"employees": @[e1, e2, e3, e2]}];
+    PrimaryCompanyObject *c2 = [PrimaryCompanyObject createInRealm:realm withValue:@ {@"name": @"ABC AG 2", @"employees": @[e1, e4]}];
 
     ArrayOfPrimaryCompanies *companies = [ArrayOfPrimaryCompanies createInRealm:realm withValue:@[@[c1, c2]]];
     [realm commitWriteTransaction];
@@ -892,7 +892,9 @@
                           (@[@"A", @"B", @"C"]));
     XCTAssertEqualObjects([companies.companies valueForKeyPath:@"@unionOfArrays.employees"],
                           (@[e1, e2, e3, e2, e1, e4]));
-    NSComparator cmp = ^NSComparisonResult(id obj1, id obj2) { return [[obj1 name] compare:[obj2 name]]; };
+    NSComparator cmp = ^NSComparisonResult(id obj1, id obj2) {
+        return [[obj1 name] compare:[obj2 name]];
+    };
     XCTAssertEqualObjects([[companies.companies valueForKeyPath:@"@distinctUnionOfArrays.employees"] sortedArrayUsingComparator:cmp],
                           (@[e1, e2, e3, e4]));
 
@@ -920,8 +922,8 @@
     RLMArray *employees = company.employees;
 
     // Unmanaged object can be accessed from other threads
-    [self dispatchAsyncAndWait:^{
-        XCTAssertNoThrow(company.employees);
+    [self dispatchAsyncAndWait:^ {
+             XCTAssertNoThrow(company.employees);
         XCTAssertNoThrow([employees lastObject]);
     }];
 
@@ -932,8 +934,8 @@
     employees = company.employees;
     XCTAssertNoThrow(company.employees);
     XCTAssertNoThrow([employees lastObject]);
-    [self dispatchAsyncAndWait:^{
-        XCTAssertThrows(company.employees);
+    [self dispatchAsyncAndWait:^ {
+             XCTAssertThrows(company.employees);
         XCTAssertThrows([employees lastObject]);
     }];
 }
@@ -969,13 +971,13 @@
 
     bool (^checkOrder)(NSArray *, NSArray *, NSArray *) = ^bool(NSArray *properties, NSArray *ascending, NSArray *dogs) {
         NSArray *sort = @[[RLMSortDescriptor sortDescriptorWithKeyPath:properties[0] ascending:[ascending[0] boolValue]],
-                          [RLMSortDescriptor sortDescriptorWithKeyPath:properties[1] ascending:[ascending[1] boolValue]]];
+                                                                                     [RLMSortDescriptor sortDescriptorWithKeyPath:properties[1] ascending:[ascending[1] boolValue]]];
         RLMResults *actual = [array.dogs sortedResultsUsingDescriptors:sort];
 
         return [actual[0] isEqualToObject:dogs[0]]
-            && [actual[1] isEqualToObject:dogs[1]]
-            && [actual[2] isEqualToObject:dogs[2]]
-            && [actual[3] isEqualToObject:dogs[3]];
+               && [actual[1] isEqualToObject:dogs[1]]
+               && [actual[2] isEqualToObject:dogs[2]]
+               && [actual[3] isEqualToObject:dogs[3]];
     };
 
     // Check each valid sort
@@ -992,7 +994,7 @@
 - (void)testSortByRenamedColumns {
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm beginWriteTransaction];
-    id value = @{@"array": @[@[@1, @"c"], @[@2, @"b"], @[@3, @"a"]]};
+    id value = @ {@"array": @[@[@1, @"c"], @[@2, @"b"], @[@3, @"a"]]};
     LinkToRenamedProperties1 *obj = [LinkToRenamedProperties1 createInRealm:realm withValue:value];
 
     // FIXME: sorting has to use the column names because the parsing is done by
@@ -1179,7 +1181,7 @@
     RLMRealm *realm = self.realmWithTestPath;
     [realm beginWriteTransaction];
     ArrayPropertyObject *array = [ArrayPropertyObject createInRealm:realm
-                                                          withValue:@[@"", @[@[@"a"]], @[@[@0]]]];
+                                                      withValue:@[@"", @[@[@"a"]], @[@[@0]]]];
     RLMAssertThrowsWithReason(array.intArray = (id)array.array,
                               @"RLMArray<StringObject> does not match expected type 'IntObject' for property 'ArrayPropertyObject.intArray'.");
     RLMAssertThrowsWithReason(array[@"intArray"] = array[@"array"],
@@ -1195,8 +1197,8 @@
 
     id expectation = [self expectationWithDescription:@""];
     id token = [array.array addNotificationBlock:^(RLMArray *array, RLMCollectionChange *change, NSError *error) {
-        XCTAssertNotNil(array);
-        XCTAssertNil(change);
+                    XCTAssertNotNil(array);
+                    XCTAssertNil(change);
         XCTAssertNil(error);
         [expectation fulfill];
     }];
@@ -1214,8 +1216,8 @@
     __block bool first = true;
     __block id expectation = [self expectationWithDescription:@""];
     id token = [array.array addNotificationBlock:^(RLMArray *array, RLMCollectionChange *change, NSError *error) {
-        XCTAssertNotNil(array);
-        XCTAssert(first ? !change : !!change);
+                    XCTAssertNotNil(array);
+                    XCTAssert(first ? !change : !!change);
         XCTAssertNil(error);
         first = false;
         [expectation fulfill];
@@ -1223,10 +1225,10 @@
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 
     expectation = [self expectationWithDescription:@""];
-    [self dispatchAsyncAndWait:^{
-        RLMRealm *realm = self.realmWithTestPath;
+    [self dispatchAsyncAndWait:^ {
+             RLMRealm *realm = self.realmWithTestPath;
         [realm transactionWithBlock:^{
-            RLMArray *array = [(ArrayPropertyObject *)[ArrayPropertyObject allObjectsInRealm:realm].firstObject array];
+                  RLMArray *array = [(ArrayPropertyObject *)[ArrayPropertyObject allObjectsInRealm:realm].firstObject array];
             [array addObject:[[StringObject alloc] init]];
         }];
     }];
@@ -1243,20 +1245,20 @@
 
     id expectation = [self expectationWithDescription:@""];
     id token = [array.array addNotificationBlock:^(__unused RLMArray *array, __unused RLMCollectionChange *change, __unused NSError *error) {
-        // will throw if it's incorrectly called a second time due to the
-        // unrelated write transaction
-        [expectation fulfill];
-    }];
+                    // will throw if it's incorrectly called a second time due to the
+                    // unrelated write transaction
+                    [expectation fulfill];
+                }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 
     // All notification blocks are called as part of a single runloop event, so
     // waiting for this one also waits for the above one to get a chance to run
-    [self waitForNotification:RLMRealmDidChangeNotification realm:realm block:^{
-        [self dispatchAsyncAndWait:^{
-            RLMRealm *realm = self.realmWithTestPath;
+    [self waitForNotification:RLMRealmDidChangeNotification realm:realm block:^ {
+             [self dispatchAsyncAndWait:^{
+                 RLMRealm *realm = self.realmWithTestPath;
             [realm transactionWithBlock:^{
-                [ArrayPropertyObject createInRealm:realm withValue:@[@"", @[], @[]]];
-            }];
+                      [ArrayPropertyObject createInRealm:realm withValue:@[@"", @[], @[]]];
+                  }];
         }];
     }];
     [(RLMNotificationToken *)token invalidate];
@@ -1270,8 +1272,8 @@
 
     __block id expectation = [self expectationWithDescription:@""];
     id token = [array.array addNotificationBlock:^(RLMArray *array, __unused RLMCollectionChange *change, NSError *error) {
-        XCTAssertNotNil(array);
-        XCTAssertNil(error);
+                    XCTAssertNotNil(array);
+                    XCTAssertNil(error);
         // will throw if it's called a second time before we create the new
         // expectation object immediately before manually refreshing
         [expectation fulfill];
@@ -1283,11 +1285,11 @@
 
     // All notification blocks are called as part of a single runloop event, so
     // waiting for this one also waits for the above one to get a chance to run
-    [self waitForNotification:RLMRealmRefreshRequiredNotification realm:realm block:^{
-        [self dispatchAsyncAndWait:^{
-            RLMRealm *realm = self.realmWithTestPath;
+    [self waitForNotification:RLMRealmRefreshRequiredNotification realm:realm block:^ {
+             [self dispatchAsyncAndWait:^{
+                 RLMRealm *realm = self.realmWithTestPath;
             [realm transactionWithBlock:^{
-                RLMArray *array = [(ArrayPropertyObject *)[ArrayPropertyObject allObjectsInRealm:realm].firstObject array];
+                      RLMArray *array = [(ArrayPropertyObject *)[ArrayPropertyObject allObjectsInRealm:realm].firstObject array];
                 [array addObject:[[StringObject alloc] init]];
             }];
         }];
@@ -1308,8 +1310,8 @@
 
     __block id expectation = [self expectationWithDescription:@""];
     id token = [array.array addNotificationBlock:^(RLMArray *array, __unused RLMCollectionChange *change, NSError *error) {
-        XCTAssertNotNil(array);
-        XCTAssertNil(error);
+                    XCTAssertNotNil(array);
+                    XCTAssertNil(error);
         [expectation fulfill];
     }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
@@ -1325,15 +1327,15 @@
     RLMRealm *realm = [RLMRealm defaultRealm];
     __block IntObject *io;
     __block RLMArray *array;
-    [realm transactionWithBlock:^{
-        io = [IntObject createInDefaultRealmWithValue:@[@0]];
+    [realm transactionWithBlock:^ {
+              io = [IntObject createInDefaultRealmWithValue:@[@0]];
         ArrayPropertyObject *obj = [ArrayPropertyObject createInDefaultRealmWithValue:@[@"", @[], @[io]]];
         array = obj.intArray;
     }];
     [realm beginWriteTransaction];
 
-    [self dispatchAsyncAndWait:^{
-        RLMAssertThrowsWithReasonMatching([array count], @"thread");
+    [self dispatchAsyncAndWait:^ {
+             RLMAssertThrowsWithReasonMatching([array count], @"thread");
         RLMAssertThrowsWithReasonMatching([array objectAtIndex:0], @"thread");
         RLMAssertThrowsWithReasonMatching([array firstObject], @"thread");
         RLMAssertThrowsWithReasonMatching([array lastObject], @"thread");
@@ -1368,8 +1370,8 @@
     RLMRealm *realm = [RLMRealm defaultRealm];
     __block IntObject *io;
     __block RLMArray *array;
-    [realm transactionWithBlock:^{
-        io = [IntObject createInDefaultRealmWithValue:@[@0]];
+    [realm transactionWithBlock:^ {
+              io = [IntObject createInDefaultRealmWithValue:@[@0]];
         ArrayPropertyObject *obj = [ArrayPropertyObject createInDefaultRealmWithValue:@[@"", @[], @[io]]];
         array = obj.intArray;
     }];
@@ -1453,8 +1455,8 @@
     RLMRealm *realm = [RLMRealm defaultRealm];
     __block IntObject *io;
     __block RLMArray *array;
-    [realm transactionWithBlock:^{
-        io = [IntObject createInDefaultRealmWithValue:@[@0]];
+    [realm transactionWithBlock:^ {
+              io = [IntObject createInDefaultRealmWithValue:@[@0]];
         ArrayPropertyObject *obj = [ArrayPropertyObject createInDefaultRealmWithValue:@[@"", @[], @[io]]];
         array = obj.intArray;
     }];

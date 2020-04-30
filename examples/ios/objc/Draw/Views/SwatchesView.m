@@ -42,7 +42,7 @@ static CGFloat kSwatchPencilPadding = 1.0f;
     if (self = [super initWithFrame:frame]) {
         [self setupButtons];
     }
-    
+
     return self;
 }
 
@@ -78,9 +78,11 @@ static CGFloat kSwatchPencilPadding = 1.0f;
         x += swatchSize.width + kSwatchPencilPadding;
     }
 
-    self.contentSize = (CGSize){totalWidth, swatchSize.height};
+    self.contentSize = (CGSize) {
+        totalWidth, swatchSize.height
+    };
     [self updateContentInset];
-    
+
     self.selectedIconView = [[UIImageView alloc] initWithImage:[[self class] circleIcon]];
     [self addSelectedIconToButton:self.colorButtons.firstObject];
 }
@@ -103,7 +105,7 @@ static CGFloat kSwatchPencilPadding = 1.0f;
         contentInsets.left = inset;
         contentInsets.right = inset;
     }
-    
+
     self.contentInset = contentInsets;
 }
 
@@ -128,9 +130,9 @@ static CGFloat kSwatchPencilPadding = 1.0f;
     if (selectedColor == _selectedColor) {
         return;
     }
-    
+
     _selectedColor = selectedColor;
-    
+
     if (self.swatchColorChangedHandler)
         self.swatchColorChangedHandler();
 }
@@ -138,10 +140,14 @@ static CGFloat kSwatchPencilPadding = 1.0f;
 + (CGSize)sizeForDevice
 {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        return (CGSize){kSwatchButtonWidthPad, kSwatchButtonHeightPad};
+        return (CGSize) {
+            kSwatchButtonWidthPad, kSwatchButtonHeightPad
+        };
     }
-    
-    return (CGSize){kSwatchButtonWidthPhone, kSwatchButtonHeightPhone};
+
+    return (CGSize) {
+        kSwatchButtonWidthPhone, kSwatchButtonHeightPhone
+    };
 }
 
 + (UIImage *)circleIcon

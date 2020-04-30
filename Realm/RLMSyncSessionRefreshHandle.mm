@@ -69,9 +69,9 @@ static const NSTimeInterval RLMRefreshBuffer = 10;
 @implementation RLMSyncSessionRefreshHandle
 
 - (instancetype)initWithRealmURL:(NSURL *)realmURL
-                            user:(std::shared_ptr<realm::SyncUser>)user
-                         session:(std::shared_ptr<realm::SyncSession>)session
-                 completionBlock:(RLMSyncBasicErrorReportingBlock)completionBlock {
+    user:(std::shared_ptr<realm::SyncUser>)user
+    session:(std::shared_ptr<realm::SyncSession>)session
+    completionBlock:(RLMSyncBasicErrorReportingBlock)completionBlock {
     if (self = [super init]) {
         NSString *path = [realmURL path];
         _path = [path UTF8String];
@@ -118,7 +118,7 @@ static const NSTimeInterval RLMRefreshBuffer = 10;
     [self cancelTimer];
 
     NSDate *fireDate = [RLMSyncSessionRefreshHandle fireDateForTokenExpirationDate:dateWhenTokenExpires
-                                                                           nowDate:[NSDate date]];
+                                                    nowDate:[NSDate date]];
     if (!fireDate) {
         unregisterRefreshHandle(_user, _path);
         return;
@@ -129,7 +129,7 @@ static const NSTimeInterval RLMRefreshBuffer = 10;
     dispatch_source_set_timer(self.timer, dispatch_time(DISPATCH_TIME_NOW, timeToExpiration * NSEC_PER_SEC),
                               /* interval */ DISPATCH_TIME_FOREVER,
                               /* leeway */ NSEC_PER_SEC * (timeToExpiration / 10));
-    dispatch_source_set_event_handler(self.timer, ^{ [self _timerFired]; });
+    dispatch_source_set_event_handler(self.timer, ^ { [self _timerFired]; });
     dispatch_resume(self.timer);
 }
 
@@ -146,7 +146,7 @@ static const NSTimeInterval RLMRefreshBuffer = 10;
     RLMServerPath resolvedPath = model.accessToken.tokenData.path;
     // Munge the path back onto the original URL, because the `sync` API expects an entire URL.
     NSURLComponents *urlBuffer = [NSURLComponents componentsWithURL:self.realmURL
-                                            resolvingAgainstBaseURL:YES];
+                                                  resolvingAgainstBaseURL:YES];
     urlBuffer.path = resolvedPath;
     resolvedURLString = [[urlBuffer URL] absoluteString];
     if (!resolvedURLString) {
@@ -187,17 +187,17 @@ static const NSTimeInterval RLMRefreshBuffer = 10;
     NSDate *nextTryDate = nil;
     if ([error.domain isEqualToString:NSURLErrorDomain]) {
         switch (error.code) {
-            case NSURLErrorCannotConnectToHost:
-            case NSURLErrorNotConnectedToInternet:
-            case NSURLErrorNetworkConnectionLost:
-            case NSURLErrorTimedOut:
-            case NSURLErrorDNSLookupFailed:
-            case NSURLErrorCannotFindHost:
-                // FIXME: 10 seconds is an arbitrarily chosen value, consider rationalizing it.
-                nextTryDate = [NSDate dateWithTimeIntervalSinceNow:RLMRefreshBuffer + 10];
-                break;
-            default:
-                break;
+        case NSURLErrorCannotConnectToHost:
+        case NSURLErrorNotConnectedToInternet:
+        case NSURLErrorNetworkConnectionLost:
+        case NSURLErrorTimedOut:
+        case NSURLErrorDNSLookupFailed:
+        case NSURLErrorCannotFindHost:
+            // FIXME: 10 seconds is an arbitrarily chosen value, consider rationalizing it.
+            nextTryDate = [NSDate dateWithTimeIntervalSinceNow:RLMRefreshBuffer + 10];
+            break;
+        default:
+            break;
         }
     }
     if (!nextTryDate) {
@@ -230,7 +230,7 @@ static const NSTimeInterval RLMRefreshBuffer = 10;
     if (json && !error) {
         RLMAuthResponseModel *model = [[RLMAuthResponseModel alloc] initWithDictionary:json
                                                                     requireAccessToken:YES
-                                                                   requireRefreshToken:NO];
+                                                                    requireRefreshToken:NO];
         if (model) {
             return [self _handleSuccessfulRequest:model session:*session];
         }
@@ -258,21 +258,25 @@ static const NSTimeInterval RLMRefreshBuffer = 10;
         return;
     }
 
-    NSDictionary *json = @{
-                           kRLMSyncProviderKey: @"realm",
-                           kRLMSyncPathKey: @(_path.c_str()),
-                           kRLMSyncDataKey: refreshToken,
-                           kRLMSyncAppIDKey: [RLMSyncManager sharedManager].appID,
-                           };
+    NSDictionary *json = @ {
+kRLMSyncProviderKey:
+        @"realm",
+kRLMSyncPathKey:
+        @(_path.c_str()),
+kRLMSyncDataKey:
+        refreshToken,
+kRLMSyncAppIDKey:
+        [RLMSyncManager sharedManager].appID,
+    };
 
     __weak RLMSyncSessionRefreshHandle *weakSelf = self;
     RLMSyncCompletionBlock handler = ^(NSError *error, NSDictionary *json) {
         [weakSelf _onRefreshCompletionWithError:error json:json];
     };
     [RLMSyncAuthEndpoint sendRequestToServer:self.authServerURL
-                                        JSON:json
-                                     timeout:60.0
-                                  completion:handler];
+                         JSON:json
+                         timeout:60.0
+                         completion:handler];
 }
 
 @end

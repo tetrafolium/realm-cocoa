@@ -67,18 +67,18 @@ typedef void(^RLMSyncErrorReportingBlock)(NSError *, RLMSyncSession * _Nullable)
  */
 @interface RLMSyncManager : NSObject
 
-/**
- A block which can optionally be set to report sync-related errors to your application.
+    /**
+     A block which can optionally be set to report sync-related errors to your application.
 
- Any error reported through this block will be of the `RLMSyncError` type, and marked
- with the `RLMSyncErrorDomain` domain.
+     Any error reported through this block will be of the `RLMSyncError` type, and marked
+     with the `RLMSyncErrorDomain` domain.
 
- Errors reported through this mechanism are fatal, with several exceptions. Please consult
- `RLMSyncError` for information about the types of errors that can be reported through
- the block, and for for suggestions on handling recoverable error codes.
+     Errors reported through this mechanism are fatal, with several exceptions. Please consult
+     `RLMSyncError` for information about the types of errors that can be reported through
+     the block, and for for suggestions on handling recoverable error codes.
 
- @see `RLMSyncError`
- */
+     @see `RLMSyncError`
+     */
 @property (nullable, nonatomic, copy) RLMSyncErrorReportingBlock errorHandler;
 
 /**

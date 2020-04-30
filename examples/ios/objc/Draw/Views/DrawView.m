@@ -43,27 +43,27 @@
     if (self) {
         typeof(self) __weak weakSelf = self;
         self.notificationToken = [[RLMRealm defaultRealm] addNotificationBlock:^(NSString *notification, RLMRealm *realm) {
-        
-            if (weakSelf.paths.count == 0) {
-                [weakSelf.canvasView clearCanvas];
-            }
-            else {
+
+                                    if (weakSelf.paths.count == 0) {
+                                        [weakSelf.canvasView clearCanvas];
+                                    }
+                                    else {
                 [weakSelf.canvasView setNeedsDisplay];
             }
         }];
         self.paths = [DrawPath allObjects];
-        
+
         self.canvasView = [[CanvasView alloc] init];
         self.canvasView.paths = self.paths;
         [self addSubview:self.canvasView];
-        
+
         self.swatchesView = [[SwatchesView alloc] initWithFrame:CGRectZero];
         [self addSubview:self.swatchesView];
-        
-        self.swatchesView.swatchColorChangedHandler = ^{
+
+        self.swatchesView.swatchColorChangedHandler = ^ {
             weakSelf.currentColorName = weakSelf.swatchesView.selectedColor;
         };
-        
+
         self.currentColorName = @"Black";
     }
     return self;
@@ -72,16 +72,16 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
+
     CGSize boundsSize = self.bounds.size;
     CGFloat maxDimension = MAX(boundsSize.width, boundsSize.height);
-    
+
     CGRect frame = self.canvasView.frame;
     frame.size.width = maxDimension;
     frame.size.height = maxDimension;
     frame.origin.x = (boundsSize.width - maxDimension) * 0.5f;
     self.canvasView.frame = CGRectIntegral(frame);
-    
+
     frame = self.swatchesView.frame;
     frame.size.width = CGRectGetWidth(self.frame);
     frame.origin.y = CGRectGetHeight(self.frame) - CGRectGetHeight(frame);
@@ -94,31 +94,31 @@
     // Create a draw path object
     self.drawPath = [[DrawPath alloc] init];
     self.drawPath.color = self.currentColorName;
-    
+
     // Create a draw point object
     CGPoint point = [[touches anyObject] locationInView:self.canvasView];
     DrawPoint *drawPoint = [[DrawPoint alloc] init];
     drawPoint.x = point.x;
     drawPoint.y = point.y;
-    
+
     // Add the draw point to the draw path
     [self.drawPath.points addObject:drawPoint];
-    
+
     // Add the draw path to the Realm
     RLMRealm *defaultRealm = [RLMRealm defaultRealm];
-    [defaultRealm transactionWithBlock:^{
-        [defaultRealm addObject:self.drawPath];
-    }];
-    
+    [defaultRealm transactionWithBlock:^ {
+                     [defaultRealm addObject:self.drawPath];
+                 }];
+
     [self.canvasView setNeedsDisplay];
 }
 
 - (void)addPoint:(CGPoint)point
 {
-    [[RLMRealm defaultRealm] transactionWithBlock:^{
-        if (self.drawPath.isInvalidated) {
-            self.drawPath = [[DrawPath alloc] init];
-            self.drawPath.color = self.currentColorName ?: @"Black";
+    [[RLMRealm defaultRealm] transactionWithBlock:^ {
+                                if (self.drawPath.isInvalidated) {
+                                    self.drawPath = [[DrawPath alloc] init];
+                                    self.drawPath.color = self.currentColorName ?: @"Black";
             [[RLMRealm defaultRealm] addObject:self.drawPath];
         }
 
@@ -131,7 +131,7 @@
 {
     CGPoint point = [[touches anyObject] locationInView:self.canvasView];
     [self addPoint:point];
-    
+
     [self.canvasView setNeedsDisplay];
 }
 
@@ -139,7 +139,7 @@
 {
     CGPoint point = [[touches anyObject] locationInView:self.canvasView];
     [self addPoint:point];
-    [[RLMRealm defaultRealm] transactionWithBlock:^{ self.drawPath.completed = YES; }];
+    [[RLMRealm defaultRealm] transactionWithBlock:^ { self.drawPath.completed = YES; }];
     self.drawPath = nil;
 }
 
@@ -158,23 +158,23 @@
     if (motion != UIEventSubtypeMotionShake) {
         return;
     }
-    
+
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Reset Canvas?"
-                                                                             message:@"This will clear the Realm database and reset the canvas. Are you sure you wish to proceed?"
-                                                                      preferredStyle:UIAlertControllerStyleAlert];
-    
+                                                            message:@"This will clear the Realm database and reset the canvas. Are you sure you wish to proceed?"
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+
     typeof(self) __weak weakSelf = self;
     [alertController addAction:[UIAlertAction actionWithTitle:@"Reset"
-                                                        style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction *action) {
-        [[RLMRealm defaultRealm] transactionWithBlock:^{
-            [[RLMRealm defaultRealm] deleteAllObjects];
-        }];
-        
-       [weakSelf.canvasView clearCanvas];
+                                style:UIAlertActionStyleDefault
+                    handler:^(UIAlertAction *action) {
+                        [[RLMRealm defaultRealm] transactionWithBlock:^ {
+                            [[RLMRealm defaultRealm] deleteAllObjects];
+                        }];
+
+        [weakSelf.canvasView clearCanvas];
     }]];
     [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
-    
+
     [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:alertController animated:YES completion:nil];
 }
 

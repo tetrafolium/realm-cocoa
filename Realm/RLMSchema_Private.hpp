@@ -21,8 +21,8 @@
 #import <memory>
 
 namespace realm {
-    class Schema;
-    class ObjectSchema;
+class Schema;
+class ObjectSchema;
 }
 
 @interface RLMSchema ()

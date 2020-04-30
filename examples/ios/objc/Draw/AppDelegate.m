@@ -63,32 +63,32 @@
     // Creating a debug credential since this demo is just using the generated access token
     // produced when running the Realm Object Server via the `start-object-server.command`
     RLMSyncCredentials *credential = [RLMSyncCredentials credentialsWithUsername:@"demo@realm.io"
-                                                                        password:@"password"
-                                                                        register:NO];
+                                                         password:@"password"
+                                                         register:NO];
 
     // Log the user in (async, the Realm will start syncing once the user is logged in automatically)
     [RLMSyncUser logInWithCredentials:credential
-                        authServerURL:authURL
-                         onCompletion:^(RLMSyncUser *user, NSError *error) {
-                             if (error) {
-                                 self.activityIndicatorView.hidden = YES;
-                                 UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Login Failed" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                                 [alertController addAction:[UIAlertAction actionWithTitle:@"Retry" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                                     [self logIn];
-                                     self.activityIndicatorView.hidden = NO;
-                                 }]];
-                                 [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
-                             }
-                             else { // Logged in setup the default Realm
-                                    // The Realm virtual path on the server.
-                                    // The `~` represents the Realm user ID. Since the user ID is not known until you
-                                    // log in, the ~ is used as short-hand to represent this.
-                                 NSURL *syncURL = [NSURL URLWithString:[NSString stringWithFormat:@"realm://%@:9080/~/Draw", kIPAddress]];
-                                 RLMRealmConfiguration.defaultConfiguration = [RLMSyncUser.currentUser configurationWithURL:syncURL fullSynchronization:YES];
-                                 
-                                 self.window.rootViewController.view = [DrawView new];
-                             }
-                         }];
+                 authServerURL:authURL
+                onCompletion:^(RLMSyncUser *user, NSError *error) {
+                    if (error) {
+                        self.activityIndicatorView.hidden = YES;
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Login Failed" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addAction:[UIAlertAction actionWithTitle:@"Retry" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                                [self logIn];
+                                self.activityIndicatorView.hidden = NO;
+                            }]];
+            [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
+        }
+        else { // Logged in setup the default Realm
+            // The Realm virtual path on the server.
+            // The `~` represents the Realm user ID. Since the user ID is not known until you
+            // log in, the ~ is used as short-hand to represent this.
+            NSURL *syncURL = [NSURL URLWithString:[NSString stringWithFormat:@"realm://%@:9080/~/Draw", kIPAddress]];
+            RLMRealmConfiguration.defaultConfiguration = [RLMSyncUser.currentUser configurationWithURL:syncURL fullSynchronization:YES];
+
+            self.window.rootViewController.view = [DrawView new];
+        }
+    }];
 }
 
 - (void)showActivityIndicator
@@ -96,12 +96,12 @@
     if (self.activityIndicatorView == nil) {
         self.activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
         self.activityIndicatorView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin |
-        UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+                UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
     }
 
     [self.window.rootViewController.view addSubview:self.activityIndicatorView];
     self.activityIndicatorView.center = self.window.center;
-    
+
     [self.activityIndicatorView startAnimating];
 }
 

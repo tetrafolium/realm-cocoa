@@ -48,8 +48,8 @@ static_assert(RLMUpdatePolicyUpdateChanged == static_cast<int>(CreatePolicy::Upd
 
 void RLMRealmCreateAccessors(RLMSchema *schema) {
     const size_t bufferSize = sizeof("RLM:Managed  ") // includes null terminator
-                            + std::numeric_limits<unsigned long long>::digits10
-                            + realm::Group::max_table_name_length;
+                              + std::numeric_limits<unsigned long long>::digits10
+                              + realm::Group::max_table_name_length;
 
     char className[bufferSize] = "RLM:Managed ";
     char *const start = className + strlen(className);
@@ -93,7 +93,7 @@ void RLMInitializeSwiftAccessorGenerics(__unsafe_unretained RLMObjectBase *const
     for (RLMProperty *prop in object->_objectSchema.swiftGenericProperties) {
         if (prop.type == RLMPropertyTypeLinkingObjects) {
             [prop.swiftAccessor initializeObject:(char *)(__bridge void *)object + ivar_getOffset(prop.swiftIvar)
-                                          parent:object property:prop];
+                                parent:object property:prop];
         }
         else if (prop.array) {
             id ivar = object_getIvar(object, prop.swiftIvar);
@@ -154,7 +154,7 @@ void RLMAddObjectToRealm(__unsafe_unretained RLMObjectBase *const object,
 }
 
 RLMObjectBase *RLMCreateObjectInRealmWithValue(RLMRealm *realm, NSString *className,
-                                               id value, RLMUpdatePolicy updatePolicy) {
+        id value, RLMUpdatePolicy updatePolicy) {
     RLMVerifyInWriteTransaction(realm);
 
     if (updatePolicy != RLMUpdatePolicyError && RLMIsObjectSubclass([value class])) {
@@ -199,7 +199,7 @@ void RLMDeleteObjectFromRealm(__unsafe_unretained RLMObjectBase *const object,
 
     // move last row to row we are deleting
     if (object->_row.is_attached()) {
-        RLMTrackDeletions(realm, ^{
+        RLMTrackDeletions(realm, ^ {
             object->_row.move_last_over();
         });
     }
@@ -227,17 +227,17 @@ RLMResults *RLMGetObjects(__unsafe_unretained RLMRealm *const realm,
     if (!info.table()) {
         // read-only realms may be missing tables since we can't add any
         // missing ones on init
-        return [RLMResults resultsWithObjectInfo:info results:{}];
+        return [RLMResults resultsWithObjectInfo:info results: {}];
     }
 
     if (predicate) {
         realm::Query query = RLMPredicateToQuery(predicate, info.rlmObjectSchema, realm.schema, realm.group);
         return [RLMResults resultsWithObjectInfo:info
-                                         results:realm::Results(realm->_realm, std::move(query))];
+                           results:realm::Results(realm->_realm, std::move(query))];
     }
 
     return [RLMResults resultsWithObjectInfo:info
-                                     results:realm::Results(realm->_realm, *info.table())];
+                       results:realm::Results(realm->_realm, *info.table())];
 }
 
 id RLMGetObject(RLMRealm *realm, NSString *objectClassName, id key) {
@@ -250,7 +250,7 @@ id RLMGetObject(RLMRealm *realm, NSString *objectClassName, id key) {
     try {
         RLMAccessorContext c{info};
         auto obj = realm::Object::get_for_primary_key(c, realm->_realm, *info.objectSchema,
-                                                      key ?: NSNull.null);
+                   key ?: NSNull.null);
         if (!obj.is_valid())
             return nil;
         return RLMCreateObjectAccessor(info, obj.row());

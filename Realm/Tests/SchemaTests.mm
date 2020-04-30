@@ -215,7 +215,7 @@ RLM_ARRAY_TYPE(SchemaTestsLinkSource)
 @implementation InvalidReadWriteLinkingObjectsProperty
 
 + (NSDictionary *)linkingObjectsProperties {
-    return @{ @"linkingObjects": [RLMPropertyDescriptor descriptorWithClass:SchemaTestsLinkSource.class propertyName:@"irwlop"] };
+    return @ { @"linkingObjects": [RLMPropertyDescriptor descriptorWithClass:SchemaTestsLinkSource.class propertyName:@"irwlop"] };
 }
 
 @end
@@ -235,7 +235,7 @@ RLM_ARRAY_TYPE(SchemaTestsLinkSource)
 @implementation ValidLinkingObjectsPropertyWithProtocol
 
 + (NSDictionary *)linkingObjectsProperties {
-    return @{ @"linkingObjects": [RLMPropertyDescriptor descriptorWithClass:SchemaTestsLinkSource.class propertyName:@"vlopwp"] };
+    return @ { @"linkingObjects": [RLMPropertyDescriptor descriptorWithClass:SchemaTestsLinkSource.class propertyName:@"vlopwp"] };
 }
 
 @end
@@ -249,7 +249,7 @@ RLM_ARRAY_TYPE(NotARealClass)
 @implementation InvalidLinkingObjectsPropertyProtocol
 
 + (NSDictionary *)linkingObjectsProperties {
-    return @{ @"linkingObjects": [RLMPropertyDescriptor descriptorWithClass:SchemaTestsLinkSource.class propertyName:@"ilopp"] };
+    return @ { @"linkingObjects": [RLMPropertyDescriptor descriptorWithClass:SchemaTestsLinkSource.class propertyName:@"ilopp"] };
 }
 
 @end
@@ -263,8 +263,10 @@ RLM_ARRAY_TYPE(NotARealClass)
 @implementation InvalidLinkingObjectsPropertyMissingSourcePropertyOfLink
 
 + (NSDictionary *)linkingObjectsProperties {
-    return @{ @"linkingObjects": [RLMPropertyDescriptor descriptorWithClass:InvalidLinkingObjectsPropertyMissingSourcePropertyOfLink.class
-                                                               propertyName:@"nosuchproperty"] };
+    return @ { @"linkingObjects":
+               [RLMPropertyDescriptor descriptorWithClass:InvalidLinkingObjectsPropertyMissingSourcePropertyOfLink.class
+                                      propertyName:@"nosuchproperty"]
+             };
 }
 
 @end
@@ -278,8 +280,10 @@ RLM_ARRAY_TYPE(NotARealClass)
 @implementation InvalidLinkingObjectsPropertySourcePropertyNotALink
 
 + (NSDictionary *)linkingObjectsProperties {
-    return @{ @"linkingObjects": [RLMPropertyDescriptor descriptorWithClass:InvalidLinkingObjectsPropertySourcePropertyNotALink.class
-                                                               propertyName:@"integer"] };
+    return @ { @"linkingObjects":
+               [RLMPropertyDescriptor descriptorWithClass:InvalidLinkingObjectsPropertySourcePropertyNotALink.class
+                                      propertyName:@"integer"]
+             };
 }
 
 @end
@@ -293,8 +297,10 @@ RLM_ARRAY_TYPE(NotARealClass)
 @implementation InvalidLinkingObjectsPropertySourcePropertyLinksElsewhere
 
 + (NSDictionary *)linkingObjectsProperties {
-    return @{ @"linkingObjects": [RLMPropertyDescriptor descriptorWithClass:InvalidLinkingObjectsPropertySourcePropertyLinksElsewhere.class
-                                                               propertyName:@"link"] };
+    return @ { @"linkingObjects":
+               [RLMPropertyDescriptor descriptorWithClass:InvalidLinkingObjectsPropertySourcePropertyLinksElsewhere.class
+                                      propertyName:@"link"]
+             };
 }
 
 @end
@@ -355,7 +361,7 @@ RLM_ARRAY_TYPE(NotARealClass)
             // Ensure that the className method isn't used during schema init
             // as it may not be overriden yet
             Class metaClass = object_getClass(cls);
-            IMP imp = imp_implementationWithBlock(^{ return nil; });
+            IMP imp = imp_implementationWithBlock(^ { return nil; });
             class_replaceMethod(metaClass, @selector(className), imp, "@:");
         }
 
@@ -379,7 +385,7 @@ RLM_ARRAY_TYPE(NotARealClass)
 
             // Restore the className method
             Class metaClass = object_getClass(cls);
-            IMP imp = imp_implementationWithBlock(^{ return className; });
+            IMP imp = imp_implementationWithBlock(^ { return className; });
             class_replaceMethod(metaClass, @selector(className), imp, "@:");
         }
 
@@ -387,15 +393,18 @@ RLM_ARRAY_TYPE(NotARealClass)
         // for generated subclasses
         checkSchema(schema, @"SchemaTestClassBase", @{@"baseCol": @"IntObject"});
         checkSchema(schema, @"SchemaTestClassFirstChild", @{@"baseCol": @"IntObject",
-                                                            @"firstChildCol": @"IntObject"});
+                    @"firstChildCol": @"IntObject"
+                                                           });
         checkSchema(schema, @"SchemaTestClassSecondChild", @{@"baseCol": @"IntObject",
-                                                            @"secondChildCol": @"IntObject"});
+                    @"secondChildCol": @"IntObject"
+                                                            });
         checkSchema(schema, @"SchemaTestClassLink", @{@"base": @"SchemaTestClassBase",
-                                                      @"baseArray": @"SchemaTestClassBase",
-                                                      @"child": @"SchemaTestClassFirstChild",
-                                                      @"childArray": @"SchemaTestClassFirstChild",
-                                                      @"secondChild": @"SchemaTestClassSecondChild",
-                                                      @"secondChildArray": @"SchemaTestClassSecondChild"});
+                    @"baseArray": @"SchemaTestClassBase",
+                    @"child": @"SchemaTestClassFirstChild",
+                    @"childArray": @"SchemaTestClassFirstChild",
+                    @"secondChild": @"SchemaTestClassSecondChild",
+                    @"secondChildArray": @"SchemaTestClassSecondChild"
+                                                     });
 
 
         // Test creating objects of each class
@@ -505,130 +514,130 @@ RLM_ARRAY_TYPE(NotARealClass)
     schema.objectSchema = objectSchema;
 
     XCTAssertEqualObjects(schema.description, @"Schema {\n"
-                                              @"\tAllTypesObject {\n"
-                                              @"\t\tboolCol {\n"
-                                              @"\t\t\ttype = bool;\n"
-                                              @"\t\t\tobjectClassName = (null);\n"
-                                              @"\t\t\tlinkOriginPropertyName = (null);\n"
-                                              @"\t\t\tindexed = NO;\n"
-                                              @"\t\t\tisPrimary = NO;\n"
-                                              @"\t\t\tarray = NO;\n"
-                                              @"\t\t\toptional = NO;\n"
-                                              @"\t\t}\n"
-                                              @"\t\tintCol {\n"
-                                              @"\t\t\ttype = int;\n"
-                                              @"\t\t\tobjectClassName = (null);\n"
-                                              @"\t\t\tlinkOriginPropertyName = (null);\n"
-                                              @"\t\t\tindexed = NO;\n"
-                                              @"\t\t\tisPrimary = NO;\n"
-                                              @"\t\t\tarray = NO;\n"
-                                              @"\t\t\toptional = NO;\n"
-                                              @"\t\t}\n"
-                                              @"\t\tfloatCol {\n"
-                                              @"\t\t\ttype = float;\n"
-                                              @"\t\t\tobjectClassName = (null);\n"
-                                              @"\t\t\tlinkOriginPropertyName = (null);\n"
-                                              @"\t\t\tindexed = NO;\n"
-                                              @"\t\t\tisPrimary = NO;\n"
-                                              @"\t\t\tarray = NO;\n"
-                                              @"\t\t\toptional = NO;\n"
-                                              @"\t\t}\n"
-                                              @"\t\tdoubleCol {\n"
-                                              @"\t\t\ttype = double;\n"
-                                              @"\t\t\tobjectClassName = (null);\n"
-                                              @"\t\t\tlinkOriginPropertyName = (null);\n"
-                                              @"\t\t\tindexed = NO;\n"
-                                              @"\t\t\tisPrimary = NO;\n"
-                                              @"\t\t\tarray = NO;\n"
-                                              @"\t\t\toptional = NO;\n"
-                                              @"\t\t}\n"
-                                              @"\t\tstringCol {\n"
-                                              @"\t\t\ttype = string;\n"
-                                              @"\t\t\tobjectClassName = (null);\n"
-                                              @"\t\t\tlinkOriginPropertyName = (null);\n"
-                                              @"\t\t\tindexed = NO;\n"
-                                              @"\t\t\tisPrimary = NO;\n"
-                                              @"\t\t\tarray = NO;\n"
-                                              @"\t\t\toptional = NO;\n"
-                                              @"\t\t}\n"
-                                              @"\t\tbinaryCol {\n"
-                                              @"\t\t\ttype = data;\n"
-                                              @"\t\t\tobjectClassName = (null);\n"
-                                              @"\t\t\tlinkOriginPropertyName = (null);\n"
-                                              @"\t\t\tindexed = NO;\n"
-                                              @"\t\t\tisPrimary = NO;\n"
-                                              @"\t\t\tarray = NO;\n"
-                                              @"\t\t\toptional = NO;\n"
-                                              @"\t\t}\n"
-                                              @"\t\tdateCol {\n"
-                                              @"\t\t\ttype = date;\n"
-                                              @"\t\t\tobjectClassName = (null);\n"
-                                              @"\t\t\tlinkOriginPropertyName = (null);\n"
-                                              @"\t\t\tindexed = NO;\n"
-                                              @"\t\t\tisPrimary = NO;\n"
-                                              @"\t\t\tarray = NO;\n"
-                                              @"\t\t\toptional = NO;\n"
-                                              @"\t\t}\n"
-                                              @"\t\tcBoolCol {\n"
-                                              @"\t\t\ttype = bool;\n"
-                                              @"\t\t\tobjectClassName = (null);\n"
-                                              @"\t\t\tlinkOriginPropertyName = (null);\n"
-                                              @"\t\t\tindexed = NO;\n"
-                                              @"\t\t\tisPrimary = NO;\n"
-                                              @"\t\t\tarray = NO;\n"
-                                              @"\t\t\toptional = NO;\n"
-                                              @"\t\t}\n"
-                                              @"\t\tlongCol {\n"
-                                              @"\t\t\ttype = int;\n"
-                                              @"\t\t\tobjectClassName = (null);\n"
-                                              @"\t\t\tlinkOriginPropertyName = (null);\n"
-                                              @"\t\t\tindexed = NO;\n"
-                                              @"\t\t\tisPrimary = NO;\n"
-                                              @"\t\t\tarray = NO;\n"
-                                              @"\t\t\toptional = NO;\n"
-                                              @"\t\t}\n"
-                                              @"\t\tobjectCol {\n"
-                                              @"\t\t\ttype = object;\n"
-                                              @"\t\t\tobjectClassName = StringObject;\n"
-                                              @"\t\t\tlinkOriginPropertyName = (null);\n"
-                                              @"\t\t\tindexed = NO;\n"
-                                              @"\t\t\tisPrimary = NO;\n"
-                                              @"\t\t\tarray = NO;\n"
-                                              @"\t\t\toptional = YES;\n"
-                                              @"\t\t}\n"
-                                              @"\t\tlinkingObjectsCol {\n"
-                                              @"\t\t\ttype = linking objects;\n"
-                                              @"\t\t\tobjectClassName = LinkToAllTypesObject;\n"
-                                              @"\t\t\tlinkOriginPropertyName = allTypesCol;\n"
-                                              @"\t\t\tindexed = NO;\n"
-                                              @"\t\t\tisPrimary = NO;\n"
-                                              @"\t\t\tarray = YES;\n"
-                                              @"\t\t\toptional = NO;\n"
-                                              @"\t\t}\n"
-                                              @"\t}\n"
-                                              @"\tIntObject {\n"
-                                              @"\t\tintCol {\n"
-                                              @"\t\t\ttype = int;\n"
-                                              @"\t\t\tobjectClassName = (null);\n"
-                                              @"\t\t\tlinkOriginPropertyName = (null);\n"
-                                              @"\t\t\tindexed = NO;\n"
-                                              @"\t\t\tisPrimary = NO;\n"
-                                              @"\t\t\tarray = NO;\n"
-                                              @"\t\t\toptional = NO;\n"
-                                              @"\t\t}\n"
-                                              @"\t}\n"
-                                              @"\tStringObject {\n"
-                                              @"\t\tstringCol {\n"
-                                              @"\t\t\ttype = string;\n"
-                                              @"\t\t\tobjectClassName = (null);\n"
-                                              @"\t\t\tlinkOriginPropertyName = (null);\n"
-                                              @"\t\t\tindexed = NO;\n"
-                                              @"\t\t\tisPrimary = NO;\n"
-                                              @"\t\t\tarray = NO;\n"
-                                              @"\t\t\toptional = YES;\n"
-                                              @"\t\t}\n"
-                                              @"\t}\n"
-                                              @"}");
+                          @"\tAllTypesObject {\n"
+                          @"\t\tboolCol {\n"
+                          @"\t\t\ttype = bool;\n"
+                          @"\t\t\tobjectClassName = (null);\n"
+                          @"\t\t\tlinkOriginPropertyName = (null);\n"
+                          @"\t\t\tindexed = NO;\n"
+                          @"\t\t\tisPrimary = NO;\n"
+                          @"\t\t\tarray = NO;\n"
+                          @"\t\t\toptional = NO;\n"
+                          @"\t\t}\n"
+                          @"\t\tintCol {\n"
+                          @"\t\t\ttype = int;\n"
+                          @"\t\t\tobjectClassName = (null);\n"
+                          @"\t\t\tlinkOriginPropertyName = (null);\n"
+                          @"\t\t\tindexed = NO;\n"
+                          @"\t\t\tisPrimary = NO;\n"
+                          @"\t\t\tarray = NO;\n"
+                          @"\t\t\toptional = NO;\n"
+                          @"\t\t}\n"
+                          @"\t\tfloatCol {\n"
+                          @"\t\t\ttype = float;\n"
+                          @"\t\t\tobjectClassName = (null);\n"
+                          @"\t\t\tlinkOriginPropertyName = (null);\n"
+                          @"\t\t\tindexed = NO;\n"
+                          @"\t\t\tisPrimary = NO;\n"
+                          @"\t\t\tarray = NO;\n"
+                          @"\t\t\toptional = NO;\n"
+                          @"\t\t}\n"
+                          @"\t\tdoubleCol {\n"
+                          @"\t\t\ttype = double;\n"
+                          @"\t\t\tobjectClassName = (null);\n"
+                          @"\t\t\tlinkOriginPropertyName = (null);\n"
+                          @"\t\t\tindexed = NO;\n"
+                          @"\t\t\tisPrimary = NO;\n"
+                          @"\t\t\tarray = NO;\n"
+                          @"\t\t\toptional = NO;\n"
+                          @"\t\t}\n"
+                          @"\t\tstringCol {\n"
+                          @"\t\t\ttype = string;\n"
+                          @"\t\t\tobjectClassName = (null);\n"
+                          @"\t\t\tlinkOriginPropertyName = (null);\n"
+                          @"\t\t\tindexed = NO;\n"
+                          @"\t\t\tisPrimary = NO;\n"
+                          @"\t\t\tarray = NO;\n"
+                          @"\t\t\toptional = NO;\n"
+                          @"\t\t}\n"
+                          @"\t\tbinaryCol {\n"
+                          @"\t\t\ttype = data;\n"
+                          @"\t\t\tobjectClassName = (null);\n"
+                          @"\t\t\tlinkOriginPropertyName = (null);\n"
+                          @"\t\t\tindexed = NO;\n"
+                          @"\t\t\tisPrimary = NO;\n"
+                          @"\t\t\tarray = NO;\n"
+                          @"\t\t\toptional = NO;\n"
+                          @"\t\t}\n"
+                          @"\t\tdateCol {\n"
+                          @"\t\t\ttype = date;\n"
+                          @"\t\t\tobjectClassName = (null);\n"
+                          @"\t\t\tlinkOriginPropertyName = (null);\n"
+                          @"\t\t\tindexed = NO;\n"
+                          @"\t\t\tisPrimary = NO;\n"
+                          @"\t\t\tarray = NO;\n"
+                          @"\t\t\toptional = NO;\n"
+                          @"\t\t}\n"
+                          @"\t\tcBoolCol {\n"
+                          @"\t\t\ttype = bool;\n"
+                          @"\t\t\tobjectClassName = (null);\n"
+                          @"\t\t\tlinkOriginPropertyName = (null);\n"
+                          @"\t\t\tindexed = NO;\n"
+                          @"\t\t\tisPrimary = NO;\n"
+                          @"\t\t\tarray = NO;\n"
+                          @"\t\t\toptional = NO;\n"
+                          @"\t\t}\n"
+                          @"\t\tlongCol {\n"
+                          @"\t\t\ttype = int;\n"
+                          @"\t\t\tobjectClassName = (null);\n"
+                          @"\t\t\tlinkOriginPropertyName = (null);\n"
+                          @"\t\t\tindexed = NO;\n"
+                          @"\t\t\tisPrimary = NO;\n"
+                          @"\t\t\tarray = NO;\n"
+                          @"\t\t\toptional = NO;\n"
+                          @"\t\t}\n"
+                          @"\t\tobjectCol {\n"
+                          @"\t\t\ttype = object;\n"
+                          @"\t\t\tobjectClassName = StringObject;\n"
+                          @"\t\t\tlinkOriginPropertyName = (null);\n"
+                          @"\t\t\tindexed = NO;\n"
+                          @"\t\t\tisPrimary = NO;\n"
+                          @"\t\t\tarray = NO;\n"
+                          @"\t\t\toptional = YES;\n"
+                          @"\t\t}\n"
+                          @"\t\tlinkingObjectsCol {\n"
+                          @"\t\t\ttype = linking objects;\n"
+                          @"\t\t\tobjectClassName = LinkToAllTypesObject;\n"
+                          @"\t\t\tlinkOriginPropertyName = allTypesCol;\n"
+                          @"\t\t\tindexed = NO;\n"
+                          @"\t\t\tisPrimary = NO;\n"
+                          @"\t\t\tarray = YES;\n"
+                          @"\t\t\toptional = NO;\n"
+                          @"\t\t}\n"
+                          @"\t}\n"
+                          @"\tIntObject {\n"
+                          @"\t\tintCol {\n"
+                          @"\t\t\ttype = int;\n"
+                          @"\t\t\tobjectClassName = (null);\n"
+                          @"\t\t\tlinkOriginPropertyName = (null);\n"
+                          @"\t\t\tindexed = NO;\n"
+                          @"\t\t\tisPrimary = NO;\n"
+                          @"\t\t\tarray = NO;\n"
+                          @"\t\t\toptional = NO;\n"
+                          @"\t\t}\n"
+                          @"\t}\n"
+                          @"\tStringObject {\n"
+                          @"\t\tstringCol {\n"
+                          @"\t\t\ttype = string;\n"
+                          @"\t\t\tobjectClassName = (null);\n"
+                          @"\t\t\tlinkOriginPropertyName = (null);\n"
+                          @"\t\t\tindexed = NO;\n"
+                          @"\t\t\tisPrimary = NO;\n"
+                          @"\t\t\tarray = NO;\n"
+                          @"\t\t\toptional = YES;\n"
+                          @"\t\t}\n"
+                          @"\t}\n"
+                          @"}");
 
 }
 
@@ -824,7 +833,7 @@ RLM_ARRAY_TYPE(NotARealClass)
     XCTAssertTrue(RLMSchema.partialSharedSchema.objectSchema.count == 0);
     XCTAssertNoThrow([[IntegerArrayPropertyObject alloc] initWithValue:(@[@0, @[@[@0]]])]);
     XCTAssertNoThrow([[NonDefaultArrayObject alloc] initWithValue:@[@[@[@0]]]]);
-    XCTAssertNoThrow([[MutualLink1Object alloc] initWithValue:@[@[@{}]]]);
+    XCTAssertNoThrow([[MutualLink1Object alloc] initWithValue:@[@[@ {}]]]);
 }
 
 - (void)testKVOSubclassesDoNotAppearInSchema {
@@ -854,9 +863,9 @@ RLM_ARRAY_TYPE(NotARealClass)
         config.customSchema = schema;
         config.schemaVersion = 1;
 
-        [syncRealm transactionWithBlock:^{
-            [StringObject createInRealm:syncRealm withValue:@[@""]];
-        }];
+        [syncRealm transactionWithBlock:^ {
+                      [StringObject createInRealm:syncRealm withValue:@[@""]];
+                  }];
 
         [RLMRealm realmWithConfiguration:config error:nil];
         return;
@@ -873,7 +882,7 @@ RLM_ARRAY_TYPE(NotARealClass)
     // Spawn a bunch of child processes which will all try to perform the migration
     dispatch_group_t group = dispatch_group_create();
     for (int i = 0; i < 5; ++i) {
-        dispatch_group_async(group, dispatch_get_global_queue(0, 0), ^{
+        dispatch_group_async(group, dispatch_get_global_queue(0, 0), ^ {
             RLMRunChildAndWait();
         });
     }
@@ -886,10 +895,10 @@ RLM_ARRAY_TYPE(NotARealClass)
     // wait for someone to be waiting on a mutex.
     XCTestExpectation *notificationFired = [self expectationWithDescription:@"notification fired"];
     RLMNotificationToken *token = [syncRealm addNotificationBlock:^(NSString *, RLMRealm *) {
-        if ([StringObject allObjectsInRealm:syncRealm].count == 5) {
-            [notificationFired fulfill];
-        }
-    }];
+                  if ([StringObject allObjectsInRealm:syncRealm].count == 5) {
+                      [notificationFired fulfill];
+                  }
+              }];
     [self waitForExpectationsWithTimeout:10.0 handler:nil];
     [token invalidate];
 
@@ -1051,9 +1060,9 @@ RLM_ARRAY_TYPE(NotARealClass)
     }
 
     RLMRealm *realm = [RLMRealm realmWithConfiguration:config error:nil];
-    [realm transactionWithBlock:^{
-        [IntObject createInRealm:realm withValue:@[@5]];
-    }];
+    [realm transactionWithBlock:^ {
+              [IntObject createInRealm:realm withValue:@[@5]];
+          }];
 
     RLMRunChildAndWait();
     XCTAssertEqual(5, [[IntObject allObjectsInRealm:realm].firstObject intCol]);
@@ -1061,20 +1070,20 @@ RLM_ARRAY_TYPE(NotARealClass)
 
     __block IntObject *io = [IntObject new];
     io.intCol = 6;
-    [realm transactionWithBlock:^{ [realm addObject:io]; }];
+    [realm transactionWithBlock:^ { [realm addObject:io]; }];
     XCTAssertEqual(io.intCol, 6);
     XCTAssertEqualObjects(io[@"intCol"], @6);
 
-    [realm transactionWithBlock:^{ io = [IntObject createInRealm:realm withValue:@[@7]]; }];
+    [realm transactionWithBlock:^ { io = [IntObject createInRealm:realm withValue:@[@7]]; }];
     XCTAssertEqual(io.intCol, 7);
 
-    [realm transactionWithBlock:^{ io = [IntObject createInRealm:realm withValue:@{@"intCol": @8}]; }];
+    [realm transactionWithBlock:^ { io = [IntObject createInRealm:realm withValue:@{@"intCol": @8}]; }];
     XCTAssertEqual(io.intCol, 8);
 
-    [realm transactionWithBlock:^{ io.intCol = 9; }];
+    [realm transactionWithBlock:^ { io.intCol = 9; }];
     XCTAssertEqual(io.intCol, 9);
 
-    [realm transactionWithBlock:^{ io[@"intCol"] = @10; }];
+    [realm transactionWithBlock:^ { io[@"intCol"] = @10; }];
     XCTAssertEqual(io.intCol, 10);
 
     // Create query, add column, run query

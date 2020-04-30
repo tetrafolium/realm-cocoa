@@ -21,7 +21,7 @@
 #import <Realm/RLMRealm.h>
 
 namespace realm {
-    class Schema;
+class Schema;
 }
 
 NS_ASSUME_NONNULL_BEGIN

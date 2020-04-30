@@ -19,7 +19,7 @@
 #import <Realm/Realm.h>
 #import "InterfaceController.h"
 
-@interface Counter: RLMObject
+@interface Counter : RLMObject
 @property int count;
 @end
 @implementation Counter
@@ -39,24 +39,24 @@
     if (self) {
         self.counter = [[Counter alloc] init];
         RLMRealm *realm = [RLMRealm defaultRealm];
-        [realm transactionWithBlock:^{
-            [realm addObject:self.counter];
-        }];
+        [realm transactionWithBlock:^ {
+                  [realm addObject:self.counter];
+              }];
     }
     return self;
 }
 
 - (IBAction)increment {
-    [self.counter.realm transactionWithBlock:^{
-        self.counter.count++;
-    }];
+    [self.counter.realm transactionWithBlock:^ {
+                           self.counter.count++;
+                       }];
 }
 
 - (void)willActivate {
     [super willActivate];
     self.token = [self.counter.realm addNotificationBlock:^(NSString * _Nonnull notification, RLMRealm * _Nonnull realm) {
-        [self.button setTitle:[NSString stringWithFormat:@"%@", @(self.counter.count)]];
-    }];
+                           [self.button setTitle:[NSString stringWithFormat:@"%@", @(self.counter.count)]];
+                       }];
 }
 
 - (void)didDeactivate {

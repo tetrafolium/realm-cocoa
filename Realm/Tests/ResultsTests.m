@@ -144,16 +144,16 @@
     XCTAssertEqualObjects([[AggregateObject allObjectsInRealm:realm] valueForKey:@"intCol"],
                           (@[@0, @1, @0, @1, @0, @1, @0, @1, @0, @0]));
     XCTAssertTrue([[[[AggregateObject allObjectsInRealm:realm] valueForKey:@"self"] firstObject]
-                   isEqualToObject:[AggregateObject allObjectsInRealm:realm].firstObject]);
+                                                               isEqualToObject:[AggregateObject allObjectsInRealm:realm].firstObject]);
     XCTAssertTrue([[[[AggregateObject allObjectsInRealm:realm] valueForKey:@"self"] lastObject]
-                   isEqualToObject:[AggregateObject allObjectsInRealm:realm].lastObject]);
+                                                               isEqualToObject:[AggregateObject allObjectsInRealm:realm].lastObject]);
 
     XCTAssertEqualObjects([[AggregateObject objectsInRealm:realm where:@"intCol != 1"] valueForKey:@"intCol"],
                           (@[@0, @0, @0, @0, @0, @0]));
     XCTAssertTrue([[[[AggregateObject objectsInRealm:realm where:@"intCol != 1"] valueForKey:@"self"] firstObject]
-                   isEqualToObject:[AggregateObject objectsInRealm:realm where:@"intCol != 1"].firstObject]);
+                                                                                 isEqualToObject:[AggregateObject objectsInRealm:realm where:@"intCol != 1"].firstObject]);
     XCTAssertTrue([[[[AggregateObject objectsInRealm:realm where:@"intCol != 1"] valueForKey:@"self"] lastObject]
-                   isEqualToObject:[AggregateObject objectsInRealm:realm where:@"intCol != 1"].lastObject]);
+                                                                                 isEqualToObject:[AggregateObject objectsInRealm:realm where:@"intCol != 1"].lastObject]);
 
     [realm commitWriteTransaction];
 
@@ -360,8 +360,8 @@
     XCTAssertNil([results maxOfProperty:@"propA"]);
     XCTAssertThrows([results sumOfProperty:@"prop 1"]);
 
-    [realm transactionWithBlock:^{
-        [RenamedProperties1 createInRealm:realm withValue:@[@1, @""]];
+    [realm transactionWithBlock:^ {
+              [RenamedProperties1 createInRealm:realm withValue:@[@1, @""]];
         [RenamedProperties1 createInRealm:realm withValue:@[@2, @""]];
         [RenamedProperties1 createInRealm:realm withValue:@[@3, @""]];
     }];
@@ -377,18 +377,18 @@
     RLMRealm *realm = [RLMRealm defaultRealm];
 
     [realm beginWriteTransaction];
-    EmployeeObject *c1e1 = [EmployeeObject createInRealm:realm withValue:@{@"name": @"Joe",  @"age": @40, @"hired": @YES}];
-    EmployeeObject *c1e2 = [EmployeeObject createInRealm:realm withValue:@{@"name": @"John", @"age": @30, @"hired": @NO}];
-    EmployeeObject *c1e3 = [EmployeeObject createInRealm:realm withValue:@{@"name": @"Jill", @"age": @25, @"hired": @YES}];
-    [CompanyObject createInRealm:realm withValue:@{@"name": @"InspiringNames LLC", @"employees": @[c1e1, c1e2, c1e3]}];
+    EmployeeObject *c1e1 = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Joe",  @"age": @40, @"hired": @YES}];
+    EmployeeObject *c1e2 = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"John", @"age": @30, @"hired": @NO}];
+    EmployeeObject *c1e3 = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Jill", @"age": @25, @"hired": @YES}];
+    [CompanyObject createInRealm:realm withValue:@ {@"name": @"InspiringNames LLC", @"employees": @[c1e1, c1e2, c1e3]}];
 
-    EmployeeObject *c2e1 = [EmployeeObject createInRealm:realm withValue:@{@"name": @"A", @"age": @20, @"hired": @YES}];
-    EmployeeObject *c2e2 = [EmployeeObject createInRealm:realm withValue:@{@"name": @"B", @"age": @30, @"hired": @NO}];
-    EmployeeObject *c2e3 = [EmployeeObject createInRealm:realm withValue:@{@"name": @"C", @"age": @40, @"hired": @YES}];
-    [CompanyObject createInRealm:realm withValue:@{@"name": @"ABC AG", @"employees": @[c2e1, c2e2, c2e3]}];
+    EmployeeObject *c2e1 = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"A", @"age": @20, @"hired": @YES}];
+    EmployeeObject *c2e2 = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"B", @"age": @30, @"hired": @NO}];
+    EmployeeObject *c2e3 = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"C", @"age": @40, @"hired": @YES}];
+    [CompanyObject createInRealm:realm withValue:@ {@"name": @"ABC AG", @"employees": @[c2e1, c2e2, c2e3]}];
 
-    EmployeeObject *c3e1 = [EmployeeObject createInRealm:realm withValue:@{@"name": @"A", @"age": @21, @"hired": @YES}];
-    [CompanyObject createInRealm:realm withValue:@{@"name": @"ABC AG", @"employees": @[c3e1]}];
+    EmployeeObject *c3e1 = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"A", @"age": @21, @"hired": @YES}];
+    [CompanyObject createInRealm:realm withValue:@ {@"name": @"ABC AG", @"employees": @[c3e1]}];
     [realm commitWriteTransaction];
 
     RLMResults *allCompanies = [CompanyObject allObjects];
@@ -455,9 +455,9 @@
     RLMRealm *realm = [RLMRealm defaultRealm];
 
     [realm beginWriteTransaction];
-    EmployeeObject *po1 = [EmployeeObject createInRealm:realm withValue:@{@"name": @"Joe",  @"age": @40, @"hired": @YES}];
-    EmployeeObject *po2 = [EmployeeObject createInRealm:realm withValue:@{@"name": @"John", @"age": @30, @"hired": @NO}];
-    EmployeeObject *po3 = [EmployeeObject createInRealm:realm withValue:@{@"name": @"Jill", @"age": @25, @"hired": @YES}];
+    EmployeeObject *po1 = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Joe",  @"age": @40, @"hired": @YES}];
+    EmployeeObject *po2 = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"John", @"age": @30, @"hired": @NO}];
+    EmployeeObject *po3 = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Jill", @"age": @25, @"hired": @YES}];
     StringObject *so = [StringObject createInRealm:realm withValue:@[@""]];
     StringObject *deletedObject = [StringObject createInRealm:realm withValue:@[@""]];
     [realm deleteObject:deletedObject];
@@ -504,10 +504,10 @@
     RLMRealm *realm = [RLMRealm defaultRealm];
 
     [realm beginWriteTransaction];
-    [EmployeeObject createInRealm:realm withValue:@{@"name": @"Joe",  @"age": @40, @"hired": @YES}];
-    [EmployeeObject createInRealm:realm withValue:@{@"name": @"John", @"age": @30, @"hired": @NO}];
-    [EmployeeObject createInRealm:realm withValue:@{@"name": @"Jill", @"age": @25, @"hired": @YES}];
-    [EmployeeObject createInRealm:realm withValue:@{@"name": @"Phil", @"age": @38, @"hired": @NO}];
+    [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Joe",  @"age": @40, @"hired": @YES}];
+    [EmployeeObject createInRealm:realm withValue:@ {@"name": @"John", @"age": @30, @"hired": @NO}];
+    [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Jill", @"age": @25, @"hired": @YES}];
+    [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Phil", @"age": @38, @"hired": @NO}];
     [realm commitWriteTransaction];
 
     RLMResults *results = [EmployeeObject objectsWhere:@"hired = YES"];
@@ -535,8 +535,8 @@
     RLMRealm *realm = [RLMRealm defaultRealm];
 
     [realm beginWriteTransaction];
-    [EmployeeObject createInRealm:realm withValue:@{@"name": @"John", @"age": @30, @"hired": @NO}];
-    [EmployeeObject createInRealm:realm withValue:@{@"name": @"Jill",  @"age": @50, @"hired": @YES}];
+    [EmployeeObject createInRealm:realm withValue:@ {@"name": @"John", @"age": @30, @"hired": @NO}];
+    [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Jill",  @"age": @50, @"hired": @YES}];
     [realm commitWriteTransaction];
 
     RLMResults<EmployeeObject *> *subarray = nil;
@@ -546,7 +546,7 @@
     }
 
     [realm beginWriteTransaction];
-    [EmployeeObject createInRealm:realm withValue:@{@"name": @"Joe",  @"age": @40, @"hired": @YES}];
+    [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Joe",  @"age": @40, @"hired": @YES}];
     [realm commitWriteTransaction];
 
     XCTAssertEqualObjects(@"Joe", subarray[0][@"name"]);
@@ -557,8 +557,8 @@
     RLMRealm *realm = [RLMRealm defaultRealm];
 
     [realm beginWriteTransaction];
-    [EmployeeObject createInRealm:realm withValue:@{@"name": @"John", @"age": @30, @"hired": @NO}];
-    [EmployeeObject createInRealm:realm withValue:@{@"name": @"Jill",  @"age": @50, @"hired": @YES}];
+    [EmployeeObject createInRealm:realm withValue:@ {@"name": @"John", @"age": @30, @"hired": @NO}];
+    [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Jill",  @"age": @50, @"hired": @YES}];
     [realm commitWriteTransaction];
 
     RLMResults<EmployeeObject *> *subarray = nil;
@@ -568,7 +568,7 @@
     }
 
     [realm beginWriteTransaction];
-    [EmployeeObject createInRealm:realm withValue:@{@"name": @"Joe",  @"age": @40, @"hired": @YES}];
+    [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Joe",  @"age": @40, @"hired": @YES}];
     [realm commitWriteTransaction];
 
     XCTAssertEqual(3U, subarray.count);
@@ -582,9 +582,9 @@
     RLMRealm *realm = [RLMRealm defaultRealm];
 
     [realm beginWriteTransaction];
-    [EmployeeObject createInRealm:realm withValue:@{@"name": @"A",  @"age": @20, @"hired": @YES}];
-    [EmployeeObject createInRealm:realm withValue:@{@"name": @"B", @"age": @30, @"hired": @NO}];
-    [EmployeeObject createInRealm:realm withValue:@{@"name": @"C", @"age": @40, @"hired": @YES}];
+    [EmployeeObject createInRealm:realm withValue:@ {@"name": @"A",  @"age": @20, @"hired": @YES}];
+    [EmployeeObject createInRealm:realm withValue:@ {@"name": @"B", @"age": @30, @"hired": @NO}];
+    [EmployeeObject createInRealm:realm withValue:@ {@"name": @"C", @"age": @40, @"hired": @YES}];
     [realm commitWriteTransaction];
 
     RLMResults *sortedAge = [[EmployeeObject allObjects] sortedResultsUsingKeyPath:@"age" ascending:YES];
@@ -605,9 +605,9 @@
     [filtered lastObject]; // Force creation of the TableView
 
     [realm beginWriteTransaction];
-    [EmployeeObject createInRealm:realm withValue:@{@"name": @"A",  @"age": @20, @"hired": @YES}];
-    [EmployeeObject createInRealm:realm withValue:@{@"name": @"B", @"age": @30, @"hired": @NO}];
-    [EmployeeObject createInRealm:realm withValue:@{@"name": @"C", @"age": @40, @"hired": @YES}];
+    [EmployeeObject createInRealm:realm withValue:@ {@"name": @"A",  @"age": @20, @"hired": @YES}];
+    [EmployeeObject createInRealm:realm withValue:@ {@"name": @"B", @"age": @30, @"hired": @NO}];
+    [EmployeeObject createInRealm:realm withValue:@ {@"name": @"C", @"age": @40, @"hired": @YES}];
     [realm commitWriteTransaction];
 
     XCTAssertEqual(3U, sortedAge.count);
@@ -763,8 +763,8 @@ static vm_size_t get_resident_size() {
     [realm commitWriteTransaction];
 
     realm.autorefresh = NO;
-    [self dispatchAsyncAndWait:^{
-        RLMRealm *realm = self.realmWithTestPath;
+    [self dispatchAsyncAndWait:^ {
+             RLMRealm *realm = self.realmWithTestPath;
         [realm beginWriteTransaction];
         // FIXME: this is roundabout because `table.clear()` does not update
         // table views correctly
@@ -842,9 +842,9 @@ static vm_size_t get_resident_size() {
 
 - (void)testAllMethodsCheckThread {
     RLMRealm *realm = [RLMRealm defaultRealm];
-    [realm transactionWithBlock:^{
-        [IntObject createInDefaultRealmWithValue:@[@0]];
-    }];
+    [realm transactionWithBlock:^ {
+              [IntObject createInDefaultRealmWithValue:@[@0]];
+          }];
 
     RLMResults *results = [IntObject allObjects];
     XCTAssertNoThrow([results isInvalidated]);
@@ -865,8 +865,8 @@ static vm_size_t get_resident_size() {
     XCTAssertNoThrow(results[0]);
     XCTAssertNoThrow([results valueForKey:@"intCol"]);
 
-    [self dispatchAsyncAndWait:^{
-        XCTAssertThrows([results isInvalidated]);
+    [self dispatchAsyncAndWait:^ {
+             XCTAssertThrows([results isInvalidated]);
         XCTAssertThrows([results objectAtIndex:0]);
         XCTAssertThrows([results firstObject]);
         XCTAssertThrows([results lastObject]);
@@ -888,9 +888,9 @@ static vm_size_t get_resident_size() {
 
 - (void)testAllMethodsCheckForInvalidation {
     RLMRealm *realm = [RLMRealm defaultRealm];
-    [realm transactionWithBlock:^{
-        [IntObject createInDefaultRealmWithValue:@[@0]];
-    }];
+    [realm transactionWithBlock:^ {
+              [IntObject createInDefaultRealmWithValue:@[@0]];
+          }];
 
     RLMResults *results = [IntObject allObjects];
     XCTAssertFalse(results.isInvalidated);
@@ -937,8 +937,8 @@ static vm_size_t get_resident_size() {
 - (void)testResultsDependingOnDeletedLinkView {
     RLMRealm *realm = [RLMRealm defaultRealm];
     __block IntegerArrayPropertyObject *object;
-    [realm transactionWithBlock:^{
-        IntObject* intObject = [IntObject createInDefaultRealmWithValue:@[@0]];
+    [realm transactionWithBlock:^ {
+              IntObject* intObject = [IntObject createInDefaultRealmWithValue:@[@0]];
         object = [IntegerArrayPropertyObject createInDefaultRealmWithValue:@[ @0, @[ intObject ] ]];
     }];
 
@@ -947,9 +947,9 @@ static vm_size_t get_resident_size() {
 
     RLMResults *unevaluatedResults = [object.array sortedResultsUsingKeyPath:@"intCol" ascending:YES];
 
-    [realm transactionWithBlock:^{
-        [realm deleteObject:object];
-    }];
+    [realm transactionWithBlock:^ {
+              [realm deleteObject:object];
+          }];
 
     XCTAssertFalse(results.isInvalidated);
     XCTAssertFalse(unevaluatedResults.isInvalidated);
@@ -964,8 +964,8 @@ static vm_size_t get_resident_size() {
 - (void)testResultsDependingOnDeletedTableView {
     RLMRealm *realm = [RLMRealm defaultRealm];
     __block DogObject *dog;
-    [realm transactionWithBlock:^{
-        dog = [DogObject createInDefaultRealmWithValue:@[ @"Fido", @3 ]];
+    [realm transactionWithBlock:^ {
+              dog = [DogObject createInDefaultRealmWithValue:@[ @"Fido", @3 ]];
         [OwnerObject createInDefaultRealmWithValue:@[ @"John", dog ]];
     }];
 
@@ -974,9 +974,9 @@ static vm_size_t get_resident_size() {
 
     RLMResults *unevaluatedResults = [dog.owners objectsWhere:@"name != 'Not a real name'"];
 
-    [realm transactionWithBlock:^{
-        [realm deleteObject:dog];
-    }];
+    [realm transactionWithBlock:^ {
+              [realm deleteObject:dog];
+          }];
 
     XCTAssertFalse(results.isInvalidated);
     XCTAssertFalse(unevaluatedResults.isInvalidated);
@@ -992,18 +992,18 @@ static vm_size_t get_resident_size() {
     RLMRealm *realm = [RLMRealm defaultRealm];
     __block DogObject *dog;
     __block OwnerObject *owner;
-    [realm transactionWithBlock:^{
-        dog = [DogObject createInDefaultRealmWithValue:@[ @"Fido", @3 ]];
+    [realm transactionWithBlock:^ {
+              dog = [DogObject createInDefaultRealmWithValue:@[ @"Fido", @3 ]];
         owner = [OwnerObject createInDefaultRealmWithValue:@[ @"John", dog ]];
     }];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@""];
     RLMResults *results = [DogObject objectsWhere:@"ANY owners.name == 'James'"];
     id token = [results addNotificationBlock:^(__unused RLMResults *results, RLMCollectionChange *change, __unused NSError *error) {
-        if (change != nil) {
-            [expectation fulfill];
-        }
-        CFRunLoopStop(CFRunLoopGetCurrent());
+                if (change != nil) {
+                    [expectation fulfill];
+                }
+                CFRunLoopStop(CFRunLoopGetCurrent());
     }];
     // Consume the initial notification.
     CFRunLoopRun();
@@ -1011,9 +1011,9 @@ static vm_size_t get_resident_size() {
     XCTAssertEqual(0u, results.count);
     XCTAssertNil(results.firstObject);
 
-    [realm transactionWithBlock:^{
-        owner.name = @"James";
-    }];
+    [realm transactionWithBlock:^ {
+              owner.name = @"James";
+          }];
 
     XCTAssertEqual(1u, results.count);
     XCTAssertEqualObjects(dog.dogName, [results.firstObject dogName]);
@@ -1027,12 +1027,12 @@ static vm_size_t get_resident_size() {
     __block DogObject *fido;
     __block DogObject *cujo;
     __block DogObject *buster;
-    [realm transactionWithBlock:^{
-        fido = [DogObject createInDefaultRealmWithValue:@[ @"Fido", @3 ]];
+    [realm transactionWithBlock:^ {
+              fido = [DogObject createInDefaultRealmWithValue:@[ @"Fido", @3 ]];
         cujo = [DogObject createInDefaultRealmWithValue:@[ @"Cujo", @3 ]];
         buster = [DogObject createInDefaultRealmWithValue:@[ @"Buster", @5 ]];
     }];
-    
+
     RLMResults *results = [[DogObject allObjects] distinctResultsUsingKeyPaths:@[@"age"]];
     NSMutableArray *ages = NSMutableArray.new;
     for (id result in results) {
@@ -1050,9 +1050,9 @@ static vm_size_t get_resident_size() {
     __block DogObject *buster;
     __block DogObject *buster2;
     __block DogObject *rotunda;
-    
-    [realm transactionWithBlock:^{
-        fido = [DogObject createInDefaultRealmWithValue:@[ @"Fido", @3 ]];
+
+    [realm transactionWithBlock:^ {
+              fido = [DogObject createInDefaultRealmWithValue:@[ @"Fido", @3 ]];
         fido2 = [DogObject createInDefaultRealmWithValue:@[ @"Fido", @3 ]];
         fido3 = [DogObject createInDefaultRealmWithValue:@[ @"Fido", @4 ]];
         cujo = [DogObject createInDefaultRealmWithValue:@[ @"Cujo", @3 ]];
@@ -1060,13 +1060,13 @@ static vm_size_t get_resident_size() {
         buster2 = [DogObject createInDefaultRealmWithValue:@[ @"Buster", @3 ]];
         rotunda = [DogObject createInDefaultRealmWithValue:@[ @"Rotunda", @7 ]];
     }];
-    
+
     RLMResults *results = [[DogObject allObjects] distinctResultsUsingKeyPaths:@[@"dogName", @"age"]];
     NSMutableArray *resultsArr = NSMutableArray.new;
     for (DogObject *result in results) {
         [resultsArr addObject:[NSString stringWithFormat:@"%@/%@", result.dogName, @(result.age)]];
     }
-    
+
     XCTAssertEqualObjects(resultsArr, (@[@"Fido/3", @"Fido/4", @"Cujo/3", @"Buster/3", @"Rotunda/7"]));
 }
 - (void)testDistinctQueryWithMultilevelKeyPath {
@@ -1077,17 +1077,17 @@ static vm_size_t get_resident_size() {
     __block DogObject *dog1;
     __block DogObject *dog2;
     __block DogObject *dog3;
-    
-    [realm transactionWithBlock:^{
-        dog1 = [DogObject createInDefaultRealmWithValue:@[ @"Fido", @3 ]];
+
+    [realm transactionWithBlock:^ {
+              dog1 = [DogObject createInDefaultRealmWithValue:@[ @"Fido", @3 ]];
         dog2 = [DogObject createInDefaultRealmWithValue:@[ @"Cujo", @3 ]];
         dog3 = [DogObject createInDefaultRealmWithValue:@[ @"Rotunda", @7 ]];
-        
+
         owner1 = [OwnerObject createInDefaultRealmWithValue:@[ @"Joe", dog1 ]];
         owner2 = [OwnerObject createInDefaultRealmWithValue:@[ @"Marie", dog2 ]];
         owner3 = [OwnerObject createInDefaultRealmWithValue:@[ @"Marie", dog3 ]];
     }];
-    
+
     RLMResults *results = [[OwnerObject allObjects] distinctResultsUsingKeyPaths:@[@"dog.age"]];
     NSMutableArray *resultsArr = NSMutableArray.new;
     for (OwnerObject *result in results) {
@@ -1098,8 +1098,8 @@ static vm_size_t get_resident_size() {
 
 - (void)testDistinctQueryThrowsInvalidKeyPathsSpecified {
     RLMRealm *realm = [RLMRealm defaultRealm];
-    [realm transactionWithBlock:^{
-        [DogObject createInDefaultRealmWithValue:@[ @"Fido", @3 ]];
+    [realm transactionWithBlock:^ {
+              [DogObject createInDefaultRealmWithValue:@[ @"Fido", @3 ]];
         [DogObject createInDefaultRealmWithValue:@[ @"Fido", @3 ]];
         [DogObject createInDefaultRealmWithValue:@[ @"Fido", @5 ]];
         AggregateObject *ao1 = [AggregateObject createInDefaultRealmWithValue:@[ @0 ]];
@@ -1107,7 +1107,7 @@ static vm_size_t get_resident_size() {
         [AggregateArrayObject createInDefaultRealmWithValue:@[@[ao1, ao2]]];
         [AllTypesObject createInDefaultRealmWithValue:@[]];
     }];
-    
+
     XCTAssertThrows([[DogObject allObjects] distinctResultsUsingKeyPaths:@[@""]]);
     XCTAssertThrows([[DogObject allObjects] distinctResultsUsingKeyPaths:@[@" "]]);
     XCTAssertThrows([[DogObject allObjects] distinctResultsUsingKeyPaths:@[@"\n"]]);
