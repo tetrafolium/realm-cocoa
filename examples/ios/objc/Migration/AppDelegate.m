@@ -97,7 +97,7 @@
   RLMRealmConfiguration *configuration =
       [RLMRealmConfiguration defaultConfiguration];
 
-  // set the schema verion and migration block for the defualt realm
+  // set the schema verion and migration block for the default realm
   configuration.schemaVersion = 3;
   configuration.migrationBlock = migrationBlock;
 

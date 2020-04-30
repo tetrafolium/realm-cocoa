@@ -266,7 +266,7 @@ Realm.
    object can be set to nil by using `NSNull` as the updated value. Unlike
    `createOrUpdateInDefaultRealmWithValue:`, only properties which have changed
    in value are set, and any change notifications produced by this call will
-   report only which properies have actually changed.
+   report only which properties have actually changed.
 
    Checking which properties have changed imposes a small amount of overhead,
    and so this method may be slower when all or nearly all of the properties
@@ -363,7 +363,7 @@ Realm.
    object can be set to nil by using `NSNull` as the updated value. Unlike
    `createOrUpdateInRealm:withValue:`, only properties which have changed in
    value are set, and any change notifications produced by this call will report
-   only which properies have actually changed.
+   only which properties have actually changed.
 
    Checking which properties have changed imposes a small amount of overhead,
    and so this method may be slower when all or nearly all of the properties

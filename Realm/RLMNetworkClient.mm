@@ -135,7 +135,7 @@ static NSRange rangeForErrorType(RLMServerHTTPErrorCodeType type) {
 
 + (NSURL *)urlForAuthServer:(__unused NSURL *)authServerURL
                     payload:(__unused NSDictionary *)json {
-  NSAssert(NO, @"This method must be overriden by concrete subclasses.");
+  NSAssert(NO, @"This method must be overridden by concrete subclasses.");
   return nil;
 }
 

@@ -158,7 +158,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable RLMSyncConfiguration *)configuration;
 
 /**
-   Temporarily suspend syncronization and disconnect from the server.
+   Temporarily suspend synchronization and disconnect from the server.
 
    The session will not attempt to connect to Realm Object Server until `resume`
    is called or the Realm file is closed and re-opened.
@@ -166,7 +166,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)suspend;
 
 /**
-   Resume syncronization and reconnect to Realm Object Server after suspending.
+   Resume synchronization and reconnect to Realm Object Server after suspending.
 
    This is a no-op if the session was already active or if the session is
    invalid. Newly created sessions begin in the Active state and do not need to

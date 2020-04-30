@@ -202,7 +202,7 @@ Upgraded realm-sync from ? to ?
 * The designated initializers defined by RLMObject and Object other than
   zero-argument `init` have been replaced with convenience initializers.
 * The implementation of the path-based permissions API has been redesigned to
-  accomodate changes to the server. This should be mostly a transparent change,
+  accommodate changes to the server. This should be mostly a transparent change,
   with two main exceptions:
   1. SyncPermission objects are no longer live Realm objects, and retrieving
   permissions gives an Array<SyncPermission> rather than Results<SyncPermission>.
@@ -347,7 +347,7 @@ This does not effect non-synchronized Realms.
 * Queries on the sum or average of an integer property would sometimes give
   incorrect results. ([Core #3356](https://github.com/realm/realm-core/pull/3356)).
 * Opening query-based synchronized Realms with a small number of subscriptions
-  performed an unneccesary write transaction. ([ObjectStore #815](https://github.com/realm/realm-object-store/pull/815)).
+  performed an unnecessary write transaction. ([ObjectStore #815](https://github.com/realm/realm-object-store/pull/815)).
 
 ### Compatibility
 
@@ -391,7 +391,7 @@ This does not effect non-synchronized Realms.
   ([#6154](https://github.com/realm/realm-cocoa/issues/6154)), since v3.15.0)
 * Queries involving an indexed int property had a memory leak if run multiple
   times. ([#6186](https://github.com/realm/realm-cocoa/issues/6186)), since v3.15.0)
-* Creating a subscription with `includeLinkingObjects:` performed unneccesary
+* Creating a subscription with `includeLinkingObjects:` performed unnecessary
   comparisons, making it extremely slow when large numbers of objects were
   involved. ([Core #3311](https://github.com/realm/realm-core/issues/3311), since v3.15.0)
 
@@ -1020,7 +1020,7 @@ Realm Object Server v3.0.0 or newer is required when using synchronized Realms.
 
 ### Bugfixes
 
-* Fix incorrect initalization of `RLMSyncManager` that made it impossible to
+* Fix incorrect initialization of `RLMSyncManager` that made it impossible to
   set `errorHandler`.
 * Fix compiler warnings when building with Xcode 9.3.
 * Fix some warnings when running with UBsan.
@@ -1043,7 +1043,7 @@ Realm Object Server v3.0.0-rc.1 or newer is required when using synchronized Rea
 
 ### Bugfixes
 
-* Fix incorrect initalization of `RLMSyncManager` that made it impossible to
+* Fix incorrect initialization of `RLMSyncManager` that made it impossible to
   set `errorHandler`.
 * Fix compiler warnings when building with Xcode 9.3.
 
@@ -1179,7 +1179,7 @@ Prebuilt frameworks are now included for Swift 3.2.2 and 4.0.2.
   `SyncError.deleteRealmUserInfo()` APIs have been changed. They now return
   `RLMSyncErrorActionToken`s or `SyncError.ActionToken`s instead of closures.
 * The class methods `Object.className()`, `Object.objectUtilClass()`, and
-  the property `Object.isInvalidated` can no longer be overriden.
+  the property `Object.isInvalidated` can no longer be overridden.
 * The callback which runs when a sync user login succeeds or fails
   now runs on the main queue by default, or can be explicitly specified
   by a new `callbackQueue` parameter on the `{RLM}SyncUser.logIn(...)` API.
@@ -1281,7 +1281,7 @@ Prebuilt frameworks are now included for Swift 3.2.2 and 4.0.2.
 * Add Swift `Object.isSameObject(as:_)` API to perform the same function as
   the existing Objective-C API `-[RLMObject isEqualToObject:]`.
 * Opening a synced Realm whose local copy was created with an older version of
-  Realm Mobile Platfrom when a migration is not possible to the current version
+  Realm Mobile Platform when a migration is not possible to the current version
   will result in an `RLMErrorIncompatibleSyncedFile` / `incompatibleSyncedFile`
   error. When such an error occurs, the original file is moved to a backup
   location, and future attempts to open the synchronized Realm will result in a new
@@ -1410,7 +1410,7 @@ Prebuilt frameworks are now included for Swift 3.2.2 and 4.0.2.
   within the array required. Querying `RLMArray`s containing values other than
   `RLMObject` subclasses is not yet implemented.
 * Opening a synced Realm whose local copy was created with an older version of
-  Realm Mobile Platfrom when a migration is not possible to the current version
+  Realm Mobile Platform when a migration is not possible to the current version
   will result in an `RLMErrorIncompatibleSyncedFile` / `incompatibleSyncedFile`
   error. When such an error occurs, the original file is moved to a backup
   location, and future attempts to open the synchronized Realm will result in a new
@@ -1470,7 +1470,7 @@ Prebuilt frameworks are now included for Swift 3.2.2 and 4.0.2.
 * The (erroneously added) instance property `Object.className` has been
   removed.
 * The class methods `Object.className()`, `Object.objectUtilClass()`, and
-  the property `Object.isInvalidated` can no longer be overriden.
+  the property `Object.isInvalidated` can no longer be overridden.
 * The callback which runs when a sync user login succeeds or fails
   now runs on the main queue by default, or can be explicitly specified
   by a new `callbackQueue` parameter on the `{RLM}SyncUser.logIn(...)` API.
@@ -2132,7 +2132,7 @@ This release adds binary versions of Swift 3.0.2 frameworks built with Xcode 8.2
 
 ### Sync Breaking Changes (In Beta)
 
-* Rename occurences of "iCloud" with "CloudKit" in APIs and comments to match
+* Rename occurrences of "iCloud" with "CloudKit" in APIs and comments to match
   naming in the Realm Object Server.
 
 ### API Breaking Changes
@@ -3449,7 +3449,7 @@ Prebuilt frameworks are now built with Xcode 7.1.
 
 ### Enhancements
 
-* Improve compatiblity of encrypted Realms with third-party crash reporters.
+* Improve compatibility of encrypted Realms with third-party crash reporters.
 
 ### Bugfixes
 
@@ -3701,7 +3701,7 @@ Prebuilt frameworks are now built with Xcode 7.1.
   the properties in a `RLMObject` subclass.
 * Fix crash on IN query with several thousand items.
 * Fix crash when querying indexed `NSString` properties.
-* Fixed an issue which prevented in-memory Realms from being used accross multiple threads.
+* Fixed an issue which prevented in-memory Realms from being used across multiple threads.
 * Preserve the sort order when querying a sorted `RLMResults`.
 * Fixed an issue with migrations where if a Realm file is deleted after a Realm is initialized,
   the newly created Realm can be initialized with an incorrect schema version.
@@ -3957,7 +3957,7 @@ Prebuilt frameworks are now built with Xcode 7.1.
 ### API breaking changes
 
 * Rename migration methods to -migrateDefaultRealmWithBlock: and -migrateRealmAtPath:withBlock:
-* Moved Realm specific query methods from RLMRealm to class methods on RLMObject (-allObjects: to +allObjectsInRealm: ect.)
+* Moved Realm specific query methods from RLMRealm to class methods on RLMObject (-allObjects: to +allObjectsInRealm: etc.)
 
 ### Enhancements
 

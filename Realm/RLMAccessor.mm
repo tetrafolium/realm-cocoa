@@ -542,7 +542,7 @@ void RLMReplaceSharedSchemaMethod(Class accessorClass,
       return schema;
     }
 
-    // If we aren't being called directly on the class this was overriden
+    // If we aren't being called directly on the class this was overridden
     // for, the class is either a subclass which we haven't initialized yet,
     // or it's a runtime-generated class which should use the parent's
     // schema. We check for the latter by checking if the immediate
