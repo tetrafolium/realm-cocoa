@@ -25,17 +25,17 @@
 /// Realm configuration options related to Sync.
 @interface RLMRealmConfiguration (Sync)
 
-    NS_ASSUME_NONNULL_BEGIN
+NS_ASSUME_NONNULL_BEGIN
 
-    /**
-     A configuration object representing configuration state for Realms intended
-     to sync with a Realm Object Server.
+/**
+   A configuration object representing configuration state for Realms intended
+   to sync with a Realm Object Server.
 
-     This property is mutually exclusive with both `inMemoryIdentifier` and `fileURL`;
-     setting any one of the three properties will automatically nil out the other two.
+   This property is mutually exclusive with both `inMemoryIdentifier` and `fileURL`;
+   setting any one of the three properties will automatically nil out the other two.
 
-     @see `RLMSyncConfiguration`
-     */
+   @see `RLMSyncConfiguration`
+ */
 @property (nullable, nonatomic) RLMSyncConfiguration *syncConfiguration;
 
 NS_ASSUME_NONNULL_END

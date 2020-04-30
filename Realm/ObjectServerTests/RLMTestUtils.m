@@ -25,29 +25,29 @@
 static void RLMSwapOutMethod(Class class,
                              SEL original, Method originalMethod,
                              SEL swizzled, Method swizzledMethod) {
-    if (class_addMethod(class,
-                        original,
-                        method_getImplementation(swizzledMethod),
-                        method_getTypeEncoding(swizzledMethod))) {
-        class_replaceMethod(class,
-                            swizzled,
-                            method_getImplementation(originalMethod),
-                            method_getTypeEncoding(originalMethod));
-    } else {
-        method_exchangeImplementations(originalMethod, swizzledMethod);
-    }
+	if (class_addMethod(class,
+	                    original,
+	                    method_getImplementation(swizzledMethod),
+	                    method_getTypeEncoding(swizzledMethod))) {
+		class_replaceMethod(class,
+		                    swizzled,
+		                    method_getImplementation(originalMethod),
+		                    method_getTypeEncoding(originalMethod));
+	} else {
+		method_exchangeImplementations(originalMethod, swizzledMethod);
+	}
 }
 
 void RLMSwapOutClassMethod(id classObject, SEL original, SEL swizzled) {
-    Class class = object_getClass((id)classObject);
-    RLMSwapOutMethod(class,
-                     original, class_getClassMethod(class, original),
-                     swizzled, class_getClassMethod(class, swizzled));
+	Class class = object_getClass((id)classObject);
+	RLMSwapOutMethod(class,
+	                 original, class_getClassMethod(class, original),
+	                 swizzled, class_getClassMethod(class, swizzled));
 }
 
 void RLMSwapOutInstanceMethod(id classObject, SEL original, SEL swizzled) {
-    Class class = [classObject class];
-    RLMSwapOutMethod(class,
-                     original, class_getInstanceMethod(class, original),
-                     swizzled, class_getInstanceMethod(class, swizzled));
+	Class class = [classObject class];
+	RLMSwapOutMethod(class,
+	                 original, class_getInstanceMethod(class, original),
+	                 swizzled, class_getInstanceMethod(class, swizzled));
 }

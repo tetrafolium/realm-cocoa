@@ -26,6 +26,6 @@ class ObjectSchema;
 }
 
 @interface RLMSchema ()
-+ (instancetype)dynamicSchemaFromObjectStoreSchema:(realm::Schema const&)objectStoreSchema;
-- (realm::Schema)objectStoreCopy;
++ (instancetype)dynamicSchemaFromObjectStoreSchema: (realm::Schema const&)objectStoreSchema;
+-(realm::Schema)objectStoreCopy;
 @end

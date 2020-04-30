@@ -25,221 +25,221 @@ struct RLMClassPrivileges;
 struct RLMObjectPrivileges;
 
 /**
- A callback block for opening Realms asynchronously.
+   A callback block for opening Realms asynchronously.
 
- Returns the Realm if the open was successful, or an error otherwise.
+   Returns the Realm if the open was successful, or an error otherwise.
  */
-typedef void(^RLMAsyncOpenRealmCallback)(RLMRealm * _Nullable realm, NSError * _Nullable error);
+typedef void (^RLMAsyncOpenRealmCallback)(RLMRealm * _Nullable realm, NSError * _Nullable error);
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- An `RLMRealm` instance (also referred to as "a Realm") represents a Realm
- database.
+   An `RLMRealm` instance (also referred to as "a Realm") represents a Realm
+   database.
 
- Realms can either be stored on disk (see `+[RLMRealm realmWithURL:]`) or in
- memory (see `RLMRealmConfiguration`).
+   Realms can either be stored on disk (see `+[RLMRealm realmWithURL:]`) or in
+   memory (see `RLMRealmConfiguration`).
 
- `RLMRealm` instances are cached internally, and constructing equivalent `RLMRealm`
- objects (for example, by using the same path or identifier) multiple times on a single thread
- within a single iteration of the run loop will normally return the same
- `RLMRealm` object.
+   `RLMRealm` instances are cached internally, and constructing equivalent `RLMRealm`
+   objects (for example, by using the same path or identifier) multiple times on a single thread
+   within a single iteration of the run loop will normally return the same
+   `RLMRealm` object.
 
- If you specifically want to ensure an `RLMRealm` instance is
- destroyed (for example, if you wish to open a Realm, check some property, and
- then possibly delete the Realm file and re-open it), place the code which uses
- the Realm within an `@autoreleasepool {}` and ensure you have no other
- strong references to it.
+   If you specifically want to ensure an `RLMRealm` instance is
+   destroyed (for example, if you wish to open a Realm, check some property, and
+   then possibly delete the Realm file and re-open it), place the code which uses
+   the Realm within an `@autoreleasepool {}` and ensure you have no other
+   strong references to it.
 
- @warning `RLMRealm` instances are not thread safe and cannot be shared across
- threads or dispatch queues. Trying to do so will cause an exception to be thrown.
- You must call this method on each thread you want
- to interact with the Realm on. For dispatch queues, this means that you must
- call it in each block which is dispatched, as a queue is not guaranteed to run
- all of its blocks on the same thread.
+   @warning `RLMRealm` instances are not thread safe and cannot be shared across
+   threads or dispatch queues. Trying to do so will cause an exception to be thrown.
+   You must call this method on each thread you want
+   to interact with the Realm on. For dispatch queues, this means that you must
+   call it in each block which is dispatched, as a queue is not guaranteed to run
+   all of its blocks on the same thread.
  */
 
 @interface RLMRealm : NSObject
 
 #pragma mark - Creating & Initializing a Realm
 
-    /**
-     Obtains an instance of the default Realm.
+	/**
+	Obtains an instance of the default Realm.
 
-     The default Realm is used by the `RLMObject` class methods
-     which do not take an `RLMRealm` parameter, but is otherwise not special. The
-     default Realm is persisted as *default.realm* under the *Documents* directory of
-     your Application on iOS, and in your application's *Application Support*
-     directory on OS X.
+	The default Realm is used by the `RLMObject` class methods
+	which do not take an `RLMRealm` parameter, but is otherwise not special. The
+	default Realm is persisted as *default.realm* under the *Documents* directory of
+	your Application on iOS, and in your application's *Application Support*
+	directory on OS X.
 
-     The default Realm is created using the default `RLMRealmConfiguration`, which
-     can be changed via `+[RLMRealmConfiguration setDefaultConfiguration:]`.
+	The default Realm is created using the default `RLMRealmConfiguration`, which
+	can be changed via `+[RLMRealmConfiguration setDefaultConfiguration:]`.
 
-     @return The default `RLMRealm` instance for the current thread.
-     */
+	@return The default `RLMRealm` instance for the current thread.
+	 */
 + (instancetype)defaultRealm;
 
 /**
- Obtains an `RLMRealm` instance with the given configuration.
+   Obtains an `RLMRealm` instance with the given configuration.
 
- @param configuration A configuration object to use when creating the Realm.
- @param error         If an error occurs, upon return contains an `NSError` object
+   @param configuration A configuration object to use when creating the Realm.
+   @param error         If an error occurs, upon return contains an `NSError` object
                       that describes the problem. If you are not interested in
                       possible errors, pass in `NULL`.
 
- @return An `RLMRealm` instance.
+   @return An `RLMRealm` instance.
  */
 + (nullable instancetype)realmWithConfiguration:(RLMRealmConfiguration *)configuration error:(NSError **)error;
 
 /**
- Obtains an `RLMRealm` instance persisted at a specified file URL.
+   Obtains an `RLMRealm` instance persisted at a specified file URL.
 
- @param fileURL The local URL of the file the Realm should be saved at.
+   @param fileURL The local URL of the file the Realm should be saved at.
 
- @return An `RLMRealm` instance.
+   @return An `RLMRealm` instance.
  */
 + (instancetype)realmWithURL:(NSURL *)fileURL;
 
 /**
- Asynchronously open a Realm and deliver it to a block on the given queue.
+   Asynchronously open a Realm and deliver it to a block on the given queue.
 
- Opening a Realm asynchronously will perform all work needed to get the Realm to
- a usable state (such as running potentially time-consuming migrations) on a
- background thread before dispatching to the given queue. In addition,
- synchronized Realms wait for all remote content available at the time the
- operation began to be downloaded and available locally.
+   Opening a Realm asynchronously will perform all work needed to get the Realm to
+   a usable state (such as running potentially time-consuming migrations) on a
+   background thread before dispatching to the given queue. In addition,
+   synchronized Realms wait for all remote content available at the time the
+   operation began to be downloaded and available locally.
 
- @param configuration A configuration object to use when opening the Realm.
- @param callbackQueue The dispatch queue on which the callback should be run.
- @param callback      A callback block. If the Realm was successfully opened,
+   @param configuration A configuration object to use when opening the Realm.
+   @param callbackQueue The dispatch queue on which the callback should be run.
+   @param callback      A callback block. If the Realm was successfully opened,
                       it will be passed in as an argument.
                       Otherwise, an `NSError` describing what went wrong will be
                       passed to the block instead.
 
- @note The returned Realm is confined to the thread on which it was created.
+   @note The returned Realm is confined to the thread on which it was created.
        Because GCD does not guarantee that queues will always use the same
        thread, accessing the returned Realm outside the callback block (even if
        accessed from `callbackQueue`) is unsafe.
  */
 + (RLMAsyncOpenTask *)asyncOpenWithConfiguration:(RLMRealmConfiguration *)configuration
-    callbackQueue:(dispatch_queue_t)callbackQueue
-    callback:(RLMAsyncOpenRealmCallback)callback;
+        callbackQueue:(dispatch_queue_t)callbackQueue
+        callback:(RLMAsyncOpenRealmCallback)callback;
 
 /**
- The `RLMSchema` used by the Realm.
+   The `RLMSchema` used by the Realm.
  */
 @property (nonatomic, readonly) RLMSchema *schema;
 
 /**
- Indicates if the Realm is currently engaged in a write transaction.
+   Indicates if the Realm is currently engaged in a write transaction.
 
- @warning   Do not simply check this property and then start a write transaction whenever an object needs to be
+   @warning   Do not simply check this property and then start a write transaction whenever an object needs to be
             created, updated, or removed. Doing so might cause a large number of write transactions to be created,
             degrading performance. Instead, always prefer performing multiple updates during a single transaction.
  */
 @property (nonatomic, readonly) BOOL inWriteTransaction;
 
 /**
- The `RLMRealmConfiguration` object that was used to create this `RLMRealm` instance.
+   The `RLMRealmConfiguration` object that was used to create this `RLMRealm` instance.
  */
 @property (nonatomic, readonly) RLMRealmConfiguration *configuration;
 
 /**
- Indicates if this Realm contains any objects.
+   Indicates if this Realm contains any objects.
  */
 @property (nonatomic, readonly) BOOL isEmpty;
 
 #pragma mark - File Management
 
 /**
- Writes a compacted and optionally encrypted copy of the Realm to the given local URL.
+   Writes a compacted and optionally encrypted copy of the Realm to the given local URL.
 
- The destination file cannot already exist.
+   The destination file cannot already exist.
 
- Note that if this method is called from within a write transaction, the
- *current* data is written, not the data from the point when the previous write
- transaction was committed.
+   Note that if this method is called from within a write transaction, the
+ * current* data is written, not the data from the point when the previous write
+   transaction was committed.
 
- @param fileURL Local URL to save the Realm to.
- @param key     Optional 64-byte encryption key to encrypt the new file with.
- @param error   If an error occurs, upon return contains an `NSError` object
- that describes the problem. If you are not interested in
- possible errors, pass in `NULL`.
+   @param fileURL Local URL to save the Realm to.
+   @param key     Optional 64-byte encryption key to encrypt the new file with.
+   @param error   If an error occurs, upon return contains an `NSError` object
+   that describes the problem. If you are not interested in
+   possible errors, pass in `NULL`.
 
- @return `YES` if the Realm was successfully written to disk, `NO` if an error occurred.
+   @return `YES` if the Realm was successfully written to disk, `NO` if an error occurred.
  */
 - (BOOL)writeCopyToURL:(NSURL *)fileURL encryptionKey:(nullable NSData *)key error:(NSError **)error;
 
 /**
- Checks if the Realm file for the given configuration exists locally on disk.
+   Checks if the Realm file for the given configuration exists locally on disk.
 
- For non-synchronized, non-in-memory Realms, this is equivalent to
- `-[NSFileManager.defaultManager fileExistsAtPath:config.path]`. For
- synchronized Realms, it takes care of computing the actual path on disk based
- on the server, virtual path, and user as is done when opening the Realm.
+   For non-synchronized, non-in-memory Realms, this is equivalent to
+   `-[NSFileManager.defaultManager fileExistsAtPath:config.path]`. For
+   synchronized Realms, it takes care of computing the actual path on disk based
+   on the server, virtual path, and user as is done when opening the Realm.
 
- @param config A Realm configuration to check the existence of.
- @return YES if the Realm file for the given configuration exists on disk, NO otherwise.
+   @param config A Realm configuration to check the existence of.
+   @return YES if the Realm file for the given configuration exists on disk, NO otherwise.
  */
 + (BOOL)fileExistsForConfiguration:(RLMRealmConfiguration *)config;
 
 /**
- Deletes the local Realm file and associated temporary files for the given configuration.
+   Deletes the local Realm file and associated temporary files for the given configuration.
 
- This deletes the ".realm", ".note" and ".management" files which would be
- created by opening the Realm with the given configuration. It does not delete
- the ".lock" file (which contains no persisted data and is recreated from
- scratch every time the Realm file is opened).
+   This deletes the ".realm", ".note" and ".management" files which would be
+   created by opening the Realm with the given configuration. It does not delete
+   the ".lock" file (which contains no persisted data and is recreated from
+   scratch every time the Realm file is opened).
 
- The Realm must not be currently open on any thread or in another process. If
- it is, this will return NO and report the error RLMErrorAlreadyOpen. Attempting to open
- the Realm on another thread while the deletion is happening will block (and
- then create a new Realm and open that afterwards).
+   The Realm must not be currently open on any thread or in another process. If
+   it is, this will return NO and report the error RLMErrorAlreadyOpen. Attempting to open
+   the Realm on another thread while the deletion is happening will block (and
+   then create a new Realm and open that afterwards).
 
- If the Realm already does not exist this will return `NO` and report the error NSFileNoSuchFileError;
+   If the Realm already does not exist this will return `NO` and report the error NSFileNoSuchFileError;
 
- @param config A Realm configuration identifying the Realm to be deleted.
- @return YES if any files were deleted, NO otherwise.
+   @param config A Realm configuration identifying the Realm to be deleted.
+   @return YES if any files were deleted, NO otherwise.
  */
 + (BOOL)deleteFilesForConfiguration:(RLMRealmConfiguration *)config error:(NSError **)error
-    __attribute__((swift_error(nonnull_error)));
+        __attribute__((swift_error(nonnull_error)));
 
 #pragma mark - Notifications
 
 /**
- The type of a block to run whenever the data within the Realm is modified.
+   The type of a block to run whenever the data within the Realm is modified.
 
- @see `-[RLMRealm addNotificationBlock:]`
+   @see `-[RLMRealm addNotificationBlock:]`
  */
 typedef void (^RLMNotificationBlock)(RLMNotification notification, RLMRealm *realm);
 
 #pragma mark - Receiving Notification when a Realm Changes
 
 /**
- Adds a notification handler for changes in this Realm, and returns a notification token.
+   Adds a notification handler for changes in this Realm, and returns a notification token.
 
- Notification handlers are called after each write transaction is committed,
- either on the current thread or other threads.
+   Notification handlers are called after each write transaction is committed,
+   either on the current thread or other threads.
 
- Handler blocks are called on the same thread that they were added on, and may
- only be added on threads which are currently within a run loop. Unless you are
- specifically creating and running a run loop on a background thread, this will
- normally only be the main thread.
+   Handler blocks are called on the same thread that they were added on, and may
+   only be added on threads which are currently within a run loop. Unless you are
+   specifically creating and running a run loop on a background thread, this will
+   normally only be the main thread.
 
- The block has the following definition:
+   The block has the following definition:
 
      typedef void(^RLMNotificationBlock)(RLMNotification notification, RLMRealm *realm);
 
- It receives the following parameters:
+   It receives the following parameters:
 
- - `NSString` \***notification**:    The name of the incoming notification. See
+   - `NSString` \***notification**:    The name of the incoming notification. See
                                      `RLMRealmNotification` for information on what
                                      notifications are sent.
- - `RLMRealm` \***realm**:           The Realm for which this notification occurred.
+   - `RLMRealm` \***realm**:           The Realm for which this notification occurred.
 
- @param block   A block which is called to process Realm notifications.
+   @param block   A block which is called to process Realm notifications.
 
- @return A token object which must be retained as long as you wish to continue
+   @return A token object which must be retained as long as you wish to continue
          receiving change notifications.
  */
 - (RLMNotificationToken *)addNotificationBlock:(RLMNotificationBlock)block __attribute__((warn_unused_result));
@@ -247,113 +247,113 @@ typedef void (^RLMNotificationBlock)(RLMNotification notification, RLMRealm *rea
 #pragma mark - Writing to a Realm
 
 /**
- Begins a write transaction on the Realm.
+   Begins a write transaction on the Realm.
 
- Only one write transaction can be open at a time for each Realm file. Write
- transactions cannot be nested, and trying to begin a write transaction on a
- Realm which is already in a write transaction will throw an exception. Calls to
- `beginWriteTransaction` from `RLMRealm` instances for the same Realm file in
- other threads or other processes will block until the current write transaction
- completes or is cancelled.
+   Only one write transaction can be open at a time for each Realm file. Write
+   transactions cannot be nested, and trying to begin a write transaction on a
+   Realm which is already in a write transaction will throw an exception. Calls to
+   `beginWriteTransaction` from `RLMRealm` instances for the same Realm file in
+   other threads or other processes will block until the current write transaction
+   completes or is cancelled.
 
- Before beginning the write transaction, `beginWriteTransaction` updates the
- `RLMRealm` instance to the latest Realm version, as if `refresh` had been
- called, and generates notifications if applicable. This has no effect if the
- Realm was already up to date.
+   Before beginning the write transaction, `beginWriteTransaction` updates the
+   `RLMRealm` instance to the latest Realm version, as if `refresh` had been
+   called, and generates notifications if applicable. This has no effect if the
+   Realm was already up to date.
 
- It is rarely a good idea to have write transactions span multiple cycles of
- the run loop, but if you do wish to do so you will need to ensure that the
- Realm participating in the write transaction is kept alive until the write
- transaction is committed.
+   It is rarely a good idea to have write transactions span multiple cycles of
+   the run loop, but if you do wish to do so you will need to ensure that the
+   Realm participating in the write transaction is kept alive until the write
+   transaction is committed.
  */
 - (void)beginWriteTransaction;
 
 /**
- Commits all write operations in the current write transaction, and ends the
- transaction.
+   Commits all write operations in the current write transaction, and ends the
+   transaction.
 
- After saving the changes, all notification blocks registered on this specific
- `RLMRealm` instance are invoked synchronously. Notification blocks registered
- on other threads or on collections are invoked asynchronously. If you do not
- want to receive a specific notification for this write tranaction, see
- `commitWriteTransactionWithoutNotifying:error:`.
+   After saving the changes, all notification blocks registered on this specific
+   `RLMRealm` instance are invoked synchronously. Notification blocks registered
+   on other threads or on collections are invoked asynchronously. If you do not
+   want to receive a specific notification for this write tranaction, see
+   `commitWriteTransactionWithoutNotifying:error:`.
 
- This method can fail if there is insufficient disk space available to save the
- writes made, or due to unexpected i/o errors. This version of the method throws
- an exception when errors occur. Use the version with a `NSError` out parameter
- instead if you wish to handle errors.
+   This method can fail if there is insufficient disk space available to save the
+   writes made, or due to unexpected i/o errors. This version of the method throws
+   an exception when errors occur. Use the version with a `NSError` out parameter
+   instead if you wish to handle errors.
 
- @warning This method may only be called during a write transaction.
+   @warning This method may only be called during a write transaction.
  */
 - (void)commitWriteTransaction NS_SWIFT_UNAVAILABLE("");
 
 /**
- Commits all write operations in the current write transaction, and ends the
- transaction.
+   Commits all write operations in the current write transaction, and ends the
+   transaction.
 
- After saving the changes, all notification blocks registered on this specific
- `RLMRealm` instance are invoked synchronously. Notification blocks registered
- on other threads or on collections are invoked asynchronously. If you do not
- want to receive a specific notification for this write tranaction, see
- `commitWriteTransactionWithoutNotifying:error:`.
+   After saving the changes, all notification blocks registered on this specific
+   `RLMRealm` instance are invoked synchronously. Notification blocks registered
+   on other threads or on collections are invoked asynchronously. If you do not
+   want to receive a specific notification for this write tranaction, see
+   `commitWriteTransactionWithoutNotifying:error:`.
 
- This method can fail if there is insufficient disk space available to save the
- writes made, or due to unexpected i/o errors.
+   This method can fail if there is insufficient disk space available to save the
+   writes made, or due to unexpected i/o errors.
 
- @warning This method may only be called during a write transaction.
+   @warning This method may only be called during a write transaction.
 
- @param error If an error occurs, upon return contains an `NSError` object
+   @param error If an error occurs, upon return contains an `NSError` object
               that describes the problem. If you are not interested in
               possible errors, pass in `NULL`.
 
- @return Whether the transaction succeeded.
+   @return Whether the transaction succeeded.
  */
 - (BOOL)commitWriteTransaction:(NSError **)error;
 
 /**
- Commits all write operations in the current write transaction, without
- notifying specific notification blocks of the changes.
+   Commits all write operations in the current write transaction, without
+   notifying specific notification blocks of the changes.
 
- After saving the changes, all notification blocks registered on this specific
- `RLMRealm` instance are invoked synchronously. Notification blocks registered
- on other threads or on collections are scheduled to be invoked asynchronously.
+   After saving the changes, all notification blocks registered on this specific
+   `RLMRealm` instance are invoked synchronously. Notification blocks registered
+   on other threads or on collections are scheduled to be invoked asynchronously.
 
- You can skip notifiying specific notification blocks about the changes made
- in this write transaction by passing in their associated notification tokens.
- This is primarily useful when the write transaction is saving changes already
- made in the UI and you do not want to have the notification block attempt to
- re-apply the same changes.
+   You can skip notifiying specific notification blocks about the changes made
+   in this write transaction by passing in their associated notification tokens.
+   This is primarily useful when the write transaction is saving changes already
+   made in the UI and you do not want to have the notification block attempt to
+   re-apply the same changes.
 
- The tokens passed to this method must be for notifications for this specific
- `RLMRealm` instance. Notifications for different threads cannot be skipped
- using this method.
+   The tokens passed to this method must be for notifications for this specific
+   `RLMRealm` instance. Notifications for different threads cannot be skipped
+   using this method.
 
- This method can fail if there is insufficient disk space available to save the
- writes made, or due to unexpected i/o errors.
+   This method can fail if there is insufficient disk space available to save the
+   writes made, or due to unexpected i/o errors.
 
- @warning This method may only be called during a write transaction.
+   @warning This method may only be called during a write transaction.
 
- @param tokens An array of notification tokens which were returned from adding
+   @param tokens An array of notification tokens which were returned from adding
                callbacks which you do not want to be notified for the changes
                made in this write transaction.
- @param error If an error occurs, upon return contains an `NSError` object
+   @param error If an error occurs, upon return contains an `NSError` object
               that describes the problem. If you are not interested in
               possible errors, pass in `NULL`.
 
- @return Whether the transaction succeeded.
+   @return Whether the transaction succeeded.
  */
 - (BOOL)commitWriteTransactionWithoutNotifying:(NSArray<RLMNotificationToken *> *)tokens error:(NSError **)error;
 
 /**
- Reverts all writes made during the current write transaction and ends the transaction.
+   Reverts all writes made during the current write transaction and ends the transaction.
 
- This rolls back all objects in the Realm to the state they were in at the
- beginning of the write transaction, and then ends the transaction.
+   This rolls back all objects in the Realm to the state they were in at the
+   beginning of the write transaction, and then ends the transaction.
 
- This restores the data for deleted objects, but does not revive invalidated
- object instances. Any `RLMObject`s which were added to the Realm will be
- invalidated rather than becoming unmanaged.
- Given the following code:
+   This restores the data for deleted objects, but does not revive invalidated
+   object instances. Any `RLMObject`s which were added to the Realm will be
+   invalidated rather than becoming unmanaged.
+   Given the following code:
 
      ObjectType *oldObject = [[ObjectType objectsWhere:@"..."] firstObject];
      ObjectType *newObject = [[ObjectType alloc] init];
@@ -363,267 +363,267 @@ typedef void (^RLMNotificationBlock)(RLMNotification notification, RLMRealm *rea
      [realm deleteObject:oldObject];
      [realm cancelWriteTransaction];
 
- Both `oldObject` and `newObject` will return `YES` for `isInvalidated`,
- but re-running the query which provided `oldObject` will once again return
- the valid object.
+   Both `oldObject` and `newObject` will return `YES` for `isInvalidated`,
+   but re-running the query which provided `oldObject` will once again return
+   the valid object.
 
- KVO observers on any objects which were modified during the transaction will
- be notified about the change back to their initial values, but no other
- notifcations are produced by a cancelled write transaction.
+   KVO observers on any objects which were modified during the transaction will
+   be notified about the change back to their initial values, but no other
+   notifcations are produced by a cancelled write transaction.
 
- @warning This method may only be called during a write transaction.
+   @warning This method may only be called during a write transaction.
  */
 - (void)cancelWriteTransaction;
 
 /**
- Performs actions contained within the given block inside a write transaction.
+   Performs actions contained within the given block inside a write transaction.
 
- @see `[RLMRealm transactionWithoutNotifying:block:error:]`
+   @see `[RLMRealm transactionWithoutNotifying:block:error:]`
  */
-- (void)transactionWithBlock:(__attribute__((noescape)) void(^)(void))block NS_SWIFT_UNAVAILABLE("");
+- (void)transactionWithBlock:(__attribute__((noescape)) void (^)(void))block NS_SWIFT_UNAVAILABLE("");
 
 /**
- Performs actions contained within the given block inside a write transaction.
+   Performs actions contained within the given block inside a write transaction.
 
- @see `[RLMRealm transactionWithoutNotifying:block:error:]`
+   @see `[RLMRealm transactionWithoutNotifying:block:error:]`
  */
-- (BOOL)transactionWithBlock:(__attribute__((noescape)) void(^)(void))block error:(NSError **)error;
+- (BOOL)transactionWithBlock:(__attribute__((noescape)) void (^)(void))block error:(NSError **)error;
 
 /**
- Performs actions contained within the given block inside a write transaction.
+   Performs actions contained within the given block inside a write transaction.
 
- @see `[RLMRealm transactionWithoutNotifying:block:error:]`
+   @see `[RLMRealm transactionWithoutNotifying:block:error:]`
  */
-- (void)transactionWithoutNotifying:(NSArray<RLMNotificationToken *> *)tokens block:(__attribute__((noescape)) void(^)(void))block;
+- (void)transactionWithoutNotifying:(NSArray<RLMNotificationToken *> *)tokens block:(__attribute__((noescape)) void (^)(void))block;
 
 /**
- Performs actions contained within the given block inside a write transaction.
+   Performs actions contained within the given block inside a write transaction.
 
- Write transactions cannot be nested, and trying to execute a write transaction
- on a Realm which is already participating in a write transaction will throw an
- exception. Calls to `transactionWithBlock:` from `RLMRealm` instances in other
- threads will block until the current write transaction completes.
+   Write transactions cannot be nested, and trying to execute a write transaction
+   on a Realm which is already participating in a write transaction will throw an
+   exception. Calls to `transactionWithBlock:` from `RLMRealm` instances in other
+   threads will block until the current write transaction completes.
 
- Before beginning the write transaction, `transactionWithBlock:` updates the
- `RLMRealm` instance to the latest Realm version, as if `refresh` had been called, and
- generates notifications if applicable. This has no effect if the Realm
- was already up to date.
+   Before beginning the write transaction, `transactionWithBlock:` updates the
+   `RLMRealm` instance to the latest Realm version, as if `refresh` had been called, and
+   generates notifications if applicable. This has no effect if the Realm
+   was already up to date.
 
- You can skip notifiying specific notification blocks about the changes made
- in this write transaction by passing in their associated notification tokens.
- This is primarily useful when the write transaction is saving changes already
- made in the UI and you do not want to have the notification block attempt to
- re-apply the same changes.
+   You can skip notifiying specific notification blocks about the changes made
+   in this write transaction by passing in their associated notification tokens.
+   This is primarily useful when the write transaction is saving changes already
+   made in the UI and you do not want to have the notification block attempt to
+   re-apply the same changes.
 
- The tokens passed to this method must be for notifications for this specific
- `RLMRealm` instance. Notifications for different threads cannot be skipped
- using this method.
+   The tokens passed to this method must be for notifications for this specific
+   `RLMRealm` instance. Notifications for different threads cannot be skipped
+   using this method.
 
- @param tokens An array of notification tokens which were returned from adding
+   @param tokens An array of notification tokens which were returned from adding
                callbacks which you do not want to be notified for the changes
                made in this write transaction.
- @param block The block containing actions to perform.
- @param error If an error occurs, upon return contains an `NSError` object
+   @param block The block containing actions to perform.
+   @param error If an error occurs, upon return contains an `NSError` object
               that describes the problem. If you are not interested in
               possible errors, pass in `NULL`.
 
- @return Whether the transaction succeeded.
+   @return Whether the transaction succeeded.
  */
-- (BOOL)transactionWithoutNotifying:(NSArray<RLMNotificationToken *> *)tokens block:(__attribute__((noescape)) void(^)(void))block error:(NSError **)error;
+- (BOOL)transactionWithoutNotifying:(NSArray<RLMNotificationToken *> *)tokens block:(__attribute__((noescape)) void (^)(void))block error:(NSError **)error;
 
 /**
- Updates the Realm and outstanding objects managed by the Realm to point to the
- most recent data.
+   Updates the Realm and outstanding objects managed by the Realm to point to the
+   most recent data.
 
- If the version of the Realm is actually changed, Realm and collection
- notifications will be sent to reflect the changes. This may take some time, as
- collection notifications are prepared on a background thread. As a result,
- calling this method on the main thread is not advisable.
+   If the version of the Realm is actually changed, Realm and collection
+   notifications will be sent to reflect the changes. This may take some time, as
+   collection notifications are prepared on a background thread. As a result,
+   calling this method on the main thread is not advisable.
 
- @return Whether there were any updates for the Realm. Note that `YES` may be
+   @return Whether there were any updates for the Realm. Note that `YES` may be
          returned even if no data actually changed.
  */
 - (BOOL)refresh;
 
 /**
- Set this property to `YES` to automatically update this Realm when changes
- happen in other threads.
+   Set this property to `YES` to automatically update this Realm when changes
+   happen in other threads.
 
- If set to `YES` (the default), changes made on other threads will be reflected
- in this Realm on the next cycle of the run loop after the changes are
- committed.  If set to `NO`, you must manually call `-refresh` on the Realm to
- update it to get the latest data.
+   If set to `YES` (the default), changes made on other threads will be reflected
+   in this Realm on the next cycle of the run loop after the changes are
+   committed.  If set to `NO`, you must manually call `-refresh` on the Realm to
+   update it to get the latest data.
 
- Note that by default, background threads do not have an active run loop and you
- will need to manually call `-refresh` in order to update to the latest version,
- even if `autorefresh` is set to `YES`.
+   Note that by default, background threads do not have an active run loop and you
+   will need to manually call `-refresh` in order to update to the latest version,
+   even if `autorefresh` is set to `YES`.
 
- Even with this property enabled, you can still call `-refresh` at any time to
- update the Realm before the automatic refresh would occur.
+   Even with this property enabled, you can still call `-refresh` at any time to
+   update the Realm before the automatic refresh would occur.
 
- Write transactions will still always advance a Realm to the latest version and
- produce local notifications on commit even if autorefresh is disabled.
+   Write transactions will still always advance a Realm to the latest version and
+   produce local notifications on commit even if autorefresh is disabled.
 
- Disabling `autorefresh` on a Realm without any strong references to it will not
- have any effect, and `autorefresh` will revert back to `YES` the next time the
- Realm is created. This is normally irrelevant as it means that there is nothing
- to refresh (as managed `RLMObject`s, `RLMArray`s, and `RLMResults` have strong
- references to the Realm that manages them), but it means that setting
- `RLMRealm.defaultRealm.autorefresh = NO` in
- `application:didFinishLaunchingWithOptions:` and only later storing Realm
- objects will not work.
+   Disabling `autorefresh` on a Realm without any strong references to it will not
+   have any effect, and `autorefresh` will revert back to `YES` the next time the
+   Realm is created. This is normally irrelevant as it means that there is nothing
+   to refresh (as managed `RLMObject`s, `RLMArray`s, and `RLMResults` have strong
+   references to the Realm that manages them), but it means that setting
+   `RLMRealm.defaultRealm.autorefresh = NO` in
+   `application:didFinishLaunchingWithOptions:` and only later storing Realm
+   objects will not work.
 
- Defaults to `YES`.
+   Defaults to `YES`.
  */
 @property (nonatomic) BOOL autorefresh;
 
 /**
- Invalidates all `RLMObject`s, `RLMResults`, `RLMLinkingObjects`, and `RLMArray`s managed by the Realm.
+   Invalidates all `RLMObject`s, `RLMResults`, `RLMLinkingObjects`, and `RLMArray`s managed by the Realm.
 
- A Realm holds a read lock on the version of the data accessed by it, so
- that changes made to the Realm on different threads do not modify or delete the
- data seen by this Realm. Calling this method releases the read lock,
- allowing the space used on disk to be reused by later write transactions rather
- than growing the file. This method should be called before performing long
- blocking operations on a background thread on which you previously read data
- from the Realm which you no longer need.
+   A Realm holds a read lock on the version of the data accessed by it, so
+   that changes made to the Realm on different threads do not modify or delete the
+   data seen by this Realm. Calling this method releases the read lock,
+   allowing the space used on disk to be reused by later write transactions rather
+   than growing the file. This method should be called before performing long
+   blocking operations on a background thread on which you previously read data
+   from the Realm which you no longer need.
 
- All `RLMObject`, `RLMResults` and `RLMArray` instances obtained from this
- `RLMRealm` instance on the current thread are invalidated. `RLMObject`s and `RLMArray`s
- cannot be used. `RLMResults` will become empty. The Realm itself remains valid,
- and a new read transaction is implicitly begun the next time data is read from the Realm.
+   All `RLMObject`, `RLMResults` and `RLMArray` instances obtained from this
+   `RLMRealm` instance on the current thread are invalidated. `RLMObject`s and `RLMArray`s
+   cannot be used. `RLMResults` will become empty. The Realm itself remains valid,
+   and a new read transaction is implicitly begun the next time data is read from the Realm.
 
- Calling this method multiple times in a row without reading any data from the
- Realm, or before ever reading any data from the Realm, is a no-op. This method
- may not be called on a read-only Realm.
+   Calling this method multiple times in a row without reading any data from the
+   Realm, or before ever reading any data from the Realm, is a no-op. This method
+   may not be called on a read-only Realm.
  */
 - (void)invalidate;
 
 #pragma mark - Accessing Objects
 
 /**
- Returns the same object as the one referenced when the `RLMThreadSafeReference` was first created,
- but resolved for the current Realm for this thread. Returns `nil` if this object was deleted after
- the reference was created.
+   Returns the same object as the one referenced when the `RLMThreadSafeReference` was first created,
+   but resolved for the current Realm for this thread. Returns `nil` if this object was deleted after
+   the reference was created.
 
- @param reference The thread-safe reference to the thread-confined object to resolve in this Realm.
+   @param reference The thread-safe reference to the thread-confined object to resolve in this Realm.
 
- @warning A `RLMThreadSafeReference` object must be resolved at most once.
+   @warning A `RLMThreadSafeReference` object must be resolved at most once.
           Failing to resolve a `RLMThreadSafeReference` will result in the source version of the
           Realm being pinned until the reference is deallocated.
           An exception will be thrown if a reference is resolved more than once.
 
- @warning Cannot call within a write transaction.
+   @warning Cannot call within a write transaction.
 
- @note Will refresh this Realm if the source Realm was at a later version than this one.
+   @note Will refresh this Realm if the source Realm was at a later version than this one.
 
- @see `+[RLMThreadSafeReference referenceWithThreadConfined:]`
+   @see `+[RLMThreadSafeReference referenceWithThreadConfined:]`
  */
 - (nullable id)resolveThreadSafeReference:(RLMThreadSafeReference *)reference
-    NS_REFINED_FOR_SWIFT;
+        NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Adding and Removing Objects from a Realm
 
 /**
- Adds an object to the Realm.
+   Adds an object to the Realm.
 
- Once added, this object is considered to be managed by the Realm. It can be retrieved
- using the `objectsWhere:` selectors on `RLMRealm` and on subclasses of `RLMObject`.
+   Once added, this object is considered to be managed by the Realm. It can be retrieved
+   using the `objectsWhere:` selectors on `RLMRealm` and on subclasses of `RLMObject`.
 
- When added, all child relationships referenced by this object will also be added to
- the Realm if they are not already in it.
+   When added, all child relationships referenced by this object will also be added to
+   the Realm if they are not already in it.
 
- If the object or any related objects are already being managed by a different Realm
- an exception will be thrown. Use `-[RLMObject createInRealm:withObject:]` to insert a copy of a managed object
- into a different Realm.
+   If the object or any related objects are already being managed by a different Realm
+   an exception will be thrown. Use `-[RLMObject createInRealm:withObject:]` to insert a copy of a managed object
+   into a different Realm.
 
- The object to be added must be valid and cannot have been previously deleted
- from a Realm (i.e. `isInvalidated` must be `NO`).
+   The object to be added must be valid and cannot have been previously deleted
+   from a Realm (i.e. `isInvalidated` must be `NO`).
 
- @warning This method may only be called during a write transaction.
+   @warning This method may only be called during a write transaction.
 
- @param object  The object to be added to this Realm.
+   @param object  The object to be added to this Realm.
  */
 - (void)addObject:(RLMObject *)object;
 
 /**
- Adds all the objects in a collection to the Realm.
+   Adds all the objects in a collection to the Realm.
 
- This is the equivalent of calling `addObject:` for every object in a collection.
+   This is the equivalent of calling `addObject:` for every object in a collection.
 
- @warning This method may only be called during a write transaction.
+   @warning This method may only be called during a write transaction.
 
- @param objects   An enumerable collection such as `NSArray`, `RLMArray`, or `RLMResults`,
+   @param objects   An enumerable collection such as `NSArray`, `RLMArray`, or `RLMResults`,
                   containing Realm objects to be added to the Realm.
 
- @see   `addObject:`
+   @see   `addObject:`
  */
 - (void)addObjects:(id<NSFastEnumeration>)objects;
 
 /**
- Adds or updates an existing object into the Realm.
+   Adds or updates an existing object into the Realm.
 
- The object provided must have a designated primary key. If no objects exist in the Realm
- with the same primary key value, the object is inserted. Otherwise, the existing object is
- updated with any changed values.
+   The object provided must have a designated primary key. If no objects exist in the Realm
+   with the same primary key value, the object is inserted. Otherwise, the existing object is
+   updated with any changed values.
 
- As with `addObject:`, the object cannot already be managed by a different
- Realm. Use `-[RLMObject createOrUpdateInRealm:withValue:]` to copy values to
- a different Realm.
+   As with `addObject:`, the object cannot already be managed by a different
+   Realm. Use `-[RLMObject createOrUpdateInRealm:withValue:]` to copy values to
+   a different Realm.
 
- If there is a property or KVC value on `object` whose value is nil, and it corresponds
- to a nullable property on an existing object being updated, that nullable property will
- be set to nil.
+   If there is a property or KVC value on `object` whose value is nil, and it corresponds
+   to a nullable property on an existing object being updated, that nullable property will
+   be set to nil.
 
- @warning This method may only be called during a write transaction.
+   @warning This method may only be called during a write transaction.
 
- @param object  The object to be added or updated.
+   @param object  The object to be added or updated.
  */
 - (void)addOrUpdateObject:(RLMObject *)object;
 
 /**
- Adds or updates all the objects in a collection into the Realm.
+   Adds or updates all the objects in a collection into the Realm.
 
- This is the equivalent of calling `addOrUpdateObject:` for every object in a collection.
+   This is the equivalent of calling `addOrUpdateObject:` for every object in a collection.
 
- @warning This method may only be called during a write transaction.
+   @warning This method may only be called during a write transaction.
 
- @param objects  An enumerable collection such as `NSArray`, `RLMArray`, or `RLMResults`,
+   @param objects  An enumerable collection such as `NSArray`, `RLMArray`, or `RLMResults`,
                  containing Realm objects to be added to or updated within the Realm.
 
- @see   `addOrUpdateObject:`
+   @see   `addOrUpdateObject:`
  */
 - (void)addOrUpdateObjects:(id<NSFastEnumeration>)objects;
 
 /**
- Deletes an object from the Realm. Once the object is deleted it is considered invalidated.
+   Deletes an object from the Realm. Once the object is deleted it is considered invalidated.
 
- @warning This method may only be called during a write transaction.
+   @warning This method may only be called during a write transaction.
 
- @param object  The object to be deleted.
+   @param object  The object to be deleted.
  */
 - (void)deleteObject:(RLMObject *)object;
 
 /**
- Deletes one or more objects from the Realm.
+   Deletes one or more objects from the Realm.
 
- This is the equivalent of calling `deleteObject:` for every object in a collection.
+   This is the equivalent of calling `deleteObject:` for every object in a collection.
 
- @warning This method may only be called during a write transaction.
+   @warning This method may only be called during a write transaction.
 
- @param objects  An enumerable collection such as `NSArray`, `RLMArray`, or `RLMResults`,
+   @param objects  An enumerable collection such as `NSArray`, `RLMArray`, or `RLMResults`,
                  containing objects to be deleted from the Realm.
 
- @see `deleteObject:`
+   @see `deleteObject:`
  */
 - (void)deleteObjects:(id<NSFastEnumeration>)objects;
 
 /**
- Deletes all objects from the Realm.
+   Deletes all objects from the Realm.
 
- @warning This method may only be called during a write transaction.
+   @warning This method may only be called during a write transaction.
 
- @see `deleteObject:`
+   @see `deleteObject:`
  */
 - (void)deleteAllObjects;
 
@@ -631,141 +631,141 @@ typedef void (^RLMNotificationBlock)(RLMNotification notification, RLMRealm *rea
 #pragma mark - Migrations
 
 /**
- The type of a migration block used to migrate a Realm.
+   The type of a migration block used to migrate a Realm.
 
- @param migration   A `RLMMigration` object used to perform the migration. The
+   @param migration   A `RLMMigration` object used to perform the migration. The
                     migration object allows you to enumerate and alter any
                     existing objects which require migration.
 
- @param oldSchemaVersion    The schema version of the Realm being migrated.
+   @param oldSchemaVersion    The schema version of the Realm being migrated.
  */
 typedef void (^RLMMigrationBlock)(RLMMigration *migration, uint64_t oldSchemaVersion);
 
 /**
- Returns the schema version for a Realm at a given local URL.
+   Returns the schema version for a Realm at a given local URL.
 
- @param fileURL Local URL to a Realm file.
- @param key     64-byte key used to encrypt the file, or `nil` if it is unencrypted.
- @param error   If an error occurs, upon return contains an `NSError` object
+   @param fileURL Local URL to a Realm file.
+   @param key     64-byte key used to encrypt the file, or `nil` if it is unencrypted.
+   @param error   If an error occurs, upon return contains an `NSError` object
                 that describes the problem. If you are not interested in
                 possible errors, pass in `NULL`.
 
- @return The version of the Realm at `fileURL`, or `RLMNotVersioned` if the version cannot be read.
+   @return The version of the Realm at `fileURL`, or `RLMNotVersioned` if the version cannot be read.
  */
 + (uint64_t)schemaVersionAtURL:(NSURL *)fileURL encryptionKey:(nullable NSData *)key error:(NSError **)error
-    NS_REFINED_FOR_SWIFT;
+        NS_REFINED_FOR_SWIFT;
 
 /**
- Performs the given Realm configuration's migration block on a Realm at the given path.
+   Performs the given Realm configuration's migration block on a Realm at the given path.
 
- This method is called automatically when opening a Realm for the first time and does
- not need to be called explicitly. You can choose to call this method to control
- exactly when and how migrations are performed.
+   This method is called automatically when opening a Realm for the first time and does
+   not need to be called explicitly. You can choose to call this method to control
+   exactly when and how migrations are performed.
 
- @param configuration The Realm configuration used to open and migrate the Realm.
- @return              The error that occurred while applying the migration, if any.
+   @param configuration The Realm configuration used to open and migrate the Realm.
+   @return              The error that occurred while applying the migration, if any.
 
- @see                 RLMMigration
+   @see                 RLMMigration
  */
 + (BOOL)performMigrationForConfiguration:(RLMRealmConfiguration *)configuration error:(NSError **)error;
 
 #pragma mark - Privileges
 
 /**
- Returns the computed privileges which the current user has for this Realm.
+   Returns the computed privileges which the current user has for this Realm.
 
- This combines all privileges granted on the Realm by all Roles which the
- current User is a member of into the final privileges which will be enforced by
- the server.
+   This combines all privileges granted on the Realm by all Roles which the
+   current User is a member of into the final privileges which will be enforced by
+   the server.
 
- The privilege calculation is done locally using cached data, and inherently may
- be stale. It is possible that this method may indicate that an operation is
- permitted but the server will still reject it if permission is revoked before
- the changes have been integrated on the server.
+   The privilege calculation is done locally using cached data, and inherently may
+   be stale. It is possible that this method may indicate that an operation is
+   permitted but the server will still reject it if permission is revoked before
+   the changes have been integrated on the server.
 
- Non-synchronized Realms always have permission to perform all operations.
+   Non-synchronized Realms always have permission to perform all operations.
 
- @warning This currently returns incorrect results for non-partially-synchronized read-only Realms.
- @return The privileges which the current user has for the current Realm.
+   @warning This currently returns incorrect results for non-partially-synchronized read-only Realms.
+   @return The privileges which the current user has for the current Realm.
  */
-- (struct RLMRealmPrivileges)privilegesForRealm;
+- (struct RLMRealmPrivileges) privilegesForRealm;
 
 /**
- Returns the computed privileges which the current user has for the given object.
+   Returns the computed privileges which the current user has for the given object.
 
- This combines all privileges granted on the object by all Roles which the
- current User is a member of into the final privileges which will be enforced by
- the server.
+   This combines all privileges granted on the object by all Roles which the
+   current User is a member of into the final privileges which will be enforced by
+   the server.
 
- The privilege calculation is done locally using cached data, and inherently may
- be stale. It is possible that this method may indicate that an operation is
- permitted but the server will still reject it if permission is revoked before
- the changes have been integrated on the server.
+   The privilege calculation is done locally using cached data, and inherently may
+   be stale. It is possible that this method may indicate that an operation is
+   permitted but the server will still reject it if permission is revoked before
+   the changes have been integrated on the server.
 
- Non-synchronized Realms always have permission to perform all operations.
+   Non-synchronized Realms always have permission to perform all operations.
 
- The object must be a valid object managed by this Realm. Passing in an
- invalidated object, an unmanaged object, or an object managed by a different
- Realm will throw an exception.
+   The object must be a valid object managed by this Realm. Passing in an
+   invalidated object, an unmanaged object, or an object managed by a different
+   Realm will throw an exception.
 
- @warning This currently returns incorrect results for non-partially-synchronized read-only Realms.
- @return The privileges which the current user has for the given object.
+   @warning This currently returns incorrect results for non-partially-synchronized read-only Realms.
+   @return The privileges which the current user has for the given object.
  */
-- (struct RLMObjectPrivileges)privilegesForObject:(RLMObject *)object;
+- (struct RLMObjectPrivileges) privilegesForObject:(RLMObject *)object;
 
 /**
- Returns the computed privileges which the current user has for the given class.
+   Returns the computed privileges which the current user has for the given class.
 
- This combines all privileges granted on the class by all Roles which the
- current User is a member of into the final privileges which will be enforced by
- the server.
+   This combines all privileges granted on the class by all Roles which the
+   current User is a member of into the final privileges which will be enforced by
+   the server.
 
- The privilege calculation is done locally using cached data, and inherently may
- be stale. It is possible that this method may indicate that an operation is
- permitted but the server will still reject it if permission is revoked before
- the changes have been integrated on the server.
+   The privilege calculation is done locally using cached data, and inherently may
+   be stale. It is possible that this method may indicate that an operation is
+   permitted but the server will still reject it if permission is revoked before
+   the changes have been integrated on the server.
 
- Non-synchronized Realms always have permission to perform all operations.
+   Non-synchronized Realms always have permission to perform all operations.
 
- @warning This currently returns incorrect results for non-partially-synchronized read-only Realms.
- @return The privileges which the current user has for the given object.
+   @warning This currently returns incorrect results for non-partially-synchronized read-only Realms.
+   @return The privileges which the current user has for the given object.
  */
-- (struct RLMClassPrivileges)privilegesForClass:(Class)cls;
+- (struct RLMClassPrivileges) privilegesForClass:(Class)cls;
 
 /**
- Returns the computed privileges which the current user has for the named class.
+   Returns the computed privileges which the current user has for the named class.
 
- This combines all privileges granted on the class by all Roles which the
- current User is a member of into the final privileges which will be enforced by
- the server.
+   This combines all privileges granted on the class by all Roles which the
+   current User is a member of into the final privileges which will be enforced by
+   the server.
 
- The privilege calculation is done locally using cached data, and inherently may
- be stale. It is possible that this method may indicate that an operation is
- permitted but the server will still reject it if permission is revoked before
- the changes have been integrated on the server.
+   The privilege calculation is done locally using cached data, and inherently may
+   be stale. It is possible that this method may indicate that an operation is
+   permitted but the server will still reject it if permission is revoked before
+   the changes have been integrated on the server.
 
- Non-synchronized Realms always have permission to perform all operations.
+   Non-synchronized Realms always have permission to perform all operations.
 
- @warning This currently returns incorrect results for non-partially-synchronized read-only Realms.
- @return The privileges which the current user has for the given object.
+   @warning This currently returns incorrect results for non-partially-synchronized read-only Realms.
+   @return The privileges which the current user has for the given object.
  */
-- (struct RLMClassPrivileges)privilegesForClassNamed:(NSString *)className;
+- (struct RLMClassPrivileges) privilegesForClassNamed:(NSString *)className;
 
 #pragma mark - Unavailable Methods
 
 /**
- RLMRealm instances are cached internally by Realm and cannot be created directly.
+   RLMRealm instances are cached internally by Realm and cannot be created directly.
 
- Use `+[RLMRealm defaultRealm]`, `+[RLMRealm realmWithConfiguration:error:]` or
- `+[RLMRealm realmWithURL]` to obtain a reference to an RLMRealm.
+   Use `+[RLMRealm defaultRealm]`, `+[RLMRealm realmWithConfiguration:error:]` or
+   `+[RLMRealm realmWithURL]` to obtain a reference to an RLMRealm.
  */
 - (instancetype)init __attribute__((unavailable("Use +defaultRealm, +realmWithConfiguration: or +realmWithURL:.")));
 
 /**
- RLMRealm instances are cached internally by Realm and cannot be created directly.
+   RLMRealm instances are cached internally by Realm and cannot be created directly.
 
- Use `+[RLMRealm defaultRealm]`, `+[RLMRealm realmWithConfiguration:error:]` or
- `+[RLMRealm realmWithURL]` to obtain a reference to an RLMRealm.
+   Use `+[RLMRealm defaultRealm]`, `+[RLMRealm realmWithConfiguration:error:]` or
+   `+[RLMRealm realmWithURL]` to obtain a reference to an RLMRealm.
  */
 + (instancetype)new __attribute__((unavailable("Use +defaultRealm, +realmWithConfiguration: or +realmWithURL:.")));
 
@@ -777,13 +777,13 @@ typedef void (^RLMMigrationBlock)(RLMMigration *migration, uint64_t oldSchemaVer
 // MARK: - RLMNotificationToken
 
 /**
- A token which is returned from methods which subscribe to changes to a Realm.
+   A token which is returned from methods which subscribe to changes to a Realm.
 
- Change subscriptions in Realm return an `RLMNotificationToken` instance,
- which can be used to unsubscribe from the changes. You must store a strong
- reference to the token for as long as you want to continue to receive notifications.
- When you wish to stop, call the `-invalidate` method. Notifications are also stopped if
- the token is deallocated.
+   Change subscriptions in Realm return an `RLMNotificationToken` instance,
+   which can be used to unsubscribe from the changes. You must store a strong
+   reference to the token for as long as you want to continue to receive notifications.
+   When you wish to stop, call the `-invalidate` method. Notifications are also stopped if
+   the token is deallocated.
  */
 @interface RLMNotificationToken : NSObject
 /// Stops notifications for the change subscription that returned this token.

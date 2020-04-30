@@ -53,14 +53,14 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - RLMAuthResponseModel
 
 /**
- An internal class representing a valid JSON response to an auth request.
+   An internal class representing a valid JSON response to an auth request.
 
- ```
- {
- "access_token": { ... } // (optional),
- "refresh_token": { ... } // (optional)
- }
- ```
+   ```
+   {
+   "access_token": { ... } // (optional),
+   "refresh_token": { ... } // (optional)
+   }
+   ```
  */
 @interface RLMAuthResponseModel : NSObject RLM_SYNC_UNINITIALIZABLE
 
@@ -69,8 +69,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly, nullable) NSString *urlPrefix;
 
 - (instancetype)initWithDictionary:(NSDictionary *)jsonDictionary
-    requireAccessToken:(BOOL)requireAccessToken
-    requireRefreshToken:(BOOL)requireRefreshToken;
+        requireAccessToken:(BOOL)requireAccessToken
+        requireRefreshToken:(BOOL)requireRefreshToken;
 
 @end
 

@@ -33,94 +33,94 @@
 @implementation RepositoriesViewController
 
 - (void)dealloc {
-    [self.token invalidate];
+	[self.token invalidate];
 }
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
+	[super viewDidLoad];
 
-    __weak typeof(self) weakSelf = self;
-    self.token = [[RLMRealm defaultRealm] addNotificationBlock:^(NSString * _Nonnull notification, RLMRealm * _Nonnull realm) {
-                                [weakSelf reloadData];
-                            }];
+	__weak typeof(self) weakSelf = self;
+	self.token = [[RLMRealm defaultRealm] addNotificationBlock:^(NSString * _Nonnull notification, RLMRealm * _Nonnull realm) {
+	                      [weakSelf reloadData];
+		      }];
 
-    NSURLComponents *components = [NSURLComponents componentsWithString:@"https://api.github.com/search/repositories"];
-    components.queryItems = @[[NSURLQueryItem queryItemWithName:@"q" value:@"language:objc"],
-                                                                                            [NSURLQueryItem queryItemWithName:@"sort" value:@"stars"],
-                                                                                            [NSURLQueryItem queryItemWithName:@"order" value:@"desc"]];
-    [[[NSURLSession sharedSession] dataTaskWithURL:components.URL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                                      if (!error) {
-                                          NSError *jsonError = nil;
-            NSDictionary *repositories = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&jsonError];
-            if (!jsonError) {
-                NSArray *items = repositories[@"items"];
+	NSURLComponents *components = [NSURLComponents componentsWithString:@"https://api.github.com/search/repositories"];
+	components.queryItems = @[[NSURLQueryItem queryItemWithName:@"q" value:@"language:objc"],
+	                          [NSURLQueryItem queryItemWithName:@"sort" value:@"stars"],
+	                          [NSURLQueryItem queryItemWithName:@"order" value:@"desc"]];
+	[[[NSURLSession sharedSession] dataTaskWithURL:components.URL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+	          if (!error) {
+	                  NSError *jsonError = nil;
+	                  NSDictionary *repositories = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&jsonError];
+	                  if (!jsonError) {
+	                          NSArray *items = repositories[@"items"];
 
-                RLMRealm *realm = [RLMRealm defaultRealm];
-                [realm transactionWithBlock:^ {
-                          for (NSDictionary *item in items) {
-                              Repository *repository = [Repository new];
-                        repository.identifier = [NSString stringWithFormat:@"%@", item[@"id"]];
-                        repository.name = item[@"name"];
-                        repository.avatarURL = item[@"owner"][@"avatar_url"];
+	                          RLMRealm *realm = [RLMRealm defaultRealm];
+	                          [realm transactionWithBlock:^ {
+	                                   for (NSDictionary *item in items) {
+	                                           Repository *repository = [Repository new];
+	                                           repository.identifier = [NSString stringWithFormat:@"%@", item[@"id"]];
+	                                           repository.name = item[@"name"];
+	                                           repository.avatarURL = item[@"owner"][@"avatar_url"];
 
-                        [realm addOrUpdateObject:repository];
-                    }
-                }];
-            } else {
-                NSLog(@"%@", jsonError);
-            }
-        } else {
-            NSLog(@"%@", error);
-        }
-    }] resume];
+	                                           [realm addOrUpdateObject:repository];
+					   }
+				   }];
+			  } else {
+	                          NSLog(@"%@", jsonError);
+			  }
+		  } else {
+	                  NSLog(@"%@", error);
+		  }
+	  }] resume];
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return self.results.count;
+	return self.results.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    RepositoryCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
+	RepositoryCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
 
-    Repository *repository = self.results[indexPath.item];
+	Repository *repository = self.results[indexPath.item];
 
-    cell.titleLabel.text = repository.name;
+	cell.titleLabel.text = repository.name;
 
-    [[[NSURLSession sharedSession] dataTaskWithURL:[NSURL URLWithString:repository.avatarURL] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                                      if (!error) {
-                                          dispatch_async(dispatch_get_main_queue(), ^ {
-                                              UIImage *image = [UIImage imageWithData:data];
-                                              cell.avatarImageView.image = image;
-                                          });
-        } else {
-            NSLog(@"%@", error);
-        }
-    }] resume];
+	[[[NSURLSession sharedSession] dataTaskWithURL:[NSURL URLWithString:repository.avatarURL] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+	          if (!error) {
+	                  dispatch_async(dispatch_get_main_queue(), ^ {
+						 UIImage *image = [UIImage imageWithData:data];
+						 cell.avatarImageView.image = image;
+					 });
+		  } else {
+	                  NSLog(@"%@", error);
+		  }
+	  }] resume];
 
-    return cell;
+	return cell;
 }
 
 - (void)reloadData {
-    self.results = [Repository allObjects];
-    if (self.searchField.text.length > 0) {
-        self.results = [self.results objectsWhere:@"name contains[c] %@", self.searchField.text];
-    }
-    self.results = [self.results sortedResultsUsingKeyPath:@"name" ascending:self.sortOrderControl.selectedSegmentIndex == 0];
+	self.results = [Repository allObjects];
+	if (self.searchField.text.length > 0) {
+		self.results = [self.results objectsWhere:@"name contains[c] %@", self.searchField.text];
+	}
+	self.results = [self.results sortedResultsUsingKeyPath:@"name" ascending:self.sortOrderControl.selectedSegmentIndex == 0];
 
-    [self.collectionView reloadData];
+	[self.collectionView reloadData];
 }
 
 - (IBAction)valueChanged:(id)sender {
-    [self reloadData];
+	[self reloadData];
 }
 
 - (IBAction)clearSearchField:(id)sender {
-    self.searchField.text = nil;
-    [self reloadData];
+	self.searchField.text = nil;
+	[self reloadData];
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
-    [self reloadData];
+	[self reloadData];
 }
 
 @end

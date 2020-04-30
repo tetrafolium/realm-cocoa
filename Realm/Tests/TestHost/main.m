@@ -26,9 +26,9 @@ int main(int argc, const char *argv[]) {
 @end
 
 int main(int argc, char *argv[]) {
-    @autoreleasepool {
-        return UIApplicationMain(argc, argv, NSStringFromClass([UIApplication class]), NSStringFromClass([RLMAppDelegate class]));
-    }
+	@autoreleasepool {
+		return UIApplicationMain(argc, argv, NSStringFromClass([UIApplication class]), NSStringFromClass([RLMAppDelegate class]));
+	}
 }
 
 #else
@@ -36,9 +36,9 @@ int main(int argc, char *argv[]) {
 #import <Cocoa/Cocoa.h>
 
 int main(int argc, const char *argv[]) {
-    @autoreleasepool {
-        return NSApplicationMain(argc, argv);
-    }
+	@autoreleasepool {
+		return NSApplicationMain(argc, argv);
+	}
 }
 
 #endif

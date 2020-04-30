@@ -34,27 +34,27 @@ class RLMClassInfo;
 class RLMObservationInfo;
 
 @interface RLMArray () {
-@protected
-    NSString *_objectClassName;
-    RLMPropertyType _type;
-    BOOL _optional;
-@public
-    // The name of the property which this RLMArray represents
-    NSString *_key;
-    __weak RLMObjectBase *_parentObject;
+	@protected
+	NSString *_objectClassName;
+	RLMPropertyType _type;
+	BOOL _optional;
+	@public
+	// The name of the property which this RLMArray represents
+	NSString *_key;
+	__weak RLMObjectBase *_parentObject;
 }
 @end
 
-@interface RLMManagedArray : RLMArray <RLMFastEnumerable>
-- (instancetype)initWithParent:(RLMObjectBase *)parentObject property:(RLMProperty *)property;
-- (RLMManagedArray *)initWithList:(realm::List)list
-    parentInfo:(RLMClassInfo *)parentInfo
-    property:(__unsafe_unretained RLMProperty *const)property;
+@interface RLMManagedArray: RLMArray <RLMFastEnumerable>
+-(instancetype)initWithParent: (RLMObjectBase *)parentObject property: (RLMProperty *)property;
+-(RLMManagedArray *)initWithList: (realm::List)list
+parentInfo: (RLMClassInfo *)parentInfo
+property: (__unsafe_unretained RLMProperty *const)property;
 
-- (bool)isBackedByList:(realm::List const&)list;
+-(bool)isBackedByList: (realm::List const&)list;
 
 // deletes all objects in the RLMArray from their containing realms
-- (void)deleteObjectsFromRealm;
+-(void)deleteObjectsFromRealm;
 @end
 
 void RLMValidateArrayObservationKey(NSString *keyPath, RLMArray *array);
@@ -68,5 +68,5 @@ void RLMEnsureArrayObservationInfo(std::unique_ptr<RLMObservationInfo>& info,
 // RLMResults private methods
 //
 @interface RLMResults () <RLMFastEnumerable>
-- (void)deleteObjectsFromRealm;
+-(void)deleteObjectsFromRealm;
 @end

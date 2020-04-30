@@ -49,94 +49,94 @@ class SharedGroup;
 // every change.
 class RLMObservationInfo {
 public:
-    RLMObservationInfo(id object);
-    RLMObservationInfo(RLMClassInfo &objectSchema, std::size_t row, id object);
-    ~RLMObservationInfo();
+RLMObservationInfo(id object);
+RLMObservationInfo(RLMClassInfo &objectSchema, std::size_t row, id object);
+~RLMObservationInfo();
 
-    realm::Row const& getRow() const {
-        return row;
-    }
+realm::Row const& getRow() const {
+	return row;
+}
 
-    NSString *columnName(size_t col) const noexcept;
+NSString *columnName(size_t col) const noexcept;
 
-    // Send willChange/didChange notifications to all observers for this object/row
-    // Sends the array versions if indexes is non-nil, normal versions otherwise
-    void willChange(NSString *key, NSKeyValueChange kind=NSKeyValueChangeSetting, NSIndexSet *indexes=nil) const;
-    void didChange(NSString *key, NSKeyValueChange kind=NSKeyValueChangeSetting, NSIndexSet *indexes=nil) const;
+// Send willChange/didChange notifications to all observers for this object/row
+// Sends the array versions if indexes is non-nil, normal versions otherwise
+void willChange(NSString *key, NSKeyValueChange kind=NSKeyValueChangeSetting, NSIndexSet *indexes=nil) const;
+void didChange(NSString *key, NSKeyValueChange kind=NSKeyValueChangeSetting, NSIndexSet *indexes=nil) const;
 
-    bool isForRow(size_t ndx) const {
-        return row && row.get_index() == ndx;
-    }
+bool isForRow(size_t ndx) const {
+	return row && row.get_index() == ndx;
+}
 
-    void recordObserver(realm::Row& row, RLMClassInfo *objectInfo, RLMObjectSchema *objectSchema, NSString *keyPath);
-    void removeObserver();
-    bool hasObservers() const {
-        return observerCount > 0;
-    }
+void recordObserver(realm::Row& row, RLMClassInfo *objectInfo, RLMObjectSchema *objectSchema, NSString *keyPath);
+void removeObserver();
+bool hasObservers() const {
+	return observerCount > 0;
+}
 
-    // valueForKey: on observed object and array properties needs to return the
-    // same object each time for KVO to work at all. Doing this all the time
-    // requires some odd semantics to avoid reference cycles, so instead we do
-    // it only to the extent specifically required by KVO. In addition, we
-    // need to continue to return the same object even if this row is deleted,
-    // or deleting an object with active observers will explode horribly.
-    // Once prepareForInvalidation() is called, valueForKey() will always return
-    // the cached value for object and array properties without checking the
-    // backing row to verify it's up-to-date.
-    //
-    // prepareForInvalidation() must be called on the head of the linked list
-    // (i.e. on the object pointed to directly by the object schema)
-    id valueForKey(NSString *key);
+// valueForKey: on observed object and array properties needs to return the
+// same object each time for KVO to work at all. Doing this all the time
+// requires some odd semantics to avoid reference cycles, so instead we do
+// it only to the extent specifically required by KVO. In addition, we
+// need to continue to return the same object even if this row is deleted,
+// or deleting an object with active observers will explode horribly.
+// Once prepareForInvalidation() is called, valueForKey() will always return
+// the cached value for object and array properties without checking the
+// backing row to verify it's up-to-date.
+//
+// prepareForInvalidation() must be called on the head of the linked list
+// (i.e. on the object pointed to directly by the object schema)
+id valueForKey(NSString *key);
 
-    void prepareForInvalidation();
+void prepareForInvalidation();
 
 private:
-    // Doubly-linked-list of observed objects for the same row as this
-    RLMObservationInfo *next = nullptr;
-    RLMObservationInfo *prev = nullptr;
+// Doubly-linked-list of observed objects for the same row as this
+RLMObservationInfo *next = nullptr;
+RLMObservationInfo *prev = nullptr;
 
-    // Row being observed
-    realm::Row row;
-    RLMClassInfo *objectSchema = nullptr;
+// Row being observed
+realm::Row row;
+RLMClassInfo *objectSchema = nullptr;
 
-    // Object doing the observing
-    __unsafe_unretained id object = nil;
+// Object doing the observing
+__unsafe_unretained id object = nil;
 
-    // valueForKey: hack
-    bool invalidated = false;
-    size_t observerCount = 0;
-    NSString *lastKey = nil;
-    __unsafe_unretained RLMProperty *lastProp = nil;
+// valueForKey: hack
+bool invalidated = false;
+size_t observerCount = 0;
+NSString *lastKey = nil;
+__unsafe_unretained RLMProperty *lastProp = nil;
 
-    // objects returned from valueForKey() to keep them alive in case observers
-    // are added and so that they can still be accessed after row is detached
-    NSMutableDictionary *cachedObjects;
+// objects returned from valueForKey() to keep them alive in case observers
+// are added and so that they can still be accessed after row is detached
+NSMutableDictionary *cachedObjects;
 
-    void setRow(realm::Table &table, size_t newRow);
+void setRow(realm::Table &table, size_t newRow);
 
-    template<typename F>
-    void forEach(F&& f) const {
-        // The user's observation handler may release their last reference to
-        // the object being observed, which will result in the RLMObservationInfo
-        // being destroyed. As a result, we need to retain the object which owns
-        // both `this` and the current info we're looking at.
-        __attribute__((objc_precise_lifetime)) id self = object, current;
-        for (auto info = prev; info; info = info->prev) {
-            current = info->object;
-            f(info->object);
-        }
-        for (auto info = this; info; info = info->next) {
-            current = info->object;
-            f(info->object);
-        }
-    }
+template<typename F>
+void forEach(F&& f) const {
+	// The user's observation handler may release their last reference to
+	// the object being observed, which will result in the RLMObservationInfo
+	// being destroyed. As a result, we need to retain the object which owns
+	// both `this` and the current info we're looking at.
+	__attribute__((objc_precise_lifetime)) id self = object, current;
+	for (auto info = prev; info; info = info->prev) {
+		current = info->object;
+		f(info->object);
+	}
+	for (auto info = this; info; info = info->next) {
+		current = info->object;
+		f(info->object);
+	}
+}
 
-    // Default move/copy constructors don't work due to the intrusive linked
-    // list and we don't need them
-    RLMObservationInfo(RLMObservationInfo const&) = delete;
-    RLMObservationInfo(RLMObservationInfo&&) = delete;
-    RLMObservationInfo& operator=(RLMObservationInfo const&) = delete;
-    RLMObservationInfo& operator=(RLMObservationInfo&&) = delete;
+// Default move/copy constructors don't work due to the intrusive linked
+// list and we don't need them
+RLMObservationInfo(RLMObservationInfo const&) = delete;
+RLMObservationInfo(RLMObservationInfo&&) = delete;
+RLMObservationInfo& operator=(RLMObservationInfo const&) = delete;
+RLMObservationInfo& operator=(RLMObservationInfo&&) = delete;
 };
 
 // Get the the observation info chain for the given row

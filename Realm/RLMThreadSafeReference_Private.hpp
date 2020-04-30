@@ -24,20 +24,20 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol RLMThreadConfined_Private <NSObject>
 
 // Constructs a new `ThreadSafeReference`
-- (std::unique_ptr<realm::ThreadSafeReferenceBase>)makeThreadSafeReference;
+-(std::unique_ptr<realm::ThreadSafeReferenceBase>)makeThreadSafeReference;
 
 // The extra information needed to construct an instance of this type from the Object Store type
 @property (nonatomic, readonly, nullable) id objectiveCMetadata;
 
 // Constructs an new instance of this type
-+ (nullable instancetype)objectWithThreadSafeReference:(std::unique_ptr<realm::ThreadSafeReferenceBase>)reference
-    metadata:(nullable id)metadata
-    realm:(RLMRealm *)realm;
++(nullable instancetype)objectWithThreadSafeReference: (std::unique_ptr<realm::ThreadSafeReferenceBase>) reference
+metadata: (nullable id)metadata
+realm: (RLMRealm *)realm;
 @end
 
 @interface RLMThreadSafeReference ()
 
-- (nullable id<RLMThreadConfined>)resolveReferenceInRealm:(RLMRealm *)realm;
+- (nullable id<RLMThreadConfined>) resolveReferenceInRealm: (RLMRealm *)realm;
 
 @end
 

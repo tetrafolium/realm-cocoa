@@ -32,4 +32,4 @@
 @end
 
 #define RLMRunChildAndWait() \
-    XCTAssertEqual(0, [self runChildAndWait], @"Tests in child process failed")
+	XCTAssertEqual(0, [self runChildAndWait], @"Tests in child process failed")

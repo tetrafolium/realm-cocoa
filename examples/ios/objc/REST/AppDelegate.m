@@ -32,65 +32,65 @@ NSString *clientSecret = @"YOUR CLIENT SECRET";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = [[UIViewController alloc] init];
-    [self.window makeKeyAndVisible];
+	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	self.window.rootViewController = [[UIViewController alloc] init];
+	[self.window makeKeyAndVisible];
 
-    // Ensure we start with an empty database
-    [[NSFileManager defaultManager] removeItemAtURL:[RLMRealmConfiguration defaultConfiguration].fileURL error:nil];
+	// Ensure we start with an empty database
+	[[NSFileManager defaultManager] removeItemAtURL:[RLMRealmConfiguration defaultConfiguration].fileURL error:nil];
 
-    // Query Foursquare API
-    NSDictionary *foursquareVenues = [self getFoursquareVenues];
+	// Query Foursquare API
+	NSDictionary *foursquareVenues = [self getFoursquareVenues];
 
-    // Persist the results to Realm
-    [self persistToDefaultRealm:foursquareVenues];
+	// Persist the results to Realm
+	[self persistToDefaultRealm:foursquareVenues];
 
-    return YES;
+	return YES;
 }
 
 -(NSDictionary*)getFoursquareVenues
 {
-    // Call the foursquare API - here we use an NSData method for our API request,
-    // but you could use anything that will allow you to call the API and serialize
-    // the response as an NSDictionary or NSArray
-    NSData *apiResponse = [[NSData alloc] initWithContentsOfURL:
-                                          [NSURL URLWithString:[NSString stringWithFormat:@"https://api.foursquare.com/v2/venues/search?near=San%@Francisco&client_id=%@&client_secret=%@&v=20140101&limit=50", @"%20", clientID, clientSecret]]];
+	// Call the foursquare API - here we use an NSData method for our API request,
+	// but you could use anything that will allow you to call the API and serialize
+	// the response as an NSDictionary or NSArray
+	NSData *apiResponse = [[NSData alloc] initWithContentsOfURL:
+	                       [NSURL URLWithString:[NSString stringWithFormat:@"https://api.foursquare.com/v2/venues/search?near=San%@Francisco&client_id=%@&client_secret=%@&v=20140101&limit=50", @"%20", clientID, clientSecret]]];
 
-    // Serialize the NSData object from the response into an NSDictionary
-    NSDictionary *serializedResponse = [[NSJSONSerialization JSONObjectWithData:apiResponse
-                                         options:kNilOptions
-                                         error:nil]
-                                        objectForKey:@"response"];
+	// Serialize the NSData object from the response into an NSDictionary
+	NSDictionary *serializedResponse = [[NSJSONSerialization JSONObjectWithData:apiResponse
+	                                     options:kNilOptions
+	                                     error:nil]
+	                                    objectForKey:@"response"];
 
-    // Extract the venues from the response as an NSDictionary
-    return serializedResponse[@"venues"];
+	// Extract the venues from the response as an NSDictionary
+	return serializedResponse[@"venues"];
 }
 
 - (void)persistToDefaultRealm:(NSDictionary*)foursquareVenues
 {
-    // Open the default Realm file
-    RLMRealm *defaultRealm = [RLMRealm defaultRealm];
+	// Open the default Realm file
+	RLMRealm *defaultRealm = [RLMRealm defaultRealm];
 
-    // Begin a write transaction to save to the default Realm
-    [defaultRealm beginWriteTransaction];
+	// Begin a write transaction to save to the default Realm
+	[defaultRealm beginWriteTransaction];
 
-    for (id venue in foursquareVenues) {
-        // Store the foursquare venue name and id in a Realm Object
-        Venue *newVenue = [[Venue alloc] init];
-        newVenue.foursquareID = venue[@"id"];
-        newVenue.name = venue[@"name"];
+	for (id venue in foursquareVenues) {
+		// Store the foursquare venue name and id in a Realm Object
+		Venue *newVenue = [[Venue alloc] init];
+		newVenue.foursquareID = venue[@"id"];
+		newVenue.name = venue[@"name"];
 
-        // Add the Venue object to the default Realm
-        // (alternatively you could serialize the API response as an NSArray and call addObjectsFromArray)
-        [defaultRealm addObject:newVenue];
-    }
+		// Add the Venue object to the default Realm
+		// (alternatively you could serialize the API response as an NSArray and call addObjectsFromArray)
+		[defaultRealm addObject:newVenue];
+	}
 
-    // Persist all the Venues with a single commit
-    [defaultRealm commitWriteTransaction];
+	// Persist all the Venues with a single commit
+	[defaultRealm commitWriteTransaction];
 
-    // Show all the venues that were persisted
-    NSLog(@"Here are all the venues persisted to the default Realm: \n\n %@",
-          [[Venue allObjects] description]);
+	// Show all the venues that were persisted
+	NSLog(@"Here are all the venues persisted to the default Realm: \n\n %@",
+	      [[Venue allObjects] description]);
 }
 
 @end

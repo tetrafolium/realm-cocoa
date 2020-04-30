@@ -31,13 +31,13 @@ NS_ASSUME_NONNULL_BEGIN
 /// An abstract class representing a server endpoint.
 @interface RLMSyncServerEndpoint : NSObject RLM_SYNC_UNINITIALIZABLE
 + (void)sendRequestToServer:(NSURL *)serverURL
-    JSON:(NSDictionary *)jsonDictionary
-    completion:(void (^)(NSError *))completionBlock;
+        JSON:(NSDictionary *)jsonDictionary
+        completion:(void (^)(NSError *))completionBlock;
 
 + (void)sendRequestToServer:(NSURL *)serverURL
-    JSON:(NSDictionary *)jsonDictionary
-    timeout:(NSTimeInterval)timeout
-    completion:(void (^)(NSError *, NSDictionary *))completionBlock;
+        JSON:(NSDictionary *)jsonDictionary
+        timeout:(NSTimeInterval)timeout
+        completion:(void (^)(NSError *, NSDictionary *))completionBlock;
 @end
 
 @interface RLMSyncAuthEndpoint : RLMSyncServerEndpoint RLM_SYNC_UNINITIALIZABLE

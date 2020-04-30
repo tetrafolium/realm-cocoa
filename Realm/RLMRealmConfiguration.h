@@ -22,45 +22,45 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- A block called when opening a Realm for the first time during the life
- of a process to determine if it should be compacted before being returned
- to the user. It is passed the total file size (data + free space) and the total
- bytes used by data in the file.
+   A block called when opening a Realm for the first time during the life
+   of a process to determine if it should be compacted before being returned
+   to the user. It is passed the total file size (data + free space) and the total
+   bytes used by data in the file.
 
- Return `YES` to indicate that an attempt to compact the file should be made.
- The compaction will be skipped if another process is accessing it.
+   Return `YES` to indicate that an attempt to compact the file should be made.
+   The compaction will be skipped if another process is accessing it.
  */
 typedef BOOL (^RLMShouldCompactOnLaunchBlock)(NSUInteger totalBytes, NSUInteger bytesUsed);
 
 /**
- An `RLMRealmConfiguration` instance describes the different options used to
- create an instance of a Realm.
+   An `RLMRealmConfiguration` instance describes the different options used to
+   create an instance of a Realm.
 
- `RLMRealmConfiguration` instances are just plain `NSObject`s. Unlike `RLMRealm`s
- and `RLMObject`s, they can be freely shared between threads as long as you do not
- mutate them.
+   `RLMRealmConfiguration` instances are just plain `NSObject`s. Unlike `RLMRealm`s
+   and `RLMObject`s, they can be freely shared between threads as long as you do not
+   mutate them.
 
- Creating configuration objects for class subsets (by setting the
- `objectClasses` property) can be expensive. Because of this, you will normally want to
- cache and reuse a single configuration object for each distinct configuration rather than
- creating a new object each time you open a Realm.
+   Creating configuration objects for class subsets (by setting the
+   `objectClasses` property) can be expensive. Because of this, you will normally want to
+   cache and reuse a single configuration object for each distinct configuration rather than
+   creating a new object each time you open a Realm.
  */
 @interface RLMRealmConfiguration : NSObject<NSCopying>
 
 #pragma mark - Default Configuration
 
-    /**
-     Returns the default configuration used to create Realms when no other
-     configuration is explicitly specified (i.e. `+[RLMRealm defaultRealm]`).
+	/**
+	Returns the default configuration used to create Realms when no other
+	configuration is explicitly specified (i.e. `+[RLMRealm defaultRealm]`).
 
-     @return The default Realm configuration.
-     */
+	@return The default Realm configuration.
+	 */
 + (instancetype)defaultConfiguration;
 
 /**
- Sets the default configuration to the given `RLMRealmConfiguration`.
+   Sets the default configuration to the given `RLMRealmConfiguration`.
 
- @param configuration The new default Realm configuration.
+   @param configuration The new default Realm configuration.
  */
 + (void)setDefaultConfiguration:(RLMRealmConfiguration *)configuration;
 
@@ -95,23 +95,23 @@ typedef BOOL (^RLMShouldCompactOnLaunchBlock)(NSUInteger totalBytes, NSUInteger 
 @property (nonatomic, copy, nullable) RLMMigrationBlock migrationBlock;
 
 /**
- Whether to recreate the Realm file with the provided schema if a migration is required.
- This is the case when the stored schema differs from the provided schema or
- the stored schema version differs from the version on this configuration.
- Setting this property to `YES` deletes the file if a migration would otherwise be required or executed.
+   Whether to recreate the Realm file with the provided schema if a migration is required.
+   This is the case when the stored schema differs from the provided schema or
+   the stored schema version differs from the version on this configuration.
+   Setting this property to `YES` deletes the file if a migration would otherwise be required or executed.
 
- @note Setting this property to `YES` doesn't disable file format migrations.
+   @note Setting this property to `YES` doesn't disable file format migrations.
  */
 @property (nonatomic) BOOL deleteRealmIfMigrationNeeded;
 
 /**
- A block called when opening a Realm for the first time during the life
- of a process to determine if it should be compacted before being returned
- to the user. It is passed the total file size (data + free space) and the total
- bytes used by data in the file.
+   A block called when opening a Realm for the first time during the life
+   of a process to determine if it should be compacted before being returned
+   to the user. It is passed the total file size (data + free space) and the total
+   bytes used by data in the file.
 
- Return `YES` to indicate that an attempt to compact the file should be made.
- The compaction will be skipped if another process is accessing it.
+   Return `YES` to indicate that an attempt to compact the file should be made.
+   The compaction will be skipped if another process is accessing it.
  */
 @property (nonatomic, copy, nullable) RLMShouldCompactOnLaunchBlock shouldCompactOnLaunch;
 

@@ -35,33 +35,33 @@
 
 - (instancetype)init
 {
-    self = [super init];
-    if (self) {
-        self.counter = [[Counter alloc] init];
-        RLMRealm *realm = [RLMRealm defaultRealm];
-        [realm transactionWithBlock:^ {
-                  [realm addObject:self.counter];
-              }];
-    }
-    return self;
+	self = [super init];
+	if (self) {
+		self.counter = [[Counter alloc] init];
+		RLMRealm *realm = [RLMRealm defaultRealm];
+		[realm transactionWithBlock:^ {
+		         [realm addObject:self.counter];
+		 }];
+	}
+	return self;
 }
 
 - (IBAction)increment {
-    [self.counter.realm transactionWithBlock:^ {
-                           self.counter.count++;
-                       }];
+	[self.counter.realm transactionWithBlock:^ {
+	         self.counter.count++;
+	 }];
 }
 
 - (void)willActivate {
-    [super willActivate];
-    self.token = [self.counter.realm addNotificationBlock:^(NSString * _Nonnull notification, RLMRealm * _Nonnull realm) {
-                           [self.button setTitle:[NSString stringWithFormat:@"%@", @(self.counter.count)]];
-                       }];
+	[super willActivate];
+	self.token = [self.counter.realm addNotificationBlock:^(NSString * _Nonnull notification, RLMRealm * _Nonnull realm) {
+	                      [self.button setTitle:[NSString stringWithFormat:@"%@", @(self.counter.count)]];
+		      }];
 }
 
 - (void)didDeactivate {
-    [self.token invalidate];
-    [super didDeactivate];
+	[self.token invalidate];
+	[super didDeactivate];
 }
 
 @end

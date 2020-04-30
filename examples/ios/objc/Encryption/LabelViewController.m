@@ -37,122 +37,120 @@
 @implementation LabelViewController
 // Create a view to display output in
 - (void)loadView {
-    CGRect applicationFrame = [[UIScreen mainScreen] applicationFrame];
-    UIView *contentView = [[UIView alloc] initWithFrame:applicationFrame];
-    contentView.backgroundColor = [UIColor whiteColor];
-    self.view = contentView;
+	CGRect applicationFrame = [[UIScreen mainScreen] applicationFrame];
+	UIView *contentView = [[UIView alloc] initWithFrame:applicationFrame];
+	contentView.backgroundColor = [UIColor whiteColor];
+	self.view = contentView;
 
-    self.textView = [[UITextView alloc] initWithFrame:applicationFrame];
-    [self.view addSubview:self.textView];
+	self.textView = [[UITextView alloc] initWithFrame:applicationFrame];
+	[self.view addSubview:self.textView];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+	[super viewDidAppear:animated];
 
-    // Use an autorelease pool to close the Realm at the end of the block, so
-    // that we can try to reopen it with different keys
-    @autoreleasepool {
-        RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
-        configuration.encryptionKey = [self getKey];
-        RLMRealm *realm = [RLMRealm realmWithConfiguration:configuration
-                                    error:nil];
+	// Use an autorelease pool to close the Realm at the end of the block, so
+	// that we can try to reopen it with different keys
+	@autoreleasepool {
+		RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
+		configuration.encryptionKey = [self getKey];
+		RLMRealm *realm = [RLMRealm realmWithConfiguration:configuration
+		                   error:nil];
 
-        // Add an object
-        [realm beginWriteTransaction];
-        StringObject *obj = [[StringObject alloc] init];
-        obj.stringProp = @"abcd";
-        [realm addObject:obj];
-        [realm commitWriteTransaction];
-    }
+		// Add an object
+		[realm beginWriteTransaction];
+		StringObject *obj = [[StringObject alloc] init];
+		obj.stringProp = @"abcd";
+		[realm addObject:obj];
+		[realm commitWriteTransaction];
+	}
 
-    // Opening with wrong key fails since it decrypts to the wrong thing
-    @autoreleasepool {
-        uint8_t buffer[64];
-        int status = SecRandomCopyBytes(kSecRandomDefault, 64, buffer);
-        NSAssert(status == 0, @"Failed to generate random bytes for key");
-        (void)status;
+	// Opening with wrong key fails since it decrypts to the wrong thing
+	@autoreleasepool {
+		uint8_t buffer[64];
+		int status = SecRandomCopyBytes(kSecRandomDefault, 64, buffer);
+		NSAssert(status == 0, @"Failed to generate random bytes for key");
+		(void)status;
 
-        NSError *error;
-        RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
-        configuration.encryptionKey = [[NSData alloc] initWithBytes:buffer length:sizeof(buffer)];
-        [RLMRealm realmWithConfiguration:configuration
-                  error:&error];
-        [self log:@"Open with wrong key: %@", error];
-    }
+		NSError *error;
+		RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
+		configuration.encryptionKey = [[NSData alloc] initWithBytes:buffer length:sizeof(buffer)];
+		[RLMRealm realmWithConfiguration:configuration
+		 error:&error];
+		[self log:@"Open with wrong key: %@", error];
+	}
 
-    // Opening wihout supplying a key at all fails
-    @autoreleasepool {
-        NSError *error;
-        [RLMRealm realmWithConfiguration:[RLMRealmConfiguration defaultConfiguration] error:&error];
-        [self log:@"Open with no key: %@", error];
-    }
+	// Opening wihout supplying a key at all fails
+	@autoreleasepool {
+		NSError *error;
+		[RLMRealm realmWithConfiguration:[RLMRealmConfiguration defaultConfiguration] error:&error];
+		[self log:@"Open with no key: %@", error];
+	}
 
-    // Reopening with the correct key works and can read the data
-    @autoreleasepool {
-        RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
-        configuration.encryptionKey = [self getKey];
-        RLMRealm *realm = [RLMRealm realmWithConfiguration:configuration
-                                    error:nil];
+	// Reopening with the correct key works and can read the data
+	@autoreleasepool {
+		RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
+		configuration.encryptionKey = [self getKey];
+		RLMRealm *realm = [RLMRealm realmWithConfiguration:configuration
+		                   error:nil];
 
-        [self log:@"Saved object: %@", [[[StringObject allObjectsInRealm:realm] firstObject] stringProp]];
-    }
+		[self log:@"Saved object: %@", [[[StringObject allObjectsInRealm:realm] firstObject] stringProp]];
+	}
 }
 
 // Log a message to the screen since we can't just use NSLog() with no debugger attached
 - (void)log:(NSString *)format, ... {
-    va_list args;
-    va_start(args, format);
-    NSString *str = [[NSString alloc] initWithFormat:format arguments:args];
-    va_end(args);
-    self.textView.text = [[self.textView.text
-                           stringByAppendingString:str]
-                          stringByAppendingString:@"\n\n"];
+	va_list args;
+	va_start(args, format);
+	NSString *str = [[NSString alloc] initWithFormat:format arguments:args];
+	va_end(args);
+	self.textView.text = [[self.textView.text
+	                       stringByAppendingString:str]
+	                      stringByAppendingString:@"\n\n"];
 }
 
 - (NSData *)getKey {
-    // Identifier for our keychain entry - should be unique for your application
-    static const uint8_t kKeychainIdentifier[] = "io.Realm.EncryptionExampleKey";
-    NSData *tag = [[NSData alloc] initWithBytesNoCopy:(void *)kKeychainIdentifier
-                                  length:sizeof(kKeychainIdentifier)
-                                  freeWhenDone:NO];
+	// Identifier for our keychain entry - should be unique for your application
+	static const uint8_t kKeychainIdentifier[] = "io.Realm.EncryptionExampleKey";
+	NSData *tag = [[NSData alloc] initWithBytesNoCopy:(void *)kKeychainIdentifier
+	               length:sizeof(kKeychainIdentifier)
+	               freeWhenDone:NO];
 
-    // First check in the keychain for an existing key
-    NSDictionary *query = @ {(__bridge id)kSecClass:
-                             (__bridge id)kSecClassKey,
-                             (__bridge id)kSecAttrApplicationTag:
-                             tag,
-                             (__bridge id)kSecAttrKeySizeInBits:
-                             @512,
-                             (__bridge id)kSecReturnData:
-                             @YES
-                            };
+	// First check in the keychain for an existing key
+	NSDictionary *query = @{(__bridge id)kSecClass:
+	                        (__bridge id)kSecClassKey,
+	                        (__bridge id)kSecAttrApplicationTag:
+	                        tag,
+	                        (__bridge id)kSecAttrKeySizeInBits:
+	                        @512,
+	                        (__bridge id)kSecReturnData:
+	                        @YES};
 
-    CFTypeRef dataRef = NULL;
-    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, &dataRef);
-    if (status == errSecSuccess) {
-        return (__bridge NSData *)dataRef;
-    }
+	CFTypeRef dataRef = NULL;
+	OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, &dataRef);
+	if (status == errSecSuccess) {
+		return (__bridge NSData *)dataRef;
+	}
 
-    // No pre-existing key from this application, so generate a new one
-    uint8_t buffer[64];
-    status = SecRandomCopyBytes(kSecRandomDefault, 64, buffer);
-    NSAssert(status == 0, @"Failed to generate random bytes for key");
-    NSData *keyData = [[NSData alloc] initWithBytes:buffer length:sizeof(buffer)];
+	// No pre-existing key from this application, so generate a new one
+	uint8_t buffer[64];
+	status = SecRandomCopyBytes(kSecRandomDefault, 64, buffer);
+	NSAssert(status == 0, @"Failed to generate random bytes for key");
+	NSData *keyData = [[NSData alloc] initWithBytes:buffer length:sizeof(buffer)];
 
-    // Store the key in the keychain
-    query = @ {(__bridge id)kSecClass:
-               (__bridge id)kSecClassKey,
-               (__bridge id)kSecAttrApplicationTag:
-               tag,
-               (__bridge id)kSecAttrKeySizeInBits:
-               @512,
-               (__bridge id)kSecValueData:
-               keyData
-              };
+	// Store the key in the keychain
+	query = @{(__bridge id)kSecClass:
+	          (__bridge id)kSecClassKey,
+	          (__bridge id)kSecAttrApplicationTag:
+	          tag,
+	          (__bridge id)kSecAttrKeySizeInBits:
+	          @512,
+	          (__bridge id)kSecValueData:
+	          keyData};
 
-    status = SecItemAdd((__bridge CFDictionaryRef)query, NULL);
-    NSAssert(status == errSecSuccess, @"Failed to insert new key in the keychain");
+	status = SecItemAdd((__bridge CFDictionaryRef)query, NULL);
+	NSAssert(status == errSecSuccess, @"Failed to insert new key in the keychain");
 
-    return keyData;
+	return keyData;
 }
 @end

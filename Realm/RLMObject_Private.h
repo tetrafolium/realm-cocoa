@@ -21,15 +21,15 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class RLMProperty, RLMArray;
-typedef NS_ENUM(int32_t, RLMPropertyType);
+typedef NS_ENUM (int32_t, RLMPropertyType);
 
 FOUNDATION_EXTERN void RLMInitializeWithValue(RLMObjectBase *, id, RLMSchema *);
 
 // RLMObject accessor and read/write realm
 @interface RLMObjectBase () {
-@public
-    RLMRealm *_realm;
-    __unsafe_unretained RLMObjectSchema *_objectSchema;
+	@public
+	RLMRealm *_realm;
+	__unsafe_unretained RLMObjectSchema *_objectSchema;
 }
 
 // shared schema for this class
@@ -51,9 +51,9 @@ FOUNDATION_EXTERN id _Nullable RLMValidatedValueForProperty(id object, NSString 
 FOUNDATION_EXTERN BOOL RLMObjectBaseAreEqual(RLMObjectBase * _Nullable o1, RLMObjectBase * _Nullable o2);
 
 typedef void (^RLMObjectNotificationCallback)(NSArray<NSString *> *_Nullable propertyNames,
-        NSArray *_Nullable oldValues,
-        NSArray *_Nullable newValues,
-        NSError *_Nullable error);
+                                              NSArray *_Nullable oldValues,
+                                              NSArray *_Nullable newValues,
+                                              NSError *_Nullable error);
 FOUNDATION_EXTERN RLMNotificationToken *RLMObjectAddNotificationBlock(RLMObjectBase *obj, RLMObjectNotificationCallback block);
 
 // Returns whether the class is a descendent of RLMObjectBase

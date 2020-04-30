@@ -21,7 +21,7 @@
 #import "RLMTestUtils.h"
 
 static BOOL s_calculateFireDatesWithTestLogic = NO;
-static void(^s_onRefreshCompletedOrErrored)(BOOL) = nil;
+static void (^s_onRefreshCompletedOrErrored)(BOOL) = nil;
 
 @interface RLMSyncSessionRefreshHandle ()
 + (NSDate *)fireDateForTokenExpirationDate:(NSDate *)date nowDate:(NSDate *)date;
@@ -30,37 +30,37 @@ static void(^s_onRefreshCompletedOrErrored)(BOOL) = nil;
 
 @implementation RLMSyncSessionRefreshHandle (ObjectServerTests)
 
-+ (void)calculateFireDateUsingTestLogic:(BOOL)forTest blockOnRefreshCompletion:(void(^)(BOOL))block {
-    s_onRefreshCompletedOrErrored = block;
-    s_calculateFireDatesWithTestLogic = forTest;
++ (void)calculateFireDateUsingTestLogic:(BOOL)forTest blockOnRefreshCompletion:(void (^)(BOOL))block {
+	s_onRefreshCompletedOrErrored = block;
+	s_calculateFireDatesWithTestLogic = forTest;
 }
 
 + (void)load {
-    RLMSwapOutClassMethod(self,
-                          @selector(fireDateForTokenExpirationDate:nowDate:),
-                          @selector(ost_fireDateForTokenExpirationDate:nowDate:));
-    RLMSwapOutInstanceMethod(self,
-                             @selector(_onRefreshCompletionWithError:json:),
-                             @selector(ost_onRefreshCompletionWithError:json:));
+	RLMSwapOutClassMethod(self,
+	                      @selector(fireDateForTokenExpirationDate:nowDate:),
+	                      @selector(ost_fireDateForTokenExpirationDate:nowDate:));
+	RLMSwapOutInstanceMethod(self,
+	                         @selector(_onRefreshCompletionWithError:json:),
+	                         @selector(ost_onRefreshCompletionWithError:json:));
 }
 
 + (NSDate *)ost_fireDateForTokenExpirationDate:(NSDate *)date nowDate:(NSDate *)nowDate {
-    if (s_calculateFireDatesWithTestLogic) {
-        // Force the refresh to take place one second later.
-        return [NSDate dateWithTimeIntervalSinceNow:1];
-    } else {
-        // Use the original logic.
-        return [self ost_fireDateForTokenExpirationDate:date nowDate:nowDate];
-    }
+	if (s_calculateFireDatesWithTestLogic) {
+		// Force the refresh to take place one second later.
+		return [NSDate dateWithTimeIntervalSinceNow:1];
+	} else {
+		// Use the original logic.
+		return [self ost_fireDateForTokenExpirationDate:date nowDate:nowDate];
+	}
 }
 
 - (BOOL)ost_onRefreshCompletionWithError:(NSError *)error json:(NSDictionary *)json {
-    BOOL status = [self ost_onRefreshCompletionWithError:error json:json];
-    // For the sake of testing, call a callback afterwards to let the test update its state.
-    if (s_onRefreshCompletedOrErrored) {
-        s_onRefreshCompletedOrErrored(status);
-    }
-    return status;
+	BOOL status = [self ost_onRefreshCompletionWithError:error json:json];
+	// For the sake of testing, call a callback afterwards to let the test update its state.
+	if (s_onRefreshCompletedOrErrored) {
+		s_onRefreshCompletedOrErrored(status);
+	}
+	return status;
 }
 
 @end

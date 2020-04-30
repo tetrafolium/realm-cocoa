@@ -23,47 +23,47 @@ NS_ASSUME_NONNULL_BEGIN
 @class RLMProperty;
 
 /**
- This class represents Realm model object schemas.
+   This class represents Realm model object schemas.
 
- When using Realm, `RLMObjectSchema` instances allow performing migrations and
- introspecting the database's schema.
+   When using Realm, `RLMObjectSchema` instances allow performing migrations and
+   introspecting the database's schema.
 
- Object schemas map to tables in the core database.
+   Object schemas map to tables in the core database.
  */
 @interface RLMObjectSchema : NSObject<NSCopying>
 
 #pragma mark - Properties
 
-    /**
-     An array of `RLMProperty` instances representing the managed properties of a class described by the schema.
+	/**
+	An array of `RLMProperty` instances representing the managed properties of a class described by the schema.
 
-     @see `RLMProperty`
-     */
+	@see `RLMProperty`
+	 */
 @property (nonatomic, readonly, copy) NSArray<RLMProperty *> *properties;
 
 /**
- The name of the class the schema describes.
+   The name of the class the schema describes.
  */
 @property (nonatomic, readonly) NSString *className;
 
 /**
- The property which serves as the primary key for the class the schema describes, if any.
+   The property which serves as the primary key for the class the schema describes, if any.
  */
 @property (nonatomic, readonly, nullable) RLMProperty *primaryKeyProperty;
 
 #pragma mark - Methods
 
 /**
- Retrieves an `RLMProperty` object by the property name.
+   Retrieves an `RLMProperty` object by the property name.
 
- @param propertyName The property's name.
+   @param propertyName The property's name.
 
- @return An `RLMProperty` object, or `nil` if there is no property with the given name.
+   @return An `RLMProperty` object, or `nil` if there is no property with the given name.
  */
 - (nullable RLMProperty *)objectForKeyedSubscript:(NSString *)propertyName;
 
 /**
- Returns whether two `RLMObjectSchema` instances are equal.
+   Returns whether two `RLMObjectSchema` instances are equal.
  */
 - (BOOL)isEqualToObjectSchema:(RLMObjectSchema *)objectSchema;
 

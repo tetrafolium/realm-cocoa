@@ -27,32 +27,32 @@ NSString * const kUTF8TestString = @"值значен™👍☞⎠‱௹♣︎☐
 
 - (void)testUTF8StringContents
 {
-    RLMRealm *realm = self.realmWithTestPath;
+	RLMRealm *realm = self.realmWithTestPath;
 
-    [realm beginWriteTransaction];
-    [StringObject createInRealm:realm withValue:@[kUTF8TestString]];
-    [realm commitWriteTransaction];
+	[realm beginWriteTransaction];
+	[StringObject createInRealm:realm withValue:@[kUTF8TestString]];
+	[realm commitWriteTransaction];
 
-    StringObject *obj1 = [[StringObject allObjectsInRealm:realm] firstObject];
-    XCTAssertEqualObjects(obj1.stringCol, kUTF8TestString, @"Storing and retrieving a string with UTF8 content should work");
+	StringObject *obj1 = [[StringObject allObjectsInRealm:realm] firstObject];
+	XCTAssertEqualObjects(obj1.stringCol, kUTF8TestString, @"Storing and retrieving a string with UTF8 content should work");
 
-    StringObject *obj2 = [[StringObject objectsInRealm:realm where:@"stringCol == %@", kUTF8TestString] firstObject];
-    XCTAssertTrue([obj1 isEqualToObject:obj2], @"Querying a realm searching for a string with UTF8 content should work");
+	StringObject *obj2 = [[StringObject objectsInRealm:realm where:@"stringCol == %@", kUTF8TestString] firstObject];
+	XCTAssertTrue([obj1 isEqualToObject:obj2], @"Querying a realm searching for a string with UTF8 content should work");
 }
 
 - (void)testUTF8PropertyWithUTF8StringContents
 {
-    RLMRealm *realm = self.realmWithTestPath;
+	RLMRealm *realm = self.realmWithTestPath;
 
-    [realm beginWriteTransaction];
-    [UTF8Object createInRealm:realm withValue:@[kUTF8TestString]];
-    [realm commitWriteTransaction];
+	[realm beginWriteTransaction];
+	[UTF8Object createInRealm:realm withValue:@[kUTF8TestString]];
+	[realm commitWriteTransaction];
 
-    UTF8Object *obj1 = [[UTF8Object allObjectsInRealm:realm] firstObject];
-    XCTAssertEqualObjects(obj1.柱колоéнǢкƱаم, kUTF8TestString, @"Storing and retrieving a string with UTF8 content should work");
+	UTF8Object *obj1 = [[UTF8Object allObjectsInRealm:realm] firstObject];
+	XCTAssertEqualObjects(obj1.柱колоéнǢкƱаم, kUTF8TestString, @"Storing and retrieving a string with UTF8 content should work");
 
-    // Test fails because of rdar://17735684
-    // NSPredicate does not support UTF8 keypaths
+	// Test fails because of rdar://17735684
+	// NSPredicate does not support UTF8 keypaths
 //    UTF8Object *obj2 = [[StringObject objectsInRealm:realm where:@"柱колоéнǢкƱаم == %@", kUTF8TestString] firstObject];
 //    XCTAssertEqualObjects(obj1, obj2, @"Querying a realm searching for a string with UTF8 content should work");
 }

@@ -26,7 +26,7 @@
 @end
 
 @implementation CompactionTests {
-    uint64_t _expectedTotalBytesBefore;
+	uint64_t _expectedTotalBytesBefore;
 }
 
 static const NSUInteger expectedUsedBytesBeforeMin = 50000;
@@ -35,237 +35,237 @@ static const NSUInteger count = 1000;
 #pragma mark - Helpers
 
 - (unsigned long long)fileSize:(NSURL *)fileURL {
-    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fileURL.path error:nil];
-    return [attributes[NSFileSize] unsignedLongLongValue];
+	NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fileURL.path error:nil];
+	return [attributes[NSFileSize] unsignedLongLongValue];
 }
 
 - (void)setUp {
-    [super setUp];
-    @autoreleasepool {
-        // Make compactable Realm
-        RLMRealm *realm = self.realmWithTestPath;
-        NSString *uuid = [[NSUUID UUID] UUIDString];
-        [realm transactionWithBlock:^{
-                  [StringObject createInRealm:realm withValue:@[@"A"]];
-                  for (NSUInteger i = 0; i < count; ++i) {
-                [StringObject createInRealm:realm withValue:@[uuid]];
-            }
-            [StringObject createInRealm:realm withValue:@[@"B"]];
-        }];
-    }
-    _expectedTotalBytesBefore = [self fileSize:RLMTestRealmURL()];
+	[super setUp];
+	@autoreleasepool {
+		// Make compactable Realm
+		RLMRealm *realm = self.realmWithTestPath;
+		NSString *uuid = [[NSUUID UUID] UUIDString];
+		[realm transactionWithBlock:^{
+		         [StringObject createInRealm:realm withValue:@[@"A"]];
+		         for (NSUInteger i = 0; i < count; ++i) {
+		                 [StringObject createInRealm:realm withValue:@[uuid]];
+			 }
+		         [StringObject createInRealm:realm withValue:@[@"B"]];
+		 }];
+	}
+	_expectedTotalBytesBefore = [self fileSize:RLMTestRealmURL()];
 }
 
 #pragma mark - Tests
 
 - (void)testCompact {
-    RLMRealm *realm = self.realmWithTestPath;
-    unsigned long long fileSizeBefore = [self fileSize:realm.configuration.fileURL];
-    StringObject *object = [StringObject allObjectsInRealm:realm].firstObject;
+	RLMRealm *realm = self.realmWithTestPath;
+	unsigned long long fileSizeBefore = [self fileSize:realm.configuration.fileURL];
+	StringObject *object = [StringObject allObjectsInRealm:realm].firstObject;
 
-    XCTAssertTrue([realm compact]);
+	XCTAssertTrue([realm compact]);
 
-    XCTAssertTrue(object.isInvalidated);
-    XCTAssertEqual([[StringObject allObjectsInRealm:realm] count], count + 2);
-    XCTAssertEqualObjects(@"A", [[StringObject allObjectsInRealm:realm].firstObject stringCol]);
-    XCTAssertEqualObjects(@"B", [[StringObject allObjectsInRealm:realm].lastObject stringCol]);
+	XCTAssertTrue(object.isInvalidated);
+	XCTAssertEqual([[StringObject allObjectsInRealm:realm] count], count + 2);
+	XCTAssertEqualObjects(@"A", [[StringObject allObjectsInRealm:realm].firstObject stringCol]);
+	XCTAssertEqualObjects(@"B", [[StringObject allObjectsInRealm:realm].lastObject stringCol]);
 
-    unsigned long long fileSizeAfter = [self fileSize:realm.configuration.fileURL];
-    XCTAssertGreaterThan(fileSizeBefore, fileSizeAfter);
+	unsigned long long fileSizeAfter = [self fileSize:realm.configuration.fileURL];
+	XCTAssertGreaterThan(fileSizeBefore, fileSizeAfter);
 }
 
 - (void)testSuccessfulCompactOnLaunch {
-    // Configure the Realm to compact on launch
-    RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
-    configuration.fileURL = RLMTestRealmURL();
-    configuration.shouldCompactOnLaunch = ^BOOL(NSUInteger totalBytes, NSUInteger usedBytes) {
-        // Confirm expected sizes
-        XCTAssertEqual(totalBytes, _expectedTotalBytesBefore);
-        XCTAssertTrue((usedBytes < totalBytes) && (usedBytes > expectedUsedBytesBeforeMin));
+	// Configure the Realm to compact on launch
+	RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
+	configuration.fileURL = RLMTestRealmURL();
+	configuration.shouldCompactOnLaunch = ^BOOL (NSUInteger totalBytes, NSUInteger usedBytes) {
+		// Confirm expected sizes
+		XCTAssertEqual(totalBytes, _expectedTotalBytesBefore);
+		XCTAssertTrue((usedBytes < totalBytes) && (usedBytes > expectedUsedBytesBeforeMin));
 
-        // Compact if the file is over 500KB in size and less than 20% 'used'
-        // In practice, users might want to use values closer to 100MB and 50%
-        NSUInteger fiveHundredKB = 500 * 1024;
-        return (totalBytes > fiveHundredKB) && (usedBytes / totalBytes) < 0.2;
-    };
+		// Compact if the file is over 500KB in size and less than 20% 'used'
+		// In practice, users might want to use values closer to 100MB and 50%
+		NSUInteger fiveHundredKB = 500 * 1024;
+		return (totalBytes > fiveHundredKB) && (usedBytes / totalBytes) < 0.2;
+	};
 
-    // Confirm expected sizes before and after opening the Realm
-    XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
-    RLMRealm *realm = [RLMRealm realmWithConfiguration:configuration error:nil];
-    XCTAssertLessThan([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
+	// Confirm expected sizes before and after opening the Realm
+	XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
+	RLMRealm *realm = [RLMRealm realmWithConfiguration:configuration error:nil];
+	XCTAssertLessThan([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
 
-    // Validate that the file still contains what it should
-    XCTAssertEqual([[StringObject allObjectsInRealm:realm] count], count + 2);
-    XCTAssertEqualObjects(@"A", [[StringObject allObjectsInRealm:realm].firstObject stringCol]);
-    XCTAssertEqualObjects(@"B", [[StringObject allObjectsInRealm:realm].lastObject stringCol]);
+	// Validate that the file still contains what it should
+	XCTAssertEqual([[StringObject allObjectsInRealm:realm] count], count + 2);
+	XCTAssertEqualObjects(@"A", [[StringObject allObjectsInRealm:realm].firstObject stringCol]);
+	XCTAssertEqualObjects(@"B", [[StringObject allObjectsInRealm:realm].lastObject stringCol]);
 }
 
 - (void)testNoBlockCompactOnLaunch {
-    // Configure the Realm to compact on launch
-    RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
-    configuration.fileURL = RLMTestRealmURL();
-    // Confirm expected sizes before and after opening the Realm
-    XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
-    RLMRealm *realm = [RLMRealm realmWithConfiguration:configuration error:nil];
-    XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
+	// Configure the Realm to compact on launch
+	RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
+	configuration.fileURL = RLMTestRealmURL();
+	// Confirm expected sizes before and after opening the Realm
+	XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
+	RLMRealm *realm = [RLMRealm realmWithConfiguration:configuration error:nil];
+	XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
 
-    // Validate that the file still contains what it should
-    XCTAssertEqual([[StringObject allObjectsInRealm:realm] count], count + 2);
-    XCTAssertEqualObjects(@"A", [[StringObject allObjectsInRealm:realm].firstObject stringCol]);
-    XCTAssertEqualObjects(@"B", [[StringObject allObjectsInRealm:realm].lastObject stringCol]);
+	// Validate that the file still contains what it should
+	XCTAssertEqual([[StringObject allObjectsInRealm:realm] count], count + 2);
+	XCTAssertEqualObjects(@"A", [[StringObject allObjectsInRealm:realm].firstObject stringCol]);
+	XCTAssertEqualObjects(@"B", [[StringObject allObjectsInRealm:realm].lastObject stringCol]);
 }
 
 - (void)testCachedRealmCompactOnLaunch {
-    // Test that the compaction block never gets called if there are cached Realms
-    // Access Realm before opening it with a compaction block
-    RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
-    configuration.fileURL = RLMTestRealmURL();
-    __unused RLMRealm *firstRealm = [RLMRealm realmWithConfiguration:configuration error:nil];
+	// Test that the compaction block never gets called if there are cached Realms
+	// Access Realm before opening it with a compaction block
+	RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
+	configuration.fileURL = RLMTestRealmURL();
+	__unused RLMRealm *firstRealm = [RLMRealm realmWithConfiguration:configuration error:nil];
 
-    // Configure the Realm to compact on launch
-    RLMRealmConfiguration *configurationWithCompactBlock = [configuration copy];
-    __block BOOL compactBlockInvoked = NO;
-    configurationWithCompactBlock.shouldCompactOnLaunch = ^BOOL(__unused NSUInteger totalBytes, __unused NSUInteger usedBytes) {
-        compactBlockInvoked = YES;
-        // Always attempt to compact
-        return YES;
-    };
+	// Configure the Realm to compact on launch
+	RLMRealmConfiguration *configurationWithCompactBlock = [configuration copy];
+	__block BOOL compactBlockInvoked = NO;
+	configurationWithCompactBlock.shouldCompactOnLaunch = ^BOOL (__unused NSUInteger totalBytes, __unused NSUInteger usedBytes) {
+		compactBlockInvoked = YES;
+		// Always attempt to compact
+		return YES;
+	};
 
-    // Confirm expected sizes before and after opening the Realm
-    XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
-    RLMRealm *realm = [RLMRealm realmWithConfiguration:configurationWithCompactBlock error:nil];
-    XCTAssertFalse(compactBlockInvoked);
-    XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
+	// Confirm expected sizes before and after opening the Realm
+	XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
+	RLMRealm *realm = [RLMRealm realmWithConfiguration:configurationWithCompactBlock error:nil];
+	XCTAssertFalse(compactBlockInvoked);
+	XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
 
-    // Validate that the file still contains what it should
-    XCTAssertEqual([[StringObject allObjectsInRealm:realm] count], count + 2);
-    XCTAssertEqualObjects(@"A", [[StringObject allObjectsInRealm:realm].firstObject stringCol]);
-    XCTAssertEqualObjects(@"B", [[StringObject allObjectsInRealm:realm].lastObject stringCol]);
+	// Validate that the file still contains what it should
+	XCTAssertEqual([[StringObject allObjectsInRealm:realm] count], count + 2);
+	XCTAssertEqualObjects(@"A", [[StringObject allObjectsInRealm:realm].firstObject stringCol]);
+	XCTAssertEqualObjects(@"B", [[StringObject allObjectsInRealm:realm].lastObject stringCol]);
 }
 
 - (void)testCachedRealmOtherThreadCompactOnLaunch {
-    // Test that the compaction block never gets called if the Realm is open on a different thread
-    // Access Realm before opening it with a compaction block
-    RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
-    configuration.fileURL = RLMTestRealmURL();
+	// Test that the compaction block never gets called if the Realm is open on a different thread
+	// Access Realm before opening it with a compaction block
+	RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
+	configuration.fileURL = RLMTestRealmURL();
 
-    dispatch_semaphore_t failedCompactTestCompleteSema = dispatch_semaphore_create(0);
-    dispatch_semaphore_t bgRealmClosedSema = dispatch_semaphore_create(0);
+	dispatch_semaphore_t failedCompactTestCompleteSema = dispatch_semaphore_create(0);
+	dispatch_semaphore_t bgRealmClosedSema = dispatch_semaphore_create(0);
 
-    XCTestExpectation *realmOpenedExpectation = [self expectationWithDescription:@"Realm was opened on background thread"];
-    [self dispatchAsync:^ {
-             @autoreleasepool {
-                 __unused RLMRealm *firstRealm = [RLMRealm realmWithConfiguration:configuration error:nil];
-            [realmOpenedExpectation fulfill];
-            dispatch_semaphore_wait(failedCompactTestCompleteSema, DISPATCH_TIME_FOREVER);
-        }
-        dispatch_semaphore_signal(bgRealmClosedSema);
-    }];
-    [self waitForExpectationsWithTimeout:2 handler:nil];
+	XCTestExpectation *realmOpenedExpectation = [self expectationWithDescription:@"Realm was opened on background thread"];
+	[self dispatchAsync:^ {
+	         @autoreleasepool {
+	                 __unused RLMRealm *firstRealm = [RLMRealm realmWithConfiguration:configuration error:nil];
+	                 [realmOpenedExpectation fulfill];
+	                 dispatch_semaphore_wait(failedCompactTestCompleteSema, DISPATCH_TIME_FOREVER);
+		 }
+	         dispatch_semaphore_signal(bgRealmClosedSema);
+	 }];
+	[self waitForExpectationsWithTimeout:2 handler:nil];
 
-    @autoreleasepool {
-        // Configure the Realm to compact on launch
-        RLMRealmConfiguration *configurationWithCompactBlock = [configuration copy];
-        __block BOOL compactBlockInvoked = NO;
+	@autoreleasepool {
+		// Configure the Realm to compact on launch
+		RLMRealmConfiguration *configurationWithCompactBlock = [configuration copy];
+		__block BOOL compactBlockInvoked = NO;
 
-        configurationWithCompactBlock.shouldCompactOnLaunch = ^BOOL(__unused NSUInteger totalBytes, __unused NSUInteger usedBytes) {
-            compactBlockInvoked = YES;
-            // Always attempt to compact
-            return YES;
-        };
+		configurationWithCompactBlock.shouldCompactOnLaunch = ^BOOL (__unused NSUInteger totalBytes, __unused NSUInteger usedBytes) {
+			compactBlockInvoked = YES;
+			// Always attempt to compact
+			return YES;
+		};
 
-        // Confirm expected sizes before and after opening the Realm
-        XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
-        __unused RLMRealm *realm = [RLMRealm realmWithConfiguration:configurationWithCompactBlock error:nil];
-        XCTAssertFalse(compactBlockInvoked);
-        XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
-        dispatch_semaphore_signal(failedCompactTestCompleteSema);
-    }
+		// Confirm expected sizes before and after opening the Realm
+		XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
+		__unused RLMRealm *realm = [RLMRealm realmWithConfiguration:configurationWithCompactBlock error:nil];
+		XCTAssertFalse(compactBlockInvoked);
+		XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
+		dispatch_semaphore_signal(failedCompactTestCompleteSema);
+	}
 
-    dispatch_semaphore_wait(bgRealmClosedSema, DISPATCH_TIME_FOREVER);
+	dispatch_semaphore_wait(bgRealmClosedSema, DISPATCH_TIME_FOREVER);
 
-    // Configure the Realm to compact on launch
-    RLMRealmConfiguration *configurationWithCompactBlock = [configuration copy];
-    __block BOOL compactBlockInvoked = NO;
+	// Configure the Realm to compact on launch
+	RLMRealmConfiguration *configurationWithCompactBlock = [configuration copy];
+	__block BOOL compactBlockInvoked = NO;
 
-    configurationWithCompactBlock.shouldCompactOnLaunch = ^BOOL(NSUInteger totalBytes, NSUInteger usedBytes) {
-        // Confirm expected sizes
-        XCTAssertEqual(totalBytes, _expectedTotalBytesBefore);
-        XCTAssertTrue((usedBytes < totalBytes) && (usedBytes > expectedUsedBytesBeforeMin));
+	configurationWithCompactBlock.shouldCompactOnLaunch = ^BOOL (NSUInteger totalBytes, NSUInteger usedBytes) {
+		// Confirm expected sizes
+		XCTAssertEqual(totalBytes, _expectedTotalBytesBefore);
+		XCTAssertTrue((usedBytes < totalBytes) && (usedBytes > expectedUsedBytesBeforeMin));
 
-        // Compact if the file is over 500KB in size and less than 20% 'used'
-        // In practice, users might want to use values closer to 100MB and 50%
-        NSUInteger fiveHundredKB = 500 * 1024;
-        BOOL shouldCompact = (totalBytes > fiveHundredKB) && (usedBytes / totalBytes) < 0.2;
-        compactBlockInvoked = YES;
-        return shouldCompact;
-    };
+		// Compact if the file is over 500KB in size and less than 20% 'used'
+		// In practice, users might want to use values closer to 100MB and 50%
+		NSUInteger fiveHundredKB = 500 * 1024;
+		BOOL shouldCompact = (totalBytes > fiveHundredKB) && (usedBytes / totalBytes) < 0.2;
+		compactBlockInvoked = YES;
+		return shouldCompact;
+	};
 
-    // Confirm expected sizes before and after opening the Realm
-    XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
-    RLMRealm *realm = [RLMRealm realmWithConfiguration:configurationWithCompactBlock error:nil];
-    XCTAssertTrue(compactBlockInvoked);
-    XCTAssertLessThan([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
+	// Confirm expected sizes before and after opening the Realm
+	XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
+	RLMRealm *realm = [RLMRealm realmWithConfiguration:configurationWithCompactBlock error:nil];
+	XCTAssertTrue(compactBlockInvoked);
+	XCTAssertLessThan([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
 
-    // Validate that the file still contains what it should
-    XCTAssertEqual([[StringObject allObjectsInRealm:realm] count], count + 2);
-    XCTAssertEqualObjects(@"A", [[StringObject allObjectsInRealm:realm].firstObject stringCol]);
-    XCTAssertEqualObjects(@"B", [[StringObject allObjectsInRealm:realm].lastObject stringCol]);
+	// Validate that the file still contains what it should
+	XCTAssertEqual([[StringObject allObjectsInRealm:realm] count], count + 2);
+	XCTAssertEqualObjects(@"A", [[StringObject allObjectsInRealm:realm].firstObject stringCol]);
+	XCTAssertEqualObjects(@"B", [[StringObject allObjectsInRealm:realm].lastObject stringCol]);
 }
 
 - (void)testReturnNoCompactOnLaunch {
-    // Configure the Realm to compact on launch
-    RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
-    configuration.fileURL = RLMTestRealmURL();
-    configuration.shouldCompactOnLaunch = ^BOOL(NSUInteger totalBytes, NSUInteger usedBytes) {
-        // Confirm expected sizes
-        XCTAssertEqual(totalBytes, _expectedTotalBytesBefore);
-        XCTAssertTrue((usedBytes < totalBytes) && (usedBytes > expectedUsedBytesBeforeMin));
+	// Configure the Realm to compact on launch
+	RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
+	configuration.fileURL = RLMTestRealmURL();
+	configuration.shouldCompactOnLaunch = ^BOOL (NSUInteger totalBytes, NSUInteger usedBytes) {
+		// Confirm expected sizes
+		XCTAssertEqual(totalBytes, _expectedTotalBytesBefore);
+		XCTAssertTrue((usedBytes < totalBytes) && (usedBytes > expectedUsedBytesBeforeMin));
 
-        // Don't compact.
-        return NO;
-    };
+		// Don't compact.
+		return NO;
+	};
 
-    // Confirm expected sizes before and after opening the Realm
-    XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
-    RLMRealm *realm = [RLMRealm realmWithConfiguration:configuration error:nil];
-    XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
+	// Confirm expected sizes before and after opening the Realm
+	XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
+	RLMRealm *realm = [RLMRealm realmWithConfiguration:configuration error:nil];
+	XCTAssertEqual([self fileSize:configuration.fileURL], _expectedTotalBytesBefore);
 
-    // Validate that the file still contains what it should
-    XCTAssertEqual([[StringObject allObjectsInRealm:realm] count], count + 2);
-    XCTAssertEqualObjects(@"A", [[StringObject allObjectsInRealm:realm].firstObject stringCol]);
-    XCTAssertEqualObjects(@"B", [[StringObject allObjectsInRealm:realm].lastObject stringCol]);
+	// Validate that the file still contains what it should
+	XCTAssertEqual([[StringObject allObjectsInRealm:realm] count], count + 2);
+	XCTAssertEqualObjects(@"A", [[StringObject allObjectsInRealm:realm].firstObject stringCol]);
+	XCTAssertEqualObjects(@"B", [[StringObject allObjectsInRealm:realm].lastObject stringCol]);
 }
 
 - (void)testCompactOnLaunchValidation {
-    RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
-    configuration.readOnly = YES;
+	RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
+	configuration.readOnly = YES;
 
-    BOOL (^compactBlock)(NSUInteger, NSUInteger) = ^BOOL(__unused NSUInteger totalBytes, __unused NSUInteger usedBytes) {
-        return NO;
-    };
-    RLMAssertThrowsWithReasonMatching(configuration.shouldCompactOnLaunch = compactBlock,
-                                      @"Cannot set `shouldCompactOnLaunch` when `readOnly` is set.");
+	BOOL (^compactBlock)(NSUInteger, NSUInteger) = ^BOOL (__unused NSUInteger totalBytes, __unused NSUInteger usedBytes) {
+		return NO;
+	};
+	RLMAssertThrowsWithReasonMatching(configuration.shouldCompactOnLaunch = compactBlock,
+	                                  @"Cannot set `shouldCompactOnLaunch` when `readOnly` is set.");
 
-    configuration.readOnly = NO;
-    configuration.shouldCompactOnLaunch = compactBlock;
-    RLMAssertThrowsWithReasonMatching(configuration.readOnly = YES,
-                                      @"Cannot set `readOnly` when `shouldCompactOnLaunch` is set.");
+	configuration.readOnly = NO;
+	configuration.shouldCompactOnLaunch = compactBlock;
+	RLMAssertThrowsWithReasonMatching(configuration.readOnly = YES,
+	                                  @"Cannot set `readOnly` when `shouldCompactOnLaunch` is set.");
 }
 
 - (void)testAccessDeniedOnTemporaryFile {
-    RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
-    configuration.fileURL = RLMTestRealmURL();
-    configuration.shouldCompactOnLaunch = ^(__unused NSUInteger totalBytes, __unused NSUInteger usedBytes) {
-        return YES;
-    };
-    NSURL *tmpURL = [configuration.fileURL URLByAppendingPathExtension:@"tmp_compaction_space"];
-    [NSData.data writeToURL:tmpURL atomically:NO];
-    [NSFileManager.defaultManager setAttributes:@ {NSFileImmutable: @YES} ofItemAtPath:tmpURL.path error:nil];
-    RLMAssertThrowsWithReason([RLMRealm realmWithConfiguration:configuration error:nil],
-                              @"unlink() failed: Operation not permitted");
-    [NSFileManager.defaultManager setAttributes:@ {NSFileImmutable: @NO} ofItemAtPath:tmpURL.path error:nil];
-    XCTAssertNoThrow([RLMRealm realmWithConfiguration:configuration error:nil]);
+	RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
+	configuration.fileURL = RLMTestRealmURL();
+	configuration.shouldCompactOnLaunch = ^(__unused NSUInteger totalBytes, __unused NSUInteger usedBytes) {
+		return YES;
+	};
+	NSURL *tmpURL = [configuration.fileURL URLByAppendingPathExtension:@"tmp_compaction_space"];
+	[NSData.data writeToURL:tmpURL atomically:NO];
+	[NSFileManager.defaultManager setAttributes:@{NSFileImmutable: @YES} ofItemAtPath:tmpURL.path error:nil];
+	RLMAssertThrowsWithReason([RLMRealm realmWithConfiguration:configuration error:nil],
+	                          @"unlink() failed: Operation not permitted");
+	[NSFileManager.defaultManager setAttributes:@{NSFileImmutable: @NO} ofItemAtPath:tmpURL.path error:nil];
+	XCTAssertNoThrow([RLMRealm realmWithConfiguration:configuration error:nil]);
 }
 
 @end

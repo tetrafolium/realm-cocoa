@@ -26,19 +26,19 @@ class Group;
 class Realm;
 }
 struct RLMResultsSetInfo {
-    realm::ObjectSchema osObjectSchema;
-    RLMObjectSchema *rlmObjectSchema;
-    RLMClassInfo info;
+	realm::ObjectSchema osObjectSchema;
+	RLMObjectSchema *rlmObjectSchema;
+	RLMClassInfo info;
 
-    RLMResultsSetInfo(__unsafe_unretained RLMRealm *const realm);
-    static RLMClassInfo& get(__unsafe_unretained RLMRealm *const realm);
+	RLMResultsSetInfo(__unsafe_unretained RLMRealm *const realm);
+	static RLMClassInfo& get(__unsafe_unretained RLMRealm *const realm);
 };
 
 @interface RLMRealm () {
-@public
-    std::shared_ptr<realm::Realm> _realm;
-    RLMSchemaInfo _info;
-    std::unique_ptr<RLMResultsSetInfo> _resultsSetInfo;
+	@public
+	std::shared_ptr<realm::Realm> _realm;
+	RLMSchemaInfo _info;
+	std::unique_ptr<RLMResultsSetInfo> _resultsSetInfo;
 }
 
 // FIXME - group should not be exposed
