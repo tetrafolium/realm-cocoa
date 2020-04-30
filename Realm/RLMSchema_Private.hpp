@@ -23,9 +23,10 @@
 namespace realm {
 class Schema;
 class ObjectSchema;
-}
+} // namespace realm
 
 @interface RLMSchema ()
-+ (instancetype)dynamicSchemaFromObjectStoreSchema: (realm::Schema const&)objectStoreSchema;
--(realm::Schema)objectStoreCopy;
++ (instancetype)dynamicSchemaFromObjectStoreSchema:
+    (realm::Schema const &)objectStoreSchema;
+- (realm::Schema)objectStoreCopy;
 @end

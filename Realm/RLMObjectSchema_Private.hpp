@@ -25,8 +25,9 @@ class ObjectSchema;
 
 @interface RLMObjectSchema ()
 // create realm::ObjectSchema copy
-- (realm::ObjectSchema)objectStoreCopy: (RLMSchema *)schema;
+- (realm::ObjectSchema)objectStoreCopy:(RLMSchema *)schema;
 
 // initialize with realm::ObjectSchema
-+(instancetype)objectSchemaForObjectStoreSchema: (realm::ObjectSchema const&)objectSchema;
++ (instancetype)objectSchemaForObjectStoreSchema:
+    (realm::ObjectSchema const &)objectSchema;
 @end

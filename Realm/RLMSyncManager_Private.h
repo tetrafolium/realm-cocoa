@@ -18,19 +18,21 @@
 
 #import <Realm/RLMSyncManager.h>
 
-#import "RLMSyncUtil_Private.h"
 #import "RLMNetworkClient.h"
+#import "RLMSyncUtil_Private.h"
 
 @class RLMSyncUser, RLMSyncConfiguration;
 
-// All private API methods are threadsafe and synchronized, unless denoted otherwise. Since they are expected to be
-// called very infrequently, this should pose no issues.
+// All private API methods are threadsafe and synchronized, unless denoted
+// otherwise. Since they are expected to be called very infrequently, this
+// should pose no issues.
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RLMSyncManager ()
 
-@property (nullable, nonatomic, copy) RLMSyncBasicErrorReportingBlock sessionCompletionNotifier;
+@property(nullable, nonatomic, copy)
+    RLMSyncBasicErrorReportingBlock sessionCompletionNotifier;
 
 - (void)_fireError:(NSError *)error;
 

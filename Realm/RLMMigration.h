@@ -25,64 +25,71 @@ NS_ASSUME_NONNULL_BEGIN
 @class RLMObject;
 
 /**
-   A block type which provides both the old and new versions of an object in the Realm. Object
-   properties can only be accessed using keyed subscripting.
+   A block type which provides both the old and new versions of an object in the
+   Realm. Object properties can only be accessed using keyed subscripting.
 
    @see `-[RLMMigration enumerateObjects:block:]`
 
    @param oldObject The object from the original Realm (read-only).
    @param newObject The object from the migrated Realm (read-write).
  */
-typedef void (^RLMObjectMigrationBlock)(RLMObject * __nullable oldObject, RLMObject * __nullable newObject);
+typedef void (^RLMObjectMigrationBlock)(RLMObject *__nullable oldObject,
+                                        RLMObject *__nullable newObject);
 
 /**
-   `RLMMigration` instances encapsulate information intended to facilitate a schema migration.
+   `RLMMigration` instances encapsulate information intended to facilitate a
+   schema migration.
 
-   A `RLMMigration` instance is passed into a user-defined `RLMMigrationBlock` block when updating
-   the version of a Realm. This instance provides access to the old and new database schemas, the
-   objects in the Realm, and provides functionality for modifying the Realm during the migration.
+   A `RLMMigration` instance is passed into a user-defined `RLMMigrationBlock`
+   block when updating the version of a Realm. This instance provides access to
+   the old and new database schemas, the objects in the Realm, and provides
+   functionality for modifying the Realm during the migration.
  */
 @interface RLMMigration : NSObject
 
 #pragma mark - Properties
 
-	/**
-	Returns the old `RLMSchema`. This is the schema which describes the Realm before the
-	migration is applied.
-	 */
-@property (nonatomic, readonly) RLMSchema *oldSchema;
+/**
+Returns the old `RLMSchema`. This is the schema which describes the Realm before
+the migration is applied.
+ */
+@property(nonatomic, readonly) RLMSchema *oldSchema;
 
 /**
-   Returns the new `RLMSchema`. This is the schema which describes the Realm after the
-   migration is applied.
+   Returns the new `RLMSchema`. This is the schema which describes the Realm
+   after the migration is applied.
  */
-@property (nonatomic, readonly) RLMSchema *newSchema;
-
+@property(nonatomic, readonly) RLMSchema *newSchema;
 
 #pragma mark - Altering Objects during a Migration
 
 /**
-   Enumerates all the objects of a given type in the Realm, providing both the old and new versions
-   of each object. Within the block, object properties can only be accessed using keyed subscripting.
+   Enumerates all the objects of a given type in the Realm, providing both the
+   old and new versions of each object. Within the block, object properties can
+   only be accessed using keyed subscripting.
 
    @param className   The name of the `RLMObject` class to enumerate.
 
-   @warning   All objects returned are of a type specific to the current migration and should not be cast
-            to `className`. Instead, treat them as `RLMObject`s and use keyed subscripting to access
-            properties.
+   @warning   All objects returned are of a type specific to the current
+   migration and should not be cast to `className`. Instead, treat them as
+   `RLMObject`s and use keyed subscripting to access properties.
  */
-- (void)enumerateObjects:(NSString *)className block:(__attribute__((noescape)) RLMObjectMigrationBlock)block;
+- (void)enumerateObjects:(NSString *)className
+                   block:(__attribute__((noescape))
+                          RLMObjectMigrationBlock)block;
 
 /**
-   Creates and returns an `RLMObject` instance of type `className` in the Realm being migrated.
+   Creates and returns an `RLMObject` instance of type `className` in the Realm
+   being migrated.
 
-   The `value` argument is used to populate the object. It can be a key-value coding compliant object, an array or
-   dictionary returned from the methods in `NSJSONSerialization`, or an array containing one element for each managed
-   property. An exception will be thrown if any required properties are not present and those properties were not defined
-   with default values.
+   The `value` argument is used to populate the object. It can be a key-value
+   coding compliant object, an array or dictionary returned from the methods in
+   `NSJSONSerialization`, or an array containing one element for each managed
+   property. An exception will be thrown if any required properties are not
+   present and those properties were not defined with default values.
 
-   When passing in an `NSArray` as the `value` argument, all properties must be present, valid and in the same order as
-   the properties defined in the model.
+   When passing in an `NSArray` as the `value` argument, all properties must be
+   present, valid and in the same order as the properties defined in the model.
 
    @param className   The name of the `RLMObject` class to create.
    @param value       The value used to populate the object.
@@ -92,7 +99,8 @@ typedef void (^RLMObjectMigrationBlock)(RLMObject * __nullable oldObject, RLMObj
 /**
    Deletes an object from a Realm during a migration.
 
-   It is permitted to call this method from within the block passed to `-[enumerateObjects:block:]`.
+   It is permitted to call this method from within the block passed to
+   `-[enumerateObjects:block:]`.
 
    @param object  Object to be deleted from the Realm being migrated.
  */
@@ -101,8 +109,9 @@ typedef void (^RLMObjectMigrationBlock)(RLMObject * __nullable oldObject, RLMObj
 /**
    Deletes the data for the class with the given name.
 
-   All objects of the given class will be deleted. If the `RLMObject` subclass no longer exists in your program,
-   any remaining metadata for the class will be removed from the Realm file.
+   All objects of the given class will be deleted. If the `RLMObject` subclass
+   no longer exists in your program, any remaining metadata for the class will
+   be removed from the Realm file.
 
    @param  name The name of the `RLMObject` class to delete.
 
@@ -113,14 +122,16 @@ typedef void (^RLMObjectMigrationBlock)(RLMObject * __nullable oldObject, RLMObj
 /**
    Renames a property of the given class from `oldName` to `newName`.
 
-   @param className The name of the class whose property should be renamed. This class must be present
-                  in both the old and new Realm schemas.
-   @param oldName   The old name for the property to be renamed. There must not be a property with this name in the
-                  class as defined by the new Realm schema.
-   @param newName   The new name for the property to be renamed. There must not be a property with this name in the
-                  class as defined by the old Realm schema.
+   @param className The name of the class whose property should be renamed. This
+   class must be present in both the old and new Realm schemas.
+   @param oldName   The old name for the property to be renamed. There must not
+   be a property with this name in the class as defined by the new Realm schema.
+   @param newName   The new name for the property to be renamed. There must not
+   be a property with this name in the class as defined by the old Realm schema.
  */
-- (void)renamePropertyForClass:(NSString *)className oldName:(NSString *)oldName newName:(NSString *)newName;
+- (void)renamePropertyForClass:(NSString *)className
+                       oldName:(NSString *)oldName
+                       newName:(NSString *)newName;
 
 @end
 

@@ -28,29 +28,33 @@ class RLMObservationInfo;
 
 // RLMObject accessor and read/write realm
 @interface RLMObjectBase () {
-	@public
-	realm::Row _row;
-	RLMObservationInfo *_observationInfo;
-	RLMClassInfo *_info;
+@public
+  realm::Row _row;
+  RLMObservationInfo *_observationInfo;
+  RLMClassInfo *_info;
 }
 @end
 
 id RLMCreateManagedAccessor(Class cls, RLMClassInfo *info) NS_RETURNS_RETAINED;
 
 // throw an exception if the object is invalidated or on the wrong thread
-static inline void RLMVerifyAttached(__unsafe_unretained RLMObjectBase *const obj) {
-	if (!obj->_row.is_attached()) {
-		@throw RLMException(@"Object has been deleted or invalidated.");
-	}
-	[obj->_realm verifyThread];
+static inline void
+RLMVerifyAttached(__unsafe_unretained RLMObjectBase *const obj) {
+  if (!obj->_row.is_attached()) {
+    @throw RLMException(@"Object has been deleted or invalidated.");
+  }
+  [obj->_realm verifyThread];
 }
 
 // throw an exception if the object can't be modified for any reason
-static inline void RLMVerifyInWriteTransaction(__unsafe_unretained RLMObjectBase *const obj) {
-	// first verify is attached
-	RLMVerifyAttached(obj);
+static inline void
+RLMVerifyInWriteTransaction(__unsafe_unretained RLMObjectBase *const obj) {
+  // first verify is attached
+  RLMVerifyAttached(obj);
 
-	if (!obj->_realm.inWriteTransaction) {
-		@throw RLMException(@"Attempting to modify object outside of a write transaction - call beginWriteTransaction on an RLMRealm instance first.");
-	}
+  if (!obj->_realm.inWriteTransaction) {
+    @throw RLMException(
+        @"Attempting to modify object outside of a write transaction - call "
+        @"beginWriteTransaction on an RLMRealm instance first.");
+  }
 }

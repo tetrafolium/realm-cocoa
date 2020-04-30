@@ -32,14 +32,16 @@ NS_ASSUME_NONNULL_BEGIN
    immediately perform error clean-up work, or nil if the error isn't of
    a type that provides a token.
  */
-- (nullable RLMSyncErrorActionToken *)rlmSync_errorActionToken NS_REFINED_FOR_SWIFT;
+- (nullable RLMSyncErrorActionToken *)
+    rlmSync_errorActionToken NS_REFINED_FOR_SWIFT;
 
 /**
    Given a Realm Object Server client reset error, return the path where the
    backup copy of the Realm will be placed once the client reset process is
    complete.
  */
-- (nullable NSString *)rlmSync_clientResetBackedUpRealmPath NS_SWIFT_UNAVAILABLE("");
+- (nullable NSString *)
+    rlmSync_clientResetBackedUpRealmPath NS_SWIFT_UNAVAILABLE("");
 
 @end
 

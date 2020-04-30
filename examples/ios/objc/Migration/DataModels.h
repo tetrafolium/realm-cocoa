@@ -30,7 +30,8 @@
 
 /* V1
    @interface Person : RLMObject
-   @property NSString *fullName;   // combine firstName and lastName into single field
+   @property NSString *fullName;   // combine firstName and lastName into single
+   field
    @property int age;
    @end
  */
@@ -50,15 +51,15 @@
  */
 
 /* V3 */
-typedef NS_ENUM (NSInteger, AnimalType) {
-	AnimalTypeDog = 1,
-	AnimalTypeCat,
-	AnimalTypeHamster,
+typedef NS_ENUM(NSInteger, AnimalType) {
+  AnimalTypeDog = 1,
+  AnimalTypeCat,
+  AnimalTypeHamster,
 };
 
 @interface Pet : RLMObject
 @property NSString *name;
-@property AnimalType type;      // change type from string to enum
+@property AnimalType type; // change type from string to enum
 
 + (AnimalType)animalTypeForString:(NSString *)typeString;
 
@@ -67,8 +68,6 @@ RLM_ARRAY_TYPE(Pet)
 
 @interface Person : RLMObject
 @property NSString *fullName;
-@property int age;              // age and pets properties re-ordered (handled automatically)
+@property int age; // age and pets properties re-ordered (handled automatically)
 @property RLMArray<Pet> *pets;
 @end
-
-

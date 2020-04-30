@@ -16,15 +16,15 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
-#import <UIKit/UIKit.h>
 #import <Realm/Realm.h>
+#import <UIKit/UIKit.h>
 
 @interface DrawPoint : RLMObject
 
 @property double x;
 @property double y;
 
-@property (readonly) CGPoint cgPoint;
+@property(readonly) CGPoint cgPoint;
 
 @end
 

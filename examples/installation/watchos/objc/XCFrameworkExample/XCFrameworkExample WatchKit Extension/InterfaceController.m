@@ -16,8 +16,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
-#import <Realm/Realm.h>
 #import "InterfaceController.h"
+#import <Realm/Realm.h>
 
 @interface Counter : RLMObject
 @property int count;
@@ -26,42 +26,44 @@
 @end
 
 @interface InterfaceController ()
-@property (unsafe_unretained, nonatomic) IBOutlet WKInterfaceButton *button;
-@property (nonatomic, strong) Counter *counter;
-@property (nonatomic, strong) RLMNotificationToken *token;
+@property(unsafe_unretained, nonatomic) IBOutlet WKInterfaceButton *button;
+@property(nonatomic, strong) Counter *counter;
+@property(nonatomic, strong) RLMNotificationToken *token;
 @end
 
 @implementation InterfaceController
 
-- (instancetype)init
-{
-	self = [super init];
-	if (self) {
-		self.counter = [[Counter alloc] init];
-		RLMRealm *realm = [RLMRealm defaultRealm];
-		[realm transactionWithBlock:^ {
-		         [realm addObject:self.counter];
-		 }];
-	}
-	return self;
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    self.counter = [[Counter alloc] init];
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm transactionWithBlock:^{
+      [realm addObject:self.counter];
+    }];
+  }
+  return self;
 }
 
 - (IBAction)increment {
-	[self.counter.realm transactionWithBlock:^ {
-	         self.counter.count++;
-	 }];
+  [self.counter.realm transactionWithBlock:^{
+    self.counter.count++;
+  }];
 }
 
 - (void)willActivate {
-	[super willActivate];
-	self.token = [self.counter.realm addNotificationBlock:^(NSString * _Nonnull notification, RLMRealm * _Nonnull realm) {
-	                      [self.button setTitle:[NSString stringWithFormat:@"%@", @(self.counter.count)]];
-		      }];
+  [super willActivate];
+  self.token = [self.counter.realm
+      addNotificationBlock:^(NSString *_Nonnull notification,
+                             RLMRealm *_Nonnull realm) {
+        [self.button
+            setTitle:[NSString stringWithFormat:@"%@", @(self.counter.count)]];
+      }];
 }
 
 - (void)didDeactivate {
-	[self.token invalidate];
-	[super didDeactivate];
+  [self.token invalidate];
+  [super didDeactivate];
 }
 
 @end

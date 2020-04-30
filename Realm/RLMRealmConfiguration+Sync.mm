@@ -20,8 +20,8 @@
 
 #import "RLMRealmConfiguration_Private.hpp"
 #import "RLMSyncConfiguration_Private.hpp"
-#import "RLMSyncUser_Private.hpp"
 #import "RLMSyncManager_Private.h"
+#import "RLMSyncUser_Private.hpp"
 #import "RLMSyncUtil_Private.hpp"
 #import "RLMUtil.hpp"
 
@@ -33,41 +33,46 @@
 #pragma mark - API
 
 - (void)setSyncConfiguration:(RLMSyncConfiguration *)syncConfiguration {
-	if (self.config.should_compact_on_launch_function) {
-		@throw RLMException(@"Cannot set `syncConfiguration` when `shouldCompactOnLaunch` is set.");
-	}
-	RLMSyncUser *user = syncConfiguration.user;
-	if (user.state == RLMSyncUserStateError) {
-		@throw RLMException(@"Cannot set a sync configuration which has an errored-out user.");
-	}
+  if (self.config.should_compact_on_launch_function) {
+    @throw RLMException(
+        @"Cannot set `syncConfiguration` when `shouldCompactOnLaunch` is set.");
+  }
+  RLMSyncUser *user = syncConfiguration.user;
+  if (user.state == RLMSyncUserStateError) {
+    @throw RLMException(
+        @"Cannot set a sync configuration which has an errored-out user.");
+  }
 
-	// Ensure sync manager is initialized, if it hasn't already been.
-	[RLMSyncManager sharedManager];
-	NSAssert(user.identity, @"Cannot call this method on a user that doesn't have an identity.");
-	self.config.in_memory = false;
-	self.config.sync_config = std::make_shared<realm::SyncConfig>([syncConfiguration rawConfiguration]);
-	self.config.schema_mode = realm::SchemaMode::Additive;
+  // Ensure sync manager is initialized, if it hasn't already been.
+  [RLMSyncManager sharedManager];
+  NSAssert(user.identity,
+           @"Cannot call this method on a user that doesn't have an identity.");
+  self.config.in_memory = false;
+  self.config.sync_config =
+      std::make_shared<realm::SyncConfig>([syncConfiguration rawConfiguration]);
+  self.config.schema_mode = realm::SchemaMode::Additive;
 
-	if (syncConfiguration.customFileURL) {
-		self.config.path = syncConfiguration.customFileURL.path.UTF8String;
-	} else {
-		self.config.path = SyncManager::shared().path_for_realm(*[user _syncUser],
-		                                                        self.config.sync_config->realm_url());
-	}
+  if (syncConfiguration.customFileURL) {
+    self.config.path = syncConfiguration.customFileURL.path.UTF8String;
+  } else {
+    self.config.path = SyncManager::shared().path_for_realm(
+        *[user _syncUser], self.config.sync_config->realm_url());
+  }
 
-	if (!self.config.encryption_key.empty()) {
-		auto& sync_encryption_key = self.config.sync_config->realm_encryption_key;
-		sync_encryption_key = std::array<char, 64>();
-		std::copy_n(self.config.encryption_key.begin(), 64, sync_encryption_key->begin());
-	}
+  if (!self.config.encryption_key.empty()) {
+    auto &sync_encryption_key = self.config.sync_config->realm_encryption_key;
+    sync_encryption_key = std::array<char, 64>();
+    std::copy_n(self.config.encryption_key.begin(), 64,
+                sync_encryption_key->begin());
+  }
 }
 
 - (RLMSyncConfiguration *)syncConfiguration {
-	if (!self.config.sync_config) {
-		return nil;
-	}
-	realm::SyncConfig& sync_config = *self.config.sync_config;
-	return [[RLMSyncConfiguration alloc] initWithRawConfig:sync_config];
+  if (!self.config.sync_config) {
+    return nil;
+  }
+  realm::SyncConfig &sync_config = *self.config.sync_config;
+  return [[RLMSyncConfiguration alloc] initWithRawConfig:sync_config];
 }
 
 @end

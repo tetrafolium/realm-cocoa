@@ -53,7 +53,7 @@
 
 @implementation IndexedStringObject
 + (NSArray *)indexedProperties {
-	return @[@"stringCol"];
+  return @[ @"stringCol" ];
 }
 @end
 
@@ -65,26 +65,28 @@
 
 @implementation RequiredPropertiesObject
 + (NSArray *)requiredProperties {
-	return @[@"stringCol", @"binaryCol"];
+  return @[ @"stringCol", @"binaryCol" ];
 }
 @end
 
 @implementation IgnoredURLObject
 + (NSArray *)ignoredProperties {
-	return @[@"url"];
+  return @[ @"url" ];
 }
 @end
 
 #pragma mark AllTypesObject
 
 @implementation AllTypesObject
-+ (NSDictionary *)linkingObjectsProperties
-{
-	return @{ @"linkingObjectsCol": [RLMPropertyDescriptor descriptorWithClass:LinkToAllTypesObject.class propertyName:@"allTypesCol"] };
++ (NSDictionary *)linkingObjectsProperties {
+  return @{
+    @"linkingObjectsCol" :
+        [RLMPropertyDescriptor descriptorWithClass:LinkToAllTypesObject.class
+                                      propertyName:@"allTypesCol"]
+  };
 }
-+ (NSArray *)requiredProperties
-{
-	return @[@"stringCol", @"dateCol", @"binaryCol"];
++ (NSArray *)requiredProperties {
+  return @[ @"stringCol", @"dateCol", @"binaryCol" ];
 }
 @end
 
@@ -98,7 +100,10 @@
 @end
 @implementation AllPrimitiveArrays
 + (NSArray *)requiredProperties {
-	return @[@"intObj", @"floatObj", @"doubleObj", @"boolObj", @"stringObj", @"dateObj", @"dataObj"];
+  return @[
+    @"intObj", @"floatObj", @"doubleObj", @"boolObj", @"stringObj", @"dateObj",
+    @"dataObj"
+  ];
 }
 @end
 @implementation AllOptionalPrimitiveArrays
@@ -106,10 +111,10 @@
 
 @implementation AllOptionalTypesPK
 + (NSString *)primaryKey {
-	return @"pk";
+  return @"pk";
 }
 + (NSDictionary *)defaultPropertyValues {
-	return @{@"pk": NSUUID.UUID.UUIDString};
+  return @{@"pk" : NSUUID.UUID.UUIDString};
 }
 @end
 
@@ -128,7 +133,7 @@
 
 @implementation PrimaryEmployeeObject
 + (NSString *)primaryKey {
-	return @"name";
+  return @"name";
 }
 @end
 
@@ -137,7 +142,7 @@
 
 @implementation PrimaryCompanyObject
 + (NSString *)primaryKey {
-	return @"name";
+  return @"name";
 }
 @end
 
@@ -154,9 +159,11 @@
 @class OwnerObject;
 
 @implementation DogObject
-+ (NSDictionary *)linkingObjectsProperties
-{
-	return @{ @"owners": [RLMPropertyDescriptor descriptorWithClass:OwnerObject.class propertyName:@"dog"] };
++ (NSDictionary *)linkingObjectsProperties {
+  return @{
+    @"owners" : [RLMPropertyDescriptor descriptorWithClass:OwnerObject.class
+                                              propertyName:@"dog"]
+  };
 }
 @end
 
@@ -164,9 +171,8 @@
 
 @implementation OwnerObject
 
-- (BOOL)isEqual:(id)other
-{
-	return [self isEqualToObject:other];
+- (BOOL)isEqual:(id)other {
+  return [self isEqualToObject:other];
 }
 
 @end
@@ -215,47 +221,46 @@
 
 @implementation PrimaryStringObject
 + (NSString *)primaryKey {
-	return @"stringCol";
+  return @"stringCol";
 }
 + (NSArray *)requiredProperties {
-	return @[@"stringCol"];
+  return @[ @"stringCol" ];
 }
 @end
 
 @implementation PrimaryNullableStringObject
 + (NSString *)primaryKey {
-	return @"stringCol";
+  return @"stringCol";
 }
 @end
 
 @implementation PrimaryIntObject
 + (NSString *)primaryKey {
-	return @"intCol";
+  return @"intCol";
 }
 @end
 
 @implementation PrimaryInt64Object
 + (NSString *)primaryKey {
-	return @"int64Col";
+  return @"int64Col";
 }
 @end
 
 @implementation PrimaryNullableIntObject
 + (NSString *)primaryKey {
-	return @"optIntCol";
+  return @"optIntCol";
 }
 @end
-
 
 #pragma mark ReadOnlyPropertyObject
 
 @interface ReadOnlyPropertyObject ()
-@property (readwrite) int readOnlyPropertyMadeReadWriteInClassExtension;
+@property(readwrite) int readOnlyPropertyMadeReadWriteInClassExtension;
 @end
 
 @implementation ReadOnlyPropertyObject
 - (NSNumber *)readOnlyUnsupportedProperty {
-	return nil;
+  return nil;
 }
 @end
 
@@ -269,20 +274,18 @@
 
 @implementation NumberDefaultsObject
 + (NSDictionary *)defaultPropertyValues {
-	return @{@"intObj" :
-	         @1,
-	         @"floatObj" :
-	         @2.2f,
-	         @"doubleObj" :
-	         @3.3,
-	         @"boolObj" :
-	         @NO};
+  return @{
+    @"intObj" : @1,
+    @"floatObj" : @2.2f,
+    @"doubleObj" : @3.3,
+    @"boolObj" : @NO
+  };
 }
 @end
 
 @implementation RequiredNumberObject
 + (NSArray *)requiredProperties {
-	return @[@"intObj", @"floatObj", @"doubleObj", @"boolObj"];
+  return @[ @"intObj", @"floatObj", @"doubleObj", @"boolObj" ];
 }
 @end
 
@@ -291,11 +294,11 @@
 @implementation CustomInitializerObject
 
 - (instancetype)init {
-	self = [super init];
-	if (self) {
-		self.stringCol = @"test";
-	}
-	return self;
+  self = [super init];
+  if (self) {
+    self.stringCol = @"test";
+  }
+  return self;
 }
 
 @end
@@ -309,92 +312,87 @@
 
 @implementation PersonObject
 
-+ (NSDictionary *)linkingObjectsProperties
-{
-	return @{ @"parents": [RLMPropertyDescriptor descriptorWithClass:PersonObject.class propertyName:@"children"] };
++ (NSDictionary *)linkingObjectsProperties {
+  return @{
+    @"parents" : [RLMPropertyDescriptor descriptorWithClass:PersonObject.class
+                                               propertyName:@"children"]
+  };
 }
 
-- (BOOL)isEqual:(id)other
-{
-	if (![other isKindOfClass:[PersonObject class]]) {
-		return NO;
-	}
+- (BOOL)isEqual:(id)other {
+  if (![other isKindOfClass:[PersonObject class]]) {
+    return NO;
+  }
 
-	PersonObject *otherPerson = other;
-	return [self.name isEqual:otherPerson.name] && self.age == otherPerson.age && [self.children isEqual:otherPerson.children];
+  PersonObject *otherPerson = other;
+  return [self.name isEqual:otherPerson.name] && self.age == otherPerson.age &&
+         [self.children isEqual:otherPerson.children];
 }
 
 @end
 
 @implementation RenamedProperties1
 + (NSString *)_realmObjectName {
-	return @"Renamed Properties";
+  return @"Renamed Properties";
 }
 + (NSDictionary *)_realmColumnNames {
-	return @{@"propA":
-	         @"prop 1",
-	         @"propB":
-	         @"prop 2"};
+  return @{@"propA" : @"prop 1", @"propB" : @"prop 2"};
 }
 + (NSDictionary *)linkingObjectsProperties {
-	return @{@"linking1":
-	         [RLMPropertyDescriptor descriptorWithClass:LinkToRenamedProperties1.class propertyName:@"linkA"],
-	         @"linking2":
-	         [RLMPropertyDescriptor descriptorWithClass:LinkToRenamedProperties2.class propertyName:@"linkD"]};
+  return @{
+    @"linking1" : [RLMPropertyDescriptor
+        descriptorWithClass:LinkToRenamedProperties1.class
+               propertyName:@"linkA"],
+    @"linking2" : [RLMPropertyDescriptor
+        descriptorWithClass:LinkToRenamedProperties2.class
+               propertyName:@"linkD"]
+  };
 }
 @end
 
 @implementation RenamedProperties2
 + (NSString *)_realmObjectName {
-	return @"Renamed Properties";
+  return @"Renamed Properties";
 }
 + (NSDictionary *)_realmColumnNames {
-	return @{@"propC":
-	         @"prop 1",
-	         @"propD":
-	         @"prop 2"};
+  return @{@"propC" : @"prop 1", @"propD" : @"prop 2"};
 }
 + (NSDictionary *)linkingObjectsProperties {
-	return @{@"linking1":
-	         [RLMPropertyDescriptor descriptorWithClass:LinkToRenamedProperties1.class propertyName:@"linkA"],
-	         @"linking2":
-	         [RLMPropertyDescriptor descriptorWithClass:LinkToRenamedProperties2.class propertyName:@"linkD"]};
+  return @{
+    @"linking1" : [RLMPropertyDescriptor
+        descriptorWithClass:LinkToRenamedProperties1.class
+               propertyName:@"linkA"],
+    @"linking2" : [RLMPropertyDescriptor
+        descriptorWithClass:LinkToRenamedProperties2.class
+               propertyName:@"linkD"]
+  };
 }
 @end
 
 @implementation LinkToRenamedProperties1
 + (NSString *)_realmObjectName {
-	return @"Link To Renamed Properties";
+  return @"Link To Renamed Properties";
 }
 + (NSDictionary *)_realmColumnNames {
-	return @{@"linkA":
-	         @"Link A",
-	         @"linkB":
-	         @"Link B"};
+  return @{@"linkA" : @"Link A", @"linkB" : @"Link B"};
 }
 @end
 
 @implementation LinkToRenamedProperties2
 + (NSString *)_realmObjectName {
-	return @"Link To Renamed Properties";
+  return @"Link To Renamed Properties";
 }
 + (NSDictionary *)_realmColumnNames {
-	return @{@"linkC":
-	         @"Link A",
-	         @"linkD":
-	         @"Link B"};
+  return @{@"linkC" : @"Link A", @"linkD" : @"Link B"};
 }
 @end
 
 @implementation RenamedPrimaryKey
 + (NSString *)primaryKey {
-	return @"pk";
+  return @"pk";
 }
 + (NSDictionary *)_realmColumnNames {
-	return @{@"pk":
-	         @"Primary Key",
-	         @"value":
-	         @"Value"};
+  return @{@"pk" : @"Primary Key", @"value" : @"Value"};
 }
 @end
 
@@ -402,7 +400,7 @@
 
 @implementation FakeObject
 + (bool)_realmIgnoreClass {
-	return true;
+  return true;
 }
 @end
 
@@ -411,11 +409,11 @@
 @implementation ComputedPropertyNotExplicitlyIgnoredObject
 
 - (NSURL *)URL {
-	return [NSURL URLWithString:self._URLBacking];
+  return [NSURL URLWithString:self._URLBacking];
 }
 
 - (void)setURL:(NSURL *)URL {
-	self._URLBacking = URL.absoluteString;
+  self._URLBacking = URL.absoluteString;
 }
 
 @end

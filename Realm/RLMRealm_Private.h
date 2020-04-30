@@ -25,22 +25,22 @@ NS_ASSUME_NONNULL_BEGIN
 // Disable syncing files to disk. Cannot be re-enabled. Use only for tests.
 FOUNDATION_EXTERN void RLMDisableSyncToDisk(void);
 
-FOUNDATION_EXTERN NSData * _Nullable RLMRealmValidatedEncryptionKey(NSData *key);
+FOUNDATION_EXTERN NSData *_Nullable RLMRealmValidatedEncryptionKey(NSData *key);
 
 FOUNDATION_EXTERN RLMSyncSubscription *RLMCastToSyncSubscription(id obj);
 
 // Set the queue used for async open. For testing purposes only.
 FOUNDATION_EXTERN void RLMSetAsyncOpenQueue(dispatch_queue_t queue);
 
-// Translate an in-flight exception resulting from an operation on a SharedGroup to
-// an NSError or NSException (if error is nil)
+// Translate an in-flight exception resulting from an operation on a SharedGroup
+// to an NSError or NSException (if error is nil)
 void RLMRealmTranslateException(NSError **error);
 
 // RLMRealm private members
 @interface RLMRealm ()
 
-@property (nonatomic, readonly) BOOL dynamic;
-@property (nonatomic, readwrite) RLMSchema *schema;
+@property(nonatomic, readonly) BOOL dynamic;
+@property(nonatomic, readwrite) RLMSchema *schema;
 
 + (void)resetRealmState;
 

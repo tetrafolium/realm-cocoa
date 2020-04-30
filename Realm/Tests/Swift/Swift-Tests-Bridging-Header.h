@@ -16,6 +16,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
-#import "RLMTestObjects.h"
 #import "RLMMultiProcessTestCase.h"
+#import "RLMTestObjects.h"
 #import "TestUtils.h"

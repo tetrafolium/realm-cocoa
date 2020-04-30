@@ -16,6 +16,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
-#import "TestUtils.h"
 #import "RLMAssertions.h"
 #import "RLMTestCase.h"
+#import "TestUtils.h"

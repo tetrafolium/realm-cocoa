@@ -23,57 +23,68 @@
 
 @implementation EnumeratorTests
 
-- (void)testEnum
-{
-	RLMRealm *realm = [RLMRealm defaultRealm];
+- (void)testEnum {
+  RLMRealm *realm = [RLMRealm defaultRealm];
 
-	RLMResults *emptyPeople = [EmployeeObject allObjects];
+  RLMResults *emptyPeople = [EmployeeObject allObjects];
 
-	// Enum for zero rows added
-	for (EmployeeObject *row in emptyPeople) {
-		XCTFail(@"No objects should have been added %@", row);
-	}
+  // Enum for zero rows added
+  for (EmployeeObject *row in emptyPeople) {
+    XCTFail(@"No objects should have been added %@", row);
+  }
 
-	NSArray *rowsArray = @[@{@"name": @"John", @"age": @20, @"hired": @YES},
-	                       @{@"name": @"Mary", @"age": @21, @"hired": @NO},
-	                       @{@"name": @"Lars", @"age": @21, @"hired": @YES},
-	                       @{@"name": @"Phil", @"age": @43, @"hired": @NO},
-	                       @{@"name": @"Anni", @"age": @54, @"hired": @YES}];
+  NSArray *rowsArray = @[
+    @{@"name" : @"John", @"age" : @20, @"hired" : @YES},
+    @{@"name" : @"Mary", @"age" : @21, @"hired" : @NO},
+    @{@"name" : @"Lars", @"age" : @21, @"hired" : @YES},
+    @{@"name" : @"Phil", @"age" : @43, @"hired" : @NO},
+    @{@"name" : @"Anni", @"age" : @54, @"hired" : @YES}
+  ];
 
+  // Add objects
+  [realm beginWriteTransaction];
+  for (NSArray *rowArray in rowsArray) {
+    [EmployeeObject createInRealm:realm withValue:rowArray];
+  }
+  [realm commitWriteTransaction];
 
-	// Add objects
-	[realm beginWriteTransaction];
-	for (NSArray *rowArray in rowsArray) {
-	        [EmployeeObject createInRealm:realm withValue:rowArray];
-	}
-	[realm commitWriteTransaction];
+  // Get all objects
+  RLMResults *people = [EmployeeObject allObjects];
 
-	// Get all objects
-	RLMResults *people = [EmployeeObject allObjects];
+  // Iterate using for...in
+  NSUInteger index = 0;
+  for (EmployeeObject *row in people) {
+    XCTAssertEqualObjects(
+        row.name, rowsArray[index][@"name"],
+        @"Name in iteration should be equal to what was set.");
+    XCTAssertEqualObjects(@(row.age), rowsArray[index][@"age"],
+                          @"Age in iteration should be equal to what was set.");
+    XCTAssertEqualObjects(
+        @(row.hired), rowsArray[index][@"hired"],
+        @"Hired in iteration should be equal to what was set.");
+    index++;
+  }
 
-	// Iterate using for...in
-	NSUInteger index = 0;
-	for (EmployeeObject *row in people) {
-	        XCTAssertEqualObjects(row.name, rowsArray[index][@"name"], @"Name in iteration should be equal to what was set.");
-	        XCTAssertEqualObjects(@(row.age), rowsArray[index][@"age"], @"Age in iteration should be equal to what was set.");
-	        XCTAssertEqualObjects(@(row.hired), rowsArray[index][@"hired"], @"Hired in iteration should be equal to what was set.");
-	        index++;
-	}
+  NSPredicate *pred =
+      [NSPredicate predicateWithFormat:@"hired = YES && age BETWEEN {20, 30}"];
+  NSArray *filteredArray = [rowsArray filteredArrayUsingPredicate:pred];
 
-	NSPredicate *pred = [NSPredicate predicateWithFormat:@"hired = YES && age BETWEEN {20, 30}"];
-	NSArray *filteredArray = [rowsArray filteredArrayUsingPredicate:pred];
+  // Do a query, and get all matches as RLMResults
+  RLMResults *res = [EmployeeObject objectsWithPredicate:pred];
 
-	// Do a query, and get all matches as RLMResults
-	RLMResults *res = [EmployeeObject objectsWithPredicate:pred];
-
-	// Iterate over the resulting RLMResults
-	index = 0;
-	for (EmployeeObject *row in res) {
-	        XCTAssertEqualObjects(row.name, filteredArray[index][@"name"], @"Name in iteration should be equal to what was set.");
-	        XCTAssertEqualObjects(@(row.age), filteredArray[index][@"age"], @"Age in iteration should be equal to what was set.");
-	        XCTAssertEqualObjects(@(row.hired), filteredArray[index][@"hired"], @"Hired in iteration should be equal to what was set.");
-	        index++;
-	}
+  // Iterate over the resulting RLMResults
+  index = 0;
+  for (EmployeeObject *row in res) {
+    XCTAssertEqualObjects(
+        row.name, filteredArray[index][@"name"],
+        @"Name in iteration should be equal to what was set.");
+    XCTAssertEqualObjects(@(row.age), filteredArray[index][@"age"],
+                          @"Age in iteration should be equal to what was set.");
+    XCTAssertEqualObjects(
+        @(row.hired), filteredArray[index][@"hired"],
+        @"Hired in iteration should be equal to what was set.");
+    index++;
+  }
 }
 
 @end

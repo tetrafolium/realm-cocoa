@@ -27,34 +27,42 @@
 
 void RLMCheckForUpdates() {
 #if TARGET_IPHONE_SIMULATOR
-	if (getenv("REALM_DISABLE_UPDATE_CHECKER") || RLMIsRunningInPlayground()) {
-		return;
-	}
+  if (getenv("REALM_DISABLE_UPDATE_CHECKER") || RLMIsRunningInPlayground()) {
+    return;
+  }
 
-	NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"alpha|beta|rc"
-	                              options:(NSRegularExpressionOptions)0
-	                              error:nil];
-	NSUInteger numberOfMatches = [regex numberOfMatchesInString:REALM_COCOA_VERSION
-	                              options:(NSMatchingOptions)0
-	                              range:NSMakeRange(0, REALM_COCOA_VERSION.length)];
+  NSRegularExpression *regex = [NSRegularExpression
+      regularExpressionWithPattern:@"alpha|beta|rc"
+                           options:(NSRegularExpressionOptions)0
+                             error:nil];
+  NSUInteger numberOfMatches = [regex
+      numberOfMatchesInString:REALM_COCOA_VERSION
+                      options:(NSMatchingOptions)0
+                        range:NSMakeRange(0, REALM_COCOA_VERSION.length)];
 
-	if (numberOfMatches > 0) {
-		// pre-release version, skip update checking
-		return;
-	}
+  if (numberOfMatches > 0) {
+    // pre-release version, skip update checking
+    return;
+  }
 
-	auto handler = ^(NSData *data, NSURLResponse *response, NSError *error) {
-		if (error || ((NSHTTPURLResponse *)response).statusCode != 200) {
-			return;
-		}
+  auto handler = ^(NSData *data, NSURLResponse *response, NSError *error) {
+    if (error || ((NSHTTPURLResponse *)response).statusCode != 200) {
+      return;
+    }
 
-		NSString *latestVersion = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-		if (![REALM_COCOA_VERSION isEqualToString:latestVersion]) {
-			NSLog(@"Version %@ of Realm is now available: https://github.com/realm/realm-cocoa/blob/v%@/CHANGELOG.md", latestVersion, latestVersion);
-		}
-	};
+    NSString *latestVersion =
+        [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    if (![REALM_COCOA_VERSION isEqualToString:latestVersion]) {
+      NSLog(@"Version %@ of Realm is now available: "
+            @"https://github.com/realm/realm-cocoa/blob/v%@/CHANGELOG.md",
+            latestVersion, latestVersion);
+    }
+  };
 
-	NSString *url = [NSString stringWithFormat:@"https://static.realm.io/update/cocoa?%@", REALM_COCOA_VERSION];
-	[[NSURLSession.sharedSession dataTaskWithURL:[NSURL URLWithString:url] completionHandler:handler] resume];
+  NSString *url =
+      [NSString stringWithFormat:@"https://static.realm.io/update/cocoa?%@",
+                                 REALM_COCOA_VERSION];
+  [[NSURLSession.sharedSession dataTaskWithURL:[NSURL URLWithString:url]
+                             completionHandler:handler] resume];
 #endif
 }

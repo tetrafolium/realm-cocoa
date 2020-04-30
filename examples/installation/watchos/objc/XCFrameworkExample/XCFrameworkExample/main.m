@@ -19,11 +19,9 @@
 #include <Realm/Realm.h>
 
 @interface Model : RLMObject
-@property (nonatomic) int value;
+@property(nonatomic) int value;
 @end
 @implementation Model
 @end
 
-int main(int argc, char * argv[]) {
-	return 0;
-}
+int main(int argc, char *argv[]) { return 0; }

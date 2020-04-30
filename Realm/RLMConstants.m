@@ -18,19 +18,22 @@
 
 #import <Realm/RLMConstants.h>
 
-RLMNotification const RLMRealmRefreshRequiredNotification = @"RLMRealmRefreshRequiredNotification";
-RLMNotification const RLMRealmDidChangeNotification = @"RLMRealmDidChangeNotification";
+RLMNotification const RLMRealmRefreshRequiredNotification =
+    @"RLMRealmRefreshRequiredNotification";
+RLMNotification const RLMRealmDidChangeNotification =
+    @"RLMRealmDidChangeNotification";
 
-NSString * const RLMErrorDomain = @"io.realm";
+NSString *const RLMErrorDomain = @"io.realm";
 
-NSString * const RLMUnknownSystemErrorDomain = @"io.realm.unknown";
+NSString *const RLMUnknownSystemErrorDomain = @"io.realm.unknown";
 
-NSString * const RLMExceptionName = @"RLMException";
+NSString *const RLMExceptionName = @"RLMException";
 
-NSString * const RLMRealmVersionKey = @"RLMRealmVersion";
+NSString *const RLMRealmVersionKey = @"RLMRealmVersion";
 
-NSString * const RLMRealmCoreVersionKey = @"RLMRealmCoreVersion";
+NSString *const RLMRealmCoreVersionKey = @"RLMRealmCoreVersion";
 
-NSString * const RLMInvalidatedKey = @"invalidated";
+NSString *const RLMInvalidatedKey = @"invalidated";
 
-NSString * const RLMBackupRealmConfigurationErrorKey = @"RLMBackupRealmConfiguration";
+NSString *const RLMBackupRealmConfigurationErrorKey =
+    @"RLMBackupRealmConfiguration";

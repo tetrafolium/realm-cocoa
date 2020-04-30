@@ -11,24 +11,25 @@
 #if TARGET_OS_WATCH
 
 // watchOS doesn't support testing at this time.
-int main(int argc, const char *argv[]) {
-}
+int main(int argc, const char *argv[]) {}
 
 #elif TARGET_OS_IPHONE || TARGET_OS_TV || TARGET_OS_MACCATALYST
 
 #import <UIKit/UIKit.h>
 
 @interface RLMAppDelegate : UIResponder <UIApplicationDelegate>
-@property (strong, nonatomic) UIWindow *window;
+@property(strong, nonatomic) UIWindow *window;
 @end
 
 @implementation RLMAppDelegate
 @end
 
 int main(int argc, char *argv[]) {
-	@autoreleasepool {
-		return UIApplicationMain(argc, argv, NSStringFromClass([UIApplication class]), NSStringFromClass([RLMAppDelegate class]));
-	}
+  @autoreleasepool {
+    return UIApplicationMain(argc, argv,
+                             NSStringFromClass([UIApplication class]),
+                             NSStringFromClass([RLMAppDelegate class]));
+  }
 }
 
 #else
@@ -36,9 +37,9 @@ int main(int argc, char *argv[]) {
 #import <Cocoa/Cocoa.h>
 
 int main(int argc, const char *argv[]) {
-	@autoreleasepool {
-		return NSApplicationMain(argc, argv);
-	}
+  @autoreleasepool {
+    return NSApplicationMain(argc, argv);
+  }
 }
 
 #endif

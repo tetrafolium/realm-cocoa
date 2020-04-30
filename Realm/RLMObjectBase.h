@@ -27,13 +27,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// :nodoc:
 @interface RLMObjectBase : NSObject
 
-@property (nonatomic, readonly, getter = isInvalidated) BOOL invalidated;
+@property(nonatomic, readonly, getter=isInvalidated) BOOL invalidated;
 
 - (instancetype)init NS_DESIGNATED_INITIALIZER;
 
 + (NSString *)className;
 
-// Returns whether the class is included in the default set of classes managed by a Realm.
+// Returns whether the class is included in the default set of classes managed
+// by a Realm.
 + (BOOL)shouldIncludeInDefaultSchema;
 
 + (nullable NSString *)_realmObjectName;

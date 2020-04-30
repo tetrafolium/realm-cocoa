@@ -20,8 +20,8 @@
 
 @interface Person : RLMObject
 // Add properties here to define the model
-@property NSString  *fullName;
-@property NSDate    *birthdate;
+@property NSString *fullName;
+@property NSDate *birthdate;
 @property NSInteger numberOfFriends;
 @end
 

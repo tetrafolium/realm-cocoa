@@ -23,18 +23,18 @@
 @dynamic path;
 
 - (UIBezierPath *)path {
-	UIBezierPath *path = [UIBezierPath bezierPath];
-	path.lineWidth = 4.0f;
-	NSUInteger index = 0;
-	for (DrawPoint *point in self.points) {
-		if (index == 0) {
-			[path moveToPoint:point.cgPoint];
-		} else {
-			[path addLineToPoint:point.cgPoint];
-		}
-		index++;
-	}
-	return path;
+  UIBezierPath *path = [UIBezierPath bezierPath];
+  path.lineWidth = 4.0f;
+  NSUInteger index = 0;
+  for (DrawPoint *point in self.points) {
+    if (index == 0) {
+      [path moveToPoint:point.cgPoint];
+    } else {
+      [path addLineToPoint:point.cgPoint];
+    }
+    index++;
+  }
+  return path;
 }
 
 @end

@@ -118,13 +118,13 @@ RLM_ARRAY_TYPE(IntObject)
 @property int intCol;
 @property float floatCol;
 @property double doubleCol;
-@property NSString     *stringCol;
-@property NSData       *binaryCol;
-@property NSDate       *dateCol;
+@property NSString *stringCol;
+@property NSData *binaryCol;
+@property NSDate *dateCol;
 @property bool cBoolCol;
 @property int64_t longCol;
 @property StringObject *objectCol;
-@property (readonly) RLMLinkingObjects *linkingObjectsCol;
+@property(readonly) RLMLinkingObjects *linkingObjectsCol;
 
 @end
 
@@ -135,7 +135,7 @@ RLM_ARRAY_TYPE(AllTypesObject)
 @end
 
 @interface ArrayOfAllTypesObject : RLMObject
-@property RLM_GENERIC_ARRAY(AllTypesObject) *array;
+@property RLM_GENERIC_ARRAY(AllTypesObject) * array;
 @end
 
 @interface AllOptionalTypes : RLMObject
@@ -200,7 +200,7 @@ RLM_ARRAY_TYPE(EmployeeObject)
 @interface CompanyObject : RLMObject
 
 @property NSString *name;
-@property RLM_GENERIC_ARRAY(EmployeeObject) *employees;
+@property RLM_GENERIC_ARRAY(EmployeeObject) * employees;
 
 @end
 
@@ -217,15 +217,14 @@ RLM_ARRAY_TYPE(EmployeeObject)
 @interface DogObject : RLMObject
 @property NSString *dogName;
 @property int age;
-@property (readonly) RLMLinkingObjects *owners;
+@property(readonly) RLMLinkingObjects *owners;
 @end
 
 RLM_ARRAY_TYPE(DogObject)
 
 @interface DogArrayObject : RLMObject
-@property RLM_GENERIC_ARRAY(DogObject) *dogs;
+@property RLM_GENERIC_ARRAY(DogObject) * dogs;
 @end
-
 
 #pragma mark OwnerObject
 
@@ -243,8 +242,8 @@ RLM_ARRAY_TYPE(DogObject)
 
 @interface CustomAccessorsObject : RLMObject
 
-@property (getter = getThatName) NSString *name;
-@property (setter = setTheInt:)  int age;
+@property(getter=getThatName) NSString *name;
+@property(setter=setTheInt:) int age;
 
 @end
 
@@ -276,7 +275,7 @@ RLM_ARRAY_TYPE(CircleObject);
 #pragma mark CircleArrayObject
 
 @interface CircleArrayObject : RLMObject
-@property RLM_GENERIC_ARRAY(CircleObject) *circles;
+@property RLM_GENERIC_ARRAY(CircleObject) * circles;
 @end
 
 #pragma mark ArrayPropertyObject
@@ -284,8 +283,8 @@ RLM_ARRAY_TYPE(CircleObject);
 @interface ArrayPropertyObject : RLMObject
 
 @property NSString *name;
-@property RLM_GENERIC_ARRAY(StringObject) *array;
-@property RLM_GENERIC_ARRAY(IntObject) *intArray;
+@property RLM_GENERIC_ARRAY(StringObject) * array;
+@property RLM_GENERIC_ARRAY(IntObject) * intArray;
 
 @end
 
@@ -342,9 +341,9 @@ RLM_ARRAY_TYPE(PrimaryIntObject);
 @end
 
 @interface ReadOnlyPropertyObject : RLMObject
-@property (readonly) NSNumber *readOnlyUnsupportedProperty;
-@property (readonly) int readOnlySupportedProperty;
-@property (readonly) int readOnlyPropertyMadeReadWriteInClassExtension;
+@property(readonly) NSNumber *readOnlyUnsupportedProperty;
+@property(readonly) int readOnlySupportedProperty;
+@property(readonly) int readOnlyPropertyMadeReadWriteInClassExtension;
 @end
 
 #pragma mark IntegerArrayPropertyObject
@@ -352,7 +351,7 @@ RLM_ARRAY_TYPE(PrimaryIntObject);
 @interface IntegerArrayPropertyObject : RLMObject
 
 @property NSInteger number;
-@property RLM_GENERIC_ARRAY(IntObject) *array;
+@property RLM_GENERIC_ARRAY(IntObject) * array;
 
 @end
 
@@ -393,7 +392,7 @@ RLM_ARRAY_TYPE(PersonObject);
 @property NSString *name;
 @property NSInteger age;
 @property RLMArray<PersonObject> *children;
-@property (readonly) RLMLinkingObjects *parents;
+@property(readonly) RLMLinkingObjects *parents;
 @end
 
 @interface PrimaryEmployeeObject : EmployeeObject
@@ -406,14 +405,14 @@ RLM_ARRAY_TYPE(PrimaryEmployeeObject);
 
 @interface PrimaryCompanyObject : RLMObject
 @property NSString *name;
-@property RLM_GENERIC_ARRAY(PrimaryEmployeeObject) *employees;
+@property RLM_GENERIC_ARRAY(PrimaryEmployeeObject) * employees;
 @property PrimaryEmployeeObject *intern;
 @property LinkToPrimaryEmployeeObject *wrappedIntern;
 @end
 RLM_ARRAY_TYPE(PrimaryCompanyObject);
 
 @interface ArrayOfPrimaryCompanies : RLMObject
-@property RLM_GENERIC_ARRAY(PrimaryCompanyObject) *companies;
+@property RLM_GENERIC_ARRAY(PrimaryCompanyObject) * companies;
 @end
 
 #pragma mark ComputedPropertyNotExplicitlyIgnoredObject
@@ -424,37 +423,37 @@ RLM_ARRAY_TYPE(PrimaryCompanyObject);
 @end
 
 @interface RenamedProperties1 : RLMObject
-@property (nonatomic) int propA;
-@property (nonatomic) NSString *propB;
-@property (readonly, nonatomic) RLMLinkingObjects *linking1;
-@property (readonly, nonatomic) RLMLinkingObjects *linking2;
+@property(nonatomic) int propA;
+@property(nonatomic) NSString *propB;
+@property(readonly, nonatomic) RLMLinkingObjects *linking1;
+@property(readonly, nonatomic) RLMLinkingObjects *linking2;
 @end
 
 @interface RenamedProperties2 : RLMObject
-@property (nonatomic) int propC;
-@property (nonatomic) NSString *propD;
-@property (readonly, nonatomic) RLMLinkingObjects *linking1;
-@property (readonly, nonatomic) RLMLinkingObjects *linking2;
+@property(nonatomic) int propC;
+@property(nonatomic) NSString *propD;
+@property(readonly, nonatomic) RLMLinkingObjects *linking1;
+@property(readonly, nonatomic) RLMLinkingObjects *linking2;
 @end
 
 RLM_ARRAY_TYPE(RenamedProperties1)
 RLM_ARRAY_TYPE(RenamedProperties2)
 
 @interface LinkToRenamedProperties1 : RLMObject
-@property (nonatomic) RenamedProperties1 *linkA;
-@property (nonatomic) RenamedProperties2 *linkB;
-@property (nonatomic)RLM_GENERIC_ARRAY(RenamedProperties1) *array;
+@property(nonatomic) RenamedProperties1 *linkA;
+@property(nonatomic) RenamedProperties2 *linkB;
+@property(nonatomic) RLM_GENERIC_ARRAY(RenamedProperties1) * array;
 @end
 
 @interface LinkToRenamedProperties2 : RLMObject
-@property (nonatomic) RenamedProperties2 *linkC;
-@property (nonatomic) RenamedProperties1 *linkD;
-@property (nonatomic)RLM_GENERIC_ARRAY(RenamedProperties2) *array;
+@property(nonatomic) RenamedProperties2 *linkC;
+@property(nonatomic) RenamedProperties1 *linkD;
+@property(nonatomic) RLM_GENERIC_ARRAY(RenamedProperties2) * array;
 @end
 
 @interface RenamedPrimaryKey : RLMObject
-@property (nonatomic) int pk;
-@property (nonatomic) int value;
+@property(nonatomic) int pk;
+@property(nonatomic) int value;
 @end
 
 #pragma mark FakeObject

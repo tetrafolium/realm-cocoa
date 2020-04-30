@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (instancetype)schemaWithObjectClasses:(NSArray<Class> *)classes;
 
-@property (nonatomic, readwrite, copy) NSArray<RLMObjectSchema *> *objectSchema;
+@property(nonatomic, readwrite, copy) NSArray<RLMObjectSchema *> *objectSchema;
 
 // schema based on runtime objects
 + (instancetype)sharedSchema;

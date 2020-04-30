@@ -20,7 +20,7 @@
 #import "shared_realm.hpp"
 
 @interface RLMRealmConfiguration ()
-- (realm::Realm::Config&)config;
+- (realm::Realm::Config &)config;
 
-@property (nonatomic) realm::SchemaMode schemaMode;
+@property(nonatomic) realm::SchemaMode schemaMode;
 @end

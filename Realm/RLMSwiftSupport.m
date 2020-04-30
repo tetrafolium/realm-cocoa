@@ -21,11 +21,12 @@
 @implementation RLMSwiftSupport
 
 + (BOOL)isSwiftClassName:(NSString *)className {
-	return [className rangeOfString:@"."].location != NSNotFound;
+  return [className rangeOfString:@"."].location != NSNotFound;
 }
 
 + (NSString *)demangleClassName:(NSString *)className {
-	return [className substringFromIndex:[className rangeOfString:@"."].location + 1];
+  return [className
+      substringFromIndex:[className rangeOfString:@"."].location + 1];
 }
 
 @end

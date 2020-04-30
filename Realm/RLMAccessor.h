@@ -27,15 +27,22 @@ NS_ASSUME_NONNULL_BEGIN
 //
 
 // get accessor classes for an object class - generates classes if not cached
-Class RLMManagedAccessorClassForObjectClass(Class objectClass, RLMObjectSchema *schema, const char *name);
-Class RLMUnmanagedAccessorClassForObjectClass(Class objectClass, RLMObjectSchema *schema);
+Class RLMManagedAccessorClassForObjectClass(Class objectClass,
+                                            RLMObjectSchema *schema,
+                                            const char *name);
+Class RLMUnmanagedAccessorClassForObjectClass(Class objectClass,
+                                              RLMObjectSchema *schema);
 
 //
 // Dynamic getters/setters
 //
-FOUNDATION_EXTERN void RLMDynamicValidatedSet(RLMObjectBase *obj, NSString *propName, id __nullable val);
-FOUNDATION_EXTERN id __nullable RLMDynamicGet(RLMObjectBase *obj, RLMProperty *prop);
-FOUNDATION_EXTERN id __nullable RLMDynamicGetByName(RLMObjectBase *obj, NSString *propName);
+FOUNDATION_EXTERN void RLMDynamicValidatedSet(RLMObjectBase *obj,
+                                              NSString *propName,
+                                              id __nullable val);
+FOUNDATION_EXTERN id __nullable RLMDynamicGet(RLMObjectBase *obj,
+                                              RLMProperty *prop);
+FOUNDATION_EXTERN id __nullable RLMDynamicGetByName(RLMObjectBase *obj,
+                                                    NSString *propName);
 
 // by property/column
 void RLMDynamicSet(RLMObjectBase *obj, RLMProperty *prop, id val);
@@ -48,6 +55,7 @@ void RLMDynamicSet(RLMObjectBase *obj, RLMProperty *prop, id val);
 void RLMReplaceClassNameMethod(Class accessorClass, NSString *className);
 
 // Replace sharedSchema method for the given class
-void RLMReplaceSharedSchemaMethod(Class accessorClass, RLMObjectSchema * __nullable schema);
+void RLMReplaceSharedSchemaMethod(Class accessorClass,
+                                  RLMObjectSchema *__nullable schema);
 
 NS_ASSUME_NONNULL_END
