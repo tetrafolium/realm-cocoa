@@ -109,9 +109,9 @@
     XCTAssertNil([so valueForKey:@"stringCol"]);
     XCTAssertNil(so[@"stringCol"]);
 
-    [realm transactionWithBlock:^{
-        [realm addObject:so];
-        XCTAssertNil(so.stringCol);
+    [realm transactionWithBlock:^ {
+              [realm addObject:so];
+              XCTAssertNil(so.stringCol);
         XCTAssertNil([so valueForKey:@"stringCol"]);
         XCTAssertNil(so[@"stringCol"]);
     }];
@@ -122,16 +122,16 @@
     XCTAssertNil([so valueForKey:@"stringCol"]);
     XCTAssertNil(so[@"stringCol"]);
 
-    [realm transactionWithBlock:^{
-        so.stringCol = @"b";
-    }];
+    [realm transactionWithBlock:^ {
+              so.stringCol = @"b";
+          }];
     XCTAssertEqualObjects(so.stringCol, @"b");
     XCTAssertEqualObjects([so valueForKey:@"stringCol"], @"b");
     XCTAssertEqualObjects(so[@"stringCol"], @"b");
 
-    [realm transactionWithBlock:^{
-        so.stringCol = @"";
-    }];
+    [realm transactionWithBlock:^ {
+              so.stringCol = @"";
+          }];
     XCTAssertEqualObjects(so.stringCol, @"");
     XCTAssertEqualObjects([so valueForKey:@"stringCol"], @"");
     XCTAssertEqualObjects(so[@"stringCol"], @"");
@@ -156,9 +156,9 @@
     XCTAssertNil([bo valueForKey:@"binaryCol"]);
     XCTAssertNil(bo[@"binaryCol"]);
 
-    [realm transactionWithBlock:^{
-        [realm addObject:bo];
-        XCTAssertNil(bo.binaryCol);
+    [realm transactionWithBlock:^ {
+              [realm addObject:bo];
+              XCTAssertNil(bo.binaryCol);
         XCTAssertNil([bo valueForKey:@"binaryCol"]);
         XCTAssertNil(bo[@"binaryCol"]);
     }];
@@ -170,24 +170,24 @@
     XCTAssertNil(bo[@"binaryCol"]);
 
     NSData *bData = [@"b" dataUsingEncoding:NSUTF8StringEncoding];
-    [realm transactionWithBlock:^{
-        bo.binaryCol = bData;
-    }];
+    [realm transactionWithBlock:^ {
+              bo.binaryCol = bData;
+          }];
     XCTAssertEqualObjects(bo.binaryCol, bData);
     XCTAssertEqualObjects([bo valueForKey:@"binaryCol"], bData);
     XCTAssertEqualObjects(bo[@"binaryCol"], bData);
 
     NSData *emptyData = [NSData data];
-    [realm transactionWithBlock:^{
-        bo.binaryCol = emptyData;
-    }];
+    [realm transactionWithBlock:^ {
+              bo.binaryCol = emptyData;
+          }];
     XCTAssertEqualObjects(bo.binaryCol, emptyData);
     XCTAssertEqualObjects([bo valueForKey:@"binaryCol"], emptyData);
     XCTAssertEqualObjects(bo[@"binaryCol"], emptyData);
 }
 
 - (void)testOptionalNumberProperties {
-    void (^assertNullProperties)(NumberObject *) = ^(NumberObject *no){
+    void (^assertNullProperties)(NumberObject *) = ^(NumberObject *no) {
         XCTAssertNil(no.intObj);
         XCTAssertNil(no.doubleObj);
         XCTAssertNil(no.floatObj);
@@ -204,7 +204,7 @@
         XCTAssertNil(no[@"boolObj"]);
     };
 
-    void (^assertNonNullProperties)(NumberObject *) = ^(NumberObject *no){
+    void (^assertNonNullProperties)(NumberObject *) = ^(NumberObject *no) {
         XCTAssertEqualObjects(no.intObj, @1);
         XCTAssertEqualObjects(no.doubleObj, @1.1);
         XCTAssertEqualObjects(no.floatObj, @2.2f);
@@ -252,20 +252,20 @@
     no.floatObj = nil;
     no.boolObj = nil;
 
-    [realm transactionWithBlock:^{
-        [realm addObject:no];
-        assertNullProperties(no);
+    [realm transactionWithBlock:^ {
+              [realm addObject:no];
+              assertNullProperties(no);
     }];
 
     no = [NumberObject allObjectsInRealm:realm].firstObject;
     assertNullProperties(no);
 
-    [realm transactionWithBlock:^{
-        no.intObj = @1;
-        no.doubleObj = @1.1;
-        no.floatObj = @2.2f;
-        no.boolObj = @YES;
-    }];
+    [realm transactionWithBlock:^ {
+              no.intObj = @1;
+              no.doubleObj = @1.1;
+              no.floatObj = @2.2f;
+              no.boolObj = @YES;
+          }];
     assertNonNullProperties(no);
 }
 
@@ -382,7 +382,7 @@
 }
 
 - (void)testRenamedProperties {
-    RenamedProperties1 *obj1 = [[RenamedProperties1 alloc] initWithValue:@{@"propA": @5, @"propB": @"a"}];
+    RenamedProperties1 *obj1 = [[RenamedProperties1 alloc] initWithValue:@ {@"propA": @5, @"propB": @"a"}];
     XCTAssertEqual(obj1.propA, 5);
     XCTAssertEqualObjects(obj1.propB, @"a");
     XCTAssertEqualObjects(obj1[@"propA"], @5);
@@ -400,7 +400,7 @@
     XCTAssertEqualObjects([obj1 valueForKey:@"propA"], @5);
     XCTAssertEqualObjects([obj1 valueForKey:@"propB"], @"a");
 
-    RenamedProperties2 *obj2 = [RenamedProperties2 createInRealm:realm withValue:@{@"propC": @6, @"propD": @"b"}];
+    RenamedProperties2 *obj2 = [RenamedProperties2 createInRealm:realm withValue:@ {@"propC": @6, @"propD": @"b"}];
     XCTAssertEqual(obj2.propC, 6);
     XCTAssertEqualObjects(obj2.propD, @"b");
     XCTAssertEqualObjects(obj2[@"propC"], @6);
@@ -451,27 +451,38 @@
     RLMRealm *realm = [RLMRealm defaultRealm];
     __block AllTypesObject *obj;
     __block StringObject *stringObj;
-    NSDictionary *values = @{@"boolCol": @NO,
-                             @"intCol": @0,
-                             @"floatCol": @0,
-                             @"doubleCol": @0,
-                             @"stringCol": @"",
-                             @"binaryCol": NSData.data,
-                             @"dateCol": NSDate.date,
-                             @"cBoolCol": @NO,
-                             @"longCol": @0,
-                             @"objectCol": NSNull.null};
-    [realm transactionWithBlock:^{
-        obj = [AllTypesObject createInRealm:realm withValue:values];
+    NSDictionary *values = @ {@"boolCol":
+                              @NO,
+                              @"intCol":
+                              @0,
+                              @"floatCol":
+                              @0,
+                              @"doubleCol":
+                              @0,
+                              @"stringCol":
+                              @"",
+                              @"binaryCol":
+                              NSData.data,
+                              @"dateCol":
+                              NSDate.date,
+                              @"cBoolCol":
+                              @NO,
+                              @"longCol":
+                              @0,
+                              @"objectCol":
+                              NSNull.null
+                             };
+    [realm transactionWithBlock:^ {
+              obj = [AllTypesObject createInRealm:realm withValue:values];
         stringObj = [StringObject createInRealm:realm withValue:@[@""]];
     }];
     [realm beginWriteTransaction];
 
     NSArray<NSString *> *propertyNames = [obj.objectSchema.properties valueForKey:@"name"];
-    [self dispatchAsyncAndWait:^{
-        // Getters
-        for (NSString *prop in propertyNames) {
-            RLMAssertThrowsWithReasonMatching(obj[prop], @"thread");
+    [self dispatchAsyncAndWait:^ {
+             // Getters
+             for (NSString *prop in propertyNames) {
+                 RLMAssertThrowsWithReasonMatching(obj[prop], @"thread");
             RLMAssertThrowsWithReasonMatching([obj valueForKey:prop], @"thread");
         }
         RLMAssertThrowsWithReasonMatching(obj.boolCol, @"thread");
@@ -510,18 +521,29 @@
 - (void)testAllMethodsCheckForInvalidation {
     RLMRealm *realm = [RLMRealm defaultRealm];
     __block StringObject *stringObj;
-    NSDictionary *values = @{@"boolCol": @NO,
-                             @"intCol": @0,
-                             @"floatCol": @0,
-                             @"doubleCol": @0,
-                             @"stringCol": @"",
-                             @"binaryCol": NSData.data,
-                             @"dateCol": NSDate.date,
-                             @"cBoolCol": @NO,
-                             @"longCol": @0,
-                             @"objectCol": NSNull.null};
-    [realm transactionWithBlock:^{
-        [AllTypesObject createInRealm:realm withValue:values];
+    NSDictionary *values = @ {@"boolCol":
+                              @NO,
+                              @"intCol":
+                              @0,
+                              @"floatCol":
+                              @0,
+                              @"doubleCol":
+                              @0,
+                              @"stringCol":
+                              @"",
+                              @"binaryCol":
+                              NSData.data,
+                              @"dateCol":
+                              NSDate.date,
+                              @"cBoolCol":
+                              @NO,
+                              @"longCol":
+                              @0,
+                              @"objectCol":
+                              NSNull.null
+                             };
+    [realm transactionWithBlock:^ {
+              [AllTypesObject createInRealm:realm withValue:values];
         stringObj = [StringObject createInRealm:realm withValue:@[@""]];
     }];
 

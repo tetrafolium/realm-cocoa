@@ -67,13 +67,13 @@
         @autoreleasepool {
             RLMRealm *realm = RLMRealm.defaultRealm;
             [realm transactionWithBlock:^{
-                for (int i = 0; i < 1000; ++i) {
-                    [IntObject createInRealm:realm withValue:@[@(i)]];
-                }
-            }];
+                      for (int i = 0; i < 1000; ++i) {
+                          [IntObject createInRealm:realm withValue:@[@(i)]];
+                      }
+                  }];
             [realm transactionWithBlock:^{
-                [realm deleteAllObjects];
-            }];
+                      [realm deleteAllObjects];
+                  }];
         }
         RLMRunChildAndWait(); // runs the event loop
     } else {
@@ -83,7 +83,7 @@
         };
 
         RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
-        config.shouldCompactOnLaunch = ^BOOL(__unused NSUInteger totalBytes, __unused NSUInteger usedBytes){
+        config.shouldCompactOnLaunch = ^BOOL(__unused NSUInteger totalBytes, __unused NSUInteger usedBytes) {
             return YES;
         };
         unsigned long long sizeBefore = fileSize(config.fileURL.path);
@@ -107,7 +107,7 @@
         };
 
         RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
-        config.shouldCompactOnLaunch = ^BOOL(__unused NSUInteger totalBytes, __unused NSUInteger usedBytes){
+        config.shouldCompactOnLaunch = ^BOOL(__unused NSUInteger totalBytes, __unused NSUInteger usedBytes) {
             return YES;
         };
         unsigned long long sizeBefore = fileSize(config.fileURL.path);
@@ -132,7 +132,7 @@
         __block BOOL blockCalled = NO;
 
         RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
-        config.shouldCompactOnLaunch = ^BOOL(__unused NSUInteger totalBytes, __unused NSUInteger usedBytes){
+        config.shouldCompactOnLaunch = ^BOOL(__unused NSUInteger totalBytes, __unused NSUInteger usedBytes) {
             blockCalled = YES;
             return YES;
         };
@@ -185,9 +185,9 @@
     if (self.isParent) {
         // Wait on a different thread so that this thread doesn't get the chance
         // to autorefresh
-        [self dispatchAsyncAndWait:^{
-            RLMRunChildAndWait();
-        }];
+        [self dispatchAsyncAndWait:^ {
+                 RLMRunChildAndWait();
+             }];
 
         XCTAssertEqual(0U, [IntObject allObjectsInRealm:realm].count);
         [realm refresh];
@@ -205,9 +205,9 @@
     XCTAssertEqual(0U, [IntObject allObjectsInRealm:realm].count);
 
     if (self.isParent) {
-        [self waitForNotification:RLMRealmDidChangeNotification realm:realm block:^{
-            RLMRunChildAndWait();
-        }];
+        [self waitForNotification:RLMRealmDidChangeNotification realm:realm block:^ {
+                 RLMRunChildAndWait();
+             }];
         XCTAssertEqual(1U, [IntObject allObjectsInRealm:realm].count);
     }
     else {
@@ -220,8 +220,8 @@
 - (void)testBackgroundProcessDoesNotTriggerSpuriousNotifications {
     RLMRealm *realm = [RLMRealm defaultRealm];
     RLMNotificationToken *token = [realm addNotificationBlock:^(__unused RLMNotification notification, __unused RLMRealm *realm) {
-        XCTFail(@"Notification should not have been triggered");
-    }];
+              XCTFail(@"Notification should not have been triggered");
+          }];
 
     if (self.isParent) {
         RLMRunChildAndWait();
@@ -240,9 +240,9 @@
     XCTAssertEqual(0U, [IntObject allObjectsInRealm:realm].count);
 
     if (self.isParent) {
-        [self waitForNotification:RLMRealmDidChangeNotification realm:realm block:^{
-            RLMRunChildAndWait();
-        }];
+        [self waitForNotification:RLMRealmDidChangeNotification realm:realm block:^ {
+                 RLMRunChildAndWait();
+             }];
         XCTAssertEqual(1U, [IntObject allObjectsInRealm:realm].count);
     }
     else {
@@ -267,25 +267,25 @@
     }
 
     RLMNotificationToken *token = [realm addNotificationBlock:^(__unused NSString *note, __unused RLMRealm *realm) {
-        if (obj.intCol % 2 == self.isParent && obj.intCol < stopValue) {
-            [realm transactionWithBlock:^{
-                obj.intCol++;
-            }];
+              if (obj.intCol % 2 == self.isParent && obj.intCol < stopValue) {
+                  [realm transactionWithBlock:^ {
+                      obj.intCol++;
+                  }];
         }
     }];
 
     if (self.isParent) {
         dispatch_queue_t queue = dispatch_queue_create("background", 0);
-        dispatch_async(queue, ^{ RLMRunChildAndWait(); });
+        dispatch_async(queue, ^ { RLMRunChildAndWait(); });
         while (obj.intCol < stopValue) {
             [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
         }
-        dispatch_sync(queue, ^{});
+        dispatch_sync(queue, ^ {});
     }
     else {
-        [realm transactionWithBlock:^{
-            obj.intCol++;
-        }];
+        [realm transactionWithBlock:^ {
+                  obj.intCol++;
+              }];
         while (obj.intCol < stopValue) {
             [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
         }
@@ -306,9 +306,9 @@
 
         dispatch_queue_t queue = dispatch_queue_create("queue", DISPATCH_QUEUE_CONCURRENT);
         for (int i = 0; i < workers; ++i) {
-            dispatch_async(queue, ^{ RLMRunChildAndWait(); });
+            dispatch_async(queue, ^ { RLMRunChildAndWait(); });
         }
-        dispatch_barrier_sync(queue, ^{});
+        dispatch_barrier_sync(queue, ^ {});
 
         [realm refresh];
         XCTAssertEqual(stopValue, obj.intCol);
@@ -318,10 +318,10 @@
     }
 
     // Run the run loop until someone else makes a commit
-    dispatch_block_t waitForExternalChange = ^{
+    dispatch_block_t waitForExternalChange = ^ {
         RLMNotificationToken *token = [realm addNotificationBlock:^(__unused NSString *note, __unused RLMRealm *realm) {
-            CFRunLoopStop(CFRunLoopGetCurrent());
-        }];
+                  CFRunLoopStop(CFRunLoopGetCurrent());
+              }];
         CFRunLoopRun();
         [token invalidate];
     };

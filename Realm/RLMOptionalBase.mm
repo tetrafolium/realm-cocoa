@@ -63,10 +63,10 @@ private:
 class ManagedOptional : public OptionalBase {
 public:
     ManagedOptional(RLMObjectBase *obj, RLMProperty *prop)
-    : _realm(obj->_realm)
-    , _object(obj->_realm->_realm, *obj->_info->objectSchema, obj->_row)
-    , _propertyName(prop.name.UTF8String)
-    , _ctx(*obj->_info)
+        : _realm(obj->_realm)
+        , _object(obj->_realm->_realm, *obj->_info->objectSchema, obj->_row)
+        , _propertyName(prop.name.UTF8String)
+        , _ctx(*obj->_info)
     {
     }
 

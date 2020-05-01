@@ -66,7 +66,7 @@ using namespace realm;
 }
 
 - (nullable instancetype)initWithTokenValue:(uint64_t)token
-                                    session:(std::shared_ptr<SyncSession>)session {
+    session:(std::shared_ptr<SyncSession>)session {
     if (token == 0) {
         return nil;
     }
@@ -90,7 +90,7 @@ using namespace realm;
 + (dispatch_queue_t)notificationsQueue {
     static dispatch_queue_t queue;
     static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+    dispatch_once(&onceToken, ^ {
         queue = dispatch_queue_create("io.realm.sync.sessionsNotificationQueue", DISPATCH_QUEUE_SERIAL);
     });
     return queue;
@@ -98,9 +98,12 @@ using namespace realm;
 
 static RLMSyncConnectionState convertConnectionState(SyncSession::ConnectionState state) {
     switch (state) {
-        case SyncSession::ConnectionState::Disconnected: return RLMSyncConnectionStateDisconnected;
-        case SyncSession::ConnectionState::Connecting:   return RLMSyncConnectionStateConnecting;
-        case SyncSession::ConnectionState::Connected:    return RLMSyncConnectionStateConnected;
+    case SyncSession::ConnectionState::Disconnected:
+        return RLMSyncConnectionStateDisconnected;
+    case SyncSession::ConnectionState::Connecting:
+        return RLMSyncConnectionStateConnecting;
+    case SyncSession::ConnectionState::Connected:
+        return RLMSyncConnectionStateConnected;
     }
 }
 
@@ -111,7 +114,7 @@ static RLMSyncConnectionState convertConnectionState(SyncSession::ConnectionStat
         // No need to save the token as RLMSyncSession always outlives the
         // underlying SyncSession
         session->register_connection_change_callback([=](auto, auto newState) {
-            dispatch_async(dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^ {
                 self.connectionState = convertConnectionState(newState);
             });
         });
@@ -170,7 +173,7 @@ static RLMSyncConnectionState convertConnectionState(SyncSession::ConnectionStat
         queue = queue ?: dispatch_get_main_queue();
         session->wait_for_upload_completion([=](std::error_code err) {
             NSError *error = (err == std::error_code{}) ? nil : make_sync_error(err);
-            dispatch_async(queue, ^{
+            dispatch_async(queue, ^ {
                 callback(error);
             });
         });
@@ -184,7 +187,7 @@ static RLMSyncConnectionState convertConnectionState(SyncSession::ConnectionStat
         queue = queue ?: dispatch_get_main_queue();
         session->wait_for_download_completion([=](std::error_code err) {
             NSError *error = (err == std::error_code{}) ? nil : make_sync_error(err);
-            dispatch_async(queue, ^{
+            dispatch_async(queue, ^ {
                 callback(error);
             });
         });
@@ -194,8 +197,8 @@ static RLMSyncConnectionState convertConnectionState(SyncSession::ConnectionStat
 }
 
 - (RLMProgressNotificationToken *)addProgressNotificationForDirection:(RLMSyncProgressDirection)direction
-                                                                 mode:(RLMSyncProgressMode)mode
-                                                                block:(RLMProgressNotificationBlock)block {
+    mode:(RLMSyncProgressMode)mode
+    block:(RLMProgressNotificationBlock)block {
     if (auto session = _session.lock()) {
         dispatch_queue_t queue = RLMSyncSession.notificationsQueue;
         auto notifier_direction = (direction == RLMSyncProgressDirectionUpload
@@ -203,7 +206,7 @@ static RLMSyncConnectionState convertConnectionState(SyncSession::ConnectionStat
                                    : SyncSession::NotifierType::download);
         bool is_streaming = (mode == RLMSyncProgressModeReportIndefinitely);
         uint64_t token = session->register_progress_notifier([=](uint64_t transferred, uint64_t transferrable) {
-            dispatch_async(queue, ^{
+            dispatch_async(queue, ^ {
                 block((NSUInteger)transferred, (NSUInteger)transferrable);
             });
         }, notifier_direction, is_streaming);
@@ -255,7 +258,7 @@ static RLMSyncConnectionState convertConnectionState(SyncSession::ConnectionStat
 
 - (void)addProgressNotificationOnQueue:(dispatch_queue_t)queue block:(RLMProgressNotificationBlock)block {
     auto wrappedBlock = ^(NSUInteger transferred_bytes, NSUInteger transferrable_bytes) {
-        dispatch_async(queue, ^{
+        dispatch_async(queue, ^ {
             @autoreleasepool {
                 block(transferred_bytes, transferrable_bytes);
             }

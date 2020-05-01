@@ -43,7 +43,7 @@
 @implementation IndexedObject
 + (NSArray *)indexedProperties {
     return @[@"stringCol", @"integerCol", @"intCol", @"longCol", @"longlongCol",
-             @"boolCol", @"dateCol", @"optionalIntCol", @"optionalBoolCol"];
+                           @"boolCol", @"dateCol", @"optionalIntCol", @"optionalBoolCol"];
 }
 @end
 
@@ -57,25 +57,25 @@
 - (void)testDescription {
     RLMObjectSchema *objectSchema = [RLMObjectSchema schemaForObjectClass:[PrimaryStringObject class]];
     XCTAssertEqualObjects(objectSchema.description, @"PrimaryStringObject {\n"
-                                                    @"\tstringCol {\n"
-                                                    @"\t\ttype = string;\n"
-                                                    @"\t\tobjectClassName = (null);\n"
-                                                    @"\t\tlinkOriginPropertyName = (null);\n"
-                                                    @"\t\tindexed = YES;\n"
-                                                    @"\t\tisPrimary = YES;\n"
-                                                    @"\t\tarray = NO;\n"
-                                                    @"\t\toptional = NO;\n"
-                                                    @"\t}\n"
-                                                    @"\tintCol {\n"
-                                                    @"\t\ttype = int;\n"
-                                                    @"\t\tobjectClassName = (null);\n"
-                                                    @"\t\tlinkOriginPropertyName = (null);\n"
-                                                    @"\t\tindexed = NO;\n"
-                                                    @"\t\tisPrimary = NO;\n"
-                                                    @"\t\tarray = NO;\n"
-                                                    @"\t\toptional = NO;\n"
-                                                    @"\t}\n"
-                                                    @"}");
+                          @"\tstringCol {\n"
+                          @"\t\ttype = string;\n"
+                          @"\t\tobjectClassName = (null);\n"
+                          @"\t\tlinkOriginPropertyName = (null);\n"
+                          @"\t\tindexed = YES;\n"
+                          @"\t\tisPrimary = YES;\n"
+                          @"\t\tarray = NO;\n"
+                          @"\t\toptional = NO;\n"
+                          @"\t}\n"
+                          @"\tintCol {\n"
+                          @"\t\ttype = int;\n"
+                          @"\t\tobjectClassName = (null);\n"
+                          @"\t\tlinkOriginPropertyName = (null);\n"
+                          @"\t\tindexed = NO;\n"
+                          @"\t\tisPrimary = NO;\n"
+                          @"\t\tarray = NO;\n"
+                          @"\t\toptional = NO;\n"
+                          @"\t}\n"
+                          @"}");
 }
 
 - (void)testObjectForKeyedSubscript {

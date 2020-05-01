@@ -19,19 +19,19 @@
 #import <Foundation/Foundation.h>
 
 /**
- 
- RLMPSimulatorManager is a helper class to monitor iOS Simulator status and corresponding UUID. 
- 
+
+ RLMPSimulatorManager is a helper class to monitor iOS Simulator status and corresponding UUID.
+
  The only usage is to return UUID of booted Simulator which is found by using command xcrun.
- 
+
     NSString *bootedUUID = [RLMPSimulatorManager bootedSimulatorUUID];
 */
 
 @interface RLMPSimulatorManager : NSObject
 
-/**
- UUID of booted Simulator
-*/
+    /**
+     UUID of booted Simulator
+    */
 + (NSString *)bootedSimulatorUUID;
 
 @end

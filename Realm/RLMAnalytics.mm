@@ -114,9 +114,9 @@ static NSString *RLMOSVersion() {
     }
 
     return [[NSString alloc] initWithBytesNoCopy:buffer.release()
-                                          length:bufferSize - 1
-                                        encoding:NSUTF8StringEncoding
-                                    freeWhenDone:YES];
+                             length:bufferSize - 1
+                             encoding:NSUTF8StringEncoding
+                             freeWhenDone:YES];
 }
 
 // Hash the data in the given buffer and convert it to a hex-format string
@@ -130,8 +130,8 @@ static NSString *RLMHashData(const void *bytes, size_t length) {
     }
 
     return [[NSString alloc] initWithBytes:formatted
-                                    length:CC_SHA256_DIGEST_LENGTH * 2
-                                  encoding:NSUTF8StringEncoding];
+                             length:CC_SHA256_DIGEST_LENGTH * 2
+                             encoding:NSUTF8StringEncoding];
 }
 
 // Returns the hash of the MAC address of the first network adaptor since the
@@ -186,44 +186,50 @@ static NSDictionary *RLMAnalyticsPayload() {
     static NSString *kUnknownString = @"unknown";
     NSString *hashedMACAddress = RLMMACAddress() ?: kUnknownString;
 
-    return @{
-             @"event": @"Run",
-             @"properties": @{
-                     // MixPanel properties
-                     @"token": @"ce0fac19508f6c8f20066d345d360fd0",
+    return @ {
+@"event":
+        @"Run",
+@"properties":
+        @{
+            // MixPanel properties
+@"token":
+            @"ce0fac19508f6c8f20066d345d360fd0",
 
-                     // Anonymous identifiers to deduplicate events
-                     @"distinct_id": hashedMACAddress,
-                     @"Anonymized MAC Address": hashedMACAddress,
-                     @"Anonymized Bundle ID": hashedBundleID ?: kUnknownString,
+            // Anonymous identifiers to deduplicate events
+@"distinct_id":
+            hashedMACAddress,
+@"Anonymized MAC Address":
+            hashedMACAddress,
+@"Anonymized Bundle ID":
+            hashedBundleID ?: kUnknownString,
 
-                     // Which version of Realm is being used
-                     @"Binding": @"cocoa",
-                     @"Language": isSwift ? @"swift" : @"objc",
-                     @"Realm Version": REALM_COCOA_VERSION,
+            // Which version of Realm is being used
+            @"Binding": @"cocoa",
+            @"Language": isSwift ? @"swift" : @"objc",
+            @"Realm Version": REALM_COCOA_VERSION,
 #if REALM_ENABLE_SYNC
-                     @"Sync Version": @(REALM_SYNC_VER_STRING),
+            @"Sync Version": @(REALM_SYNC_VER_STRING),
 #endif
 #if TARGET_OS_WATCH
-                     @"Target OS Type": @"watchos",
+            @"Target OS Type": @"watchos",
 #elif TARGET_OS_TV
-                     @"Target OS Type": @"tvos",
+            @"Target OS Type": @"tvos",
 #elif TARGET_OS_IPHONE
-                     @"Target OS Type": @"ios",
+            @"Target OS Type": @"ios",
 #else
-                     @"Target OS Type": @"osx",
+            @"Target OS Type": @"osx",
 #endif
-                     @"Swift Version": swiftVersion,
-                     // Current OS version the app is targetting
-                     @"Target OS Version": osVersionString,
-                     // Minimum OS version the app is targetting
-                     @"Target OS Minimum Version": appBundle.infoDictionary[@"MinimumOSVersion"] ?: kUnknownString,
+            @"Swift Version": swiftVersion,
+            // Current OS version the app is targetting
+            @"Target OS Version": osVersionString,
+            // Minimum OS version the app is targetting
+            @"Target OS Minimum Version": appBundle.infoDictionary[@"MinimumOSVersion"] ?: kUnknownString,
 
-                     // Host OS version being built on
-                     @"Host OS Type": @"osx",
-                     @"Host OS Version": RLMOSVersion() ?: kUnknownString,
-                 }
-          };
+            // Host OS version being built on
+            @"Host OS Type": @"osx",
+            @"Host OS Version": RLMOSVersion() ?: kUnknownString,
+        }
+    };
 }
 
 void RLMSendAnalytics() {

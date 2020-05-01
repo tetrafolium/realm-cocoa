@@ -103,8 +103,8 @@ static const NSString *const kRLMSyncValueKey           = @"value";
 @implementation RLMAuthResponseModel
 
 - (instancetype)initWithDictionary:(NSDictionary *)jsonDictionary
-                requireAccessToken:(BOOL)requireAccessToken
-               requireRefreshToken:(BOOL)requireRefreshToken {
+    requireAccessToken:(BOOL)requireAccessToken
+    requireRefreshToken:(BOOL)requireRefreshToken {
     if (self = [super init]) {
         // Get the access token.
         if (requireAccessToken) {
@@ -161,7 +161,7 @@ static const NSString *const kRLMSyncValueKey           = @"value";
     NSMutableDictionary *buffer = [NSMutableDictionary dictionary];
     NSArray *metadataArray = jsonDictionary[kRLMSyncMetadataKey];
     if (![metadataArray isKindOfClass:[NSArray class]]) {
-        self.metadata = @{};
+        self.metadata = @ {};
         return;
     }
     for (NSDictionary *object in metadataArray) {

@@ -87,8 +87,8 @@ extern RLMIdentityProvider const RLMIdentityProviderNickname __deprecated_msg("U
  Construct and return credentials from a Realm Object Server username and password.
  */
 + (instancetype)credentialsWithUsername:(NSString *)username
-                               password:(NSString *)password
-                               register:(BOOL)shouldRegister;
+    password:(NSString *)password
+    register:(BOOL)shouldRegister;
 
 /**
  Construct and return credentials from a JSON Web Token.
@@ -99,7 +99,7 @@ extern RLMIdentityProvider const RLMIdentityProviderNickname __deprecated_msg("U
  Construct and return anonymous credentials
  */
 + (instancetype)anonymousCredentials;
-    
+
 /**
  Construct and return credentials from a nickname
  */
@@ -144,8 +144,8 @@ extern RLMIdentityProvider const RLMIdentityProviderNickname __deprecated_msg("U
  cases, the convenience initializers should be used instead.
  */
 - (instancetype)initWithCustomToken:(RLMSyncCredentialsToken)token
-                           provider:(RLMIdentityProvider)provider
-                           userInfo:(nullable NSDictionary *)userInfo NS_DESIGNATED_INITIALIZER;
+    provider:(RLMIdentityProvider)provider
+    userInfo:(nullable NSDictionary *)userInfo NS_DESIGNATED_INITIALIZER;
 
 /// :nodoc:
 - (instancetype)init __attribute__((unavailable("RLMSyncCredentials cannot be created directly")));

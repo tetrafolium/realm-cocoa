@@ -40,30 +40,48 @@ namespace {
 
 Level levelForSyncLogLevel(RLMSyncLogLevel logLevel) {
     switch (logLevel) {
-        case RLMSyncLogLevelOff:    return Level::off;
-        case RLMSyncLogLevelFatal:  return Level::fatal;
-        case RLMSyncLogLevelError:  return Level::error;
-        case RLMSyncLogLevelWarn:   return Level::warn;
-        case RLMSyncLogLevelInfo:   return Level::info;
-        case RLMSyncLogLevelDetail: return Level::detail;
-        case RLMSyncLogLevelDebug:  return Level::debug;
-        case RLMSyncLogLevelTrace:  return Level::trace;
-        case RLMSyncLogLevelAll:    return Level::all;
+    case RLMSyncLogLevelOff:
+        return Level::off;
+    case RLMSyncLogLevelFatal:
+        return Level::fatal;
+    case RLMSyncLogLevelError:
+        return Level::error;
+    case RLMSyncLogLevelWarn:
+        return Level::warn;
+    case RLMSyncLogLevelInfo:
+        return Level::info;
+    case RLMSyncLogLevelDetail:
+        return Level::detail;
+    case RLMSyncLogLevelDebug:
+        return Level::debug;
+    case RLMSyncLogLevelTrace:
+        return Level::trace;
+    case RLMSyncLogLevelAll:
+        return Level::all;
     }
     REALM_UNREACHABLE();    // Unrecognized log level.
 }
 
 RLMSyncLogLevel logLevelForLevel(Level logLevel) {
     switch (logLevel) {
-        case Level::off:    return RLMSyncLogLevelOff;
-        case Level::fatal:  return RLMSyncLogLevelFatal;
-        case Level::error:  return RLMSyncLogLevelError;
-        case Level::warn:   return RLMSyncLogLevelWarn;
-        case Level::info:   return RLMSyncLogLevelInfo;
-        case Level::detail: return RLMSyncLogLevelDetail;
-        case Level::debug:  return RLMSyncLogLevelDebug;
-        case Level::trace:  return RLMSyncLogLevelTrace;
-        case Level::all:    return RLMSyncLogLevelAll;
+    case Level::off:
+        return RLMSyncLogLevelOff;
+    case Level::fatal:
+        return RLMSyncLogLevelFatal;
+    case Level::error:
+        return RLMSyncLogLevelError;
+    case Level::warn:
+        return RLMSyncLogLevelWarn;
+    case Level::info:
+        return RLMSyncLogLevelInfo;
+    case Level::detail:
+        return RLMSyncLogLevelDetail;
+    case Level::debug:
+        return RLMSyncLogLevelDebug;
+    case Level::trace:
+        return RLMSyncLogLevelTrace;
+    case Level::all:
+        return RLMSyncLogLevelAll;
     }
     REALM_UNREACHABLE();    // Unrecognized log level.
 }
@@ -109,7 +127,7 @@ struct CallbackLoggerFactory : public realm::SyncLoggerFactory {
 #pragma mark - RLMSyncManager
 
 @interface RLMSyncTimeoutOptions () {
-    @public
+@public
     realm::SyncClientTimeouts _options;
 }
 @end
@@ -144,15 +162,15 @@ static RLMSyncManager *s_sharedManager = nil;
     bool should_encrypt = !getenv("REALM_DISABLE_METADATA_ENCRYPTION") && !RLMIsRunningInPlayground();
     config.logger_factory = &s_syncLoggerFactory;
     config.metadata_mode = should_encrypt ? SyncManager::MetadataMode::Encryption
-                                          : SyncManager::MetadataMode::NoEncryption;
+                           : SyncManager::MetadataMode::NoEncryption;
     @autoreleasepool {
         rootDirectory = rootDirectory ?: [NSURL fileURLWithPath:RLMDefaultDirectoryForBundleIdentifier(nil)];
         config.base_file_path = rootDirectory.path.UTF8String;
 
         bool isSwift = !!NSClassFromString(@"RealmSwiftObjectUtil");
         config.user_agent_binding_info =
-            util::format("Realm%1/%2", isSwift ? "Swift" : "ObjectiveC",
-                         RLMStringDataWithNSString(REALM_COCOA_VERSION));
+        util::format("Realm%1/%2", isSwift ? "Swift" : "ObjectiveC",
+                     RLMStringDataWithNSString(REALM_COCOA_VERSION));
         config.user_agent_application_info = RLMStringDataWithNSString(self.appID);
     }
     SyncManager::shared().configure(config);
@@ -215,7 +233,7 @@ static RLMSyncManager *s_sharedManager = nil;
 #pragma mark - Private API
 
 - (void)_fireError:(NSError *)error {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^ {
         if (self.errorHandler) {
             self.errorHandler(error, nil);
         }

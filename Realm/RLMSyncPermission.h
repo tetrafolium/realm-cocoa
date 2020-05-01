@@ -21,7 +21,7 @@
 
 @protocol RLMPermission, RLMPermissionUser;
 @class RLMPermission, RLMPermissionUser, RLMPermissionRole,
-       RLMArray<RLMObjectType>, RLMLinkingObjects<RLMObjectType: RLMObject *>;
+    RLMArray<RLMObjectType>, RLMLinkingObjects<RLMObjectType: RLMObject *>;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -399,11 +399,11 @@ FOUNDATION_EXTERN RLMSyncAccessLevel RLMSyncAccessLevelFromString(NSString *);
  */
 @interface RLMSyncPermission : NSObject
 
-/**
- The Realm Object Server path to the Realm to which this permission applies (e.g. "/path/to/realm").
+    /**
+     The Realm Object Server path to the Realm to which this permission applies (e.g. "/path/to/realm").
 
- Specify "*" if this permission applies to all Realms managed by the server.
- */
+     Specify "*" if this permission applies to all Realms managed by the server.
+     */
 @property (nonatomic, readonly) NSString *path;
 
 /**
@@ -431,8 +431,8 @@ FOUNDATION_EXTERN RLMSyncAccessLevel RLMSyncAccessLevelFromString(NSString *);
  @param accessLevel The access level to grant.
  */
 - (instancetype)initWithRealmPath:(NSString *)path
-                         identity:(NSString *)identity
-                      accessLevel:(RLMSyncAccessLevel)accessLevel;
+    identity:(NSString *)identity
+    accessLevel:(RLMSyncAccessLevel)accessLevel;
 
 /**
  Create a new sync permission value, for use with permission APIs.
@@ -444,8 +444,8 @@ FOUNDATION_EXTERN RLMSyncAccessLevel RLMSyncAccessLevelFromString(NSString *);
  @param accessLevel The access level to grant.
  */
 - (instancetype)initWithRealmPath:(NSString *)path
-                         username:(NSString *)username
-                      accessLevel:(RLMSyncAccessLevel)accessLevel;
+    username:(NSString *)username
+    accessLevel:(RLMSyncAccessLevel)accessLevel;
 
 /**
  The identity of the user to whom this permission is granted, or "*"
@@ -486,9 +486,9 @@ FOUNDATION_EXTERN RLMSyncAccessLevel RLMSyncAccessLevelFromString(NSString *);
 
 /// :nodoc:
 - (instancetype)initWithRealmPath:(NSString *)path
-                           userID:(NSString *)identity
-                      accessLevel:(RLMSyncAccessLevel)accessLevel
-__attribute__((unavailable("Renamed to `-initWithRealmPath:identity:accessLevel:`")));
+    userID:(NSString *)identity
+    accessLevel:(RLMSyncAccessLevel)accessLevel
+    __attribute__((unavailable("Renamed to `-initWithRealmPath:identity:accessLevel:`")));
 
 @end
 
@@ -518,10 +518,10 @@ __attribute__((unavailable("Renamed to `-initWithRealmPath:identity:accessLevel:
 
 /// :nodoc:
 - (instancetype)initWithRealmPath:(NSString *)path
-                            token:(NSString *)token
-                        expiresAt:(NSDate *)expiresAt
-                        createdAt:(NSDate *)createdAt
-                      accessLevel:(RLMSyncAccessLevel)accessLevel;
+    token:(NSString *)token
+    expiresAt:(NSDate *)expiresAt
+    createdAt:(NSDate *)createdAt
+    accessLevel:(RLMSyncAccessLevel)accessLevel;
 @end
 
 NS_ASSUME_NONNULL_END

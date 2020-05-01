@@ -41,24 +41,24 @@
 
     __weak typeof(self) weakSelf = self;
     self.token = [[RLMRealm defaultRealm] addNotificationBlock:^(NSString * _Nonnull notification, RLMRealm * _Nonnull realm) {
-        [weakSelf reloadData];
-    }];
+                                [weakSelf reloadData];
+                            }];
 
     NSURLComponents *components = [NSURLComponents componentsWithString:@"https://api.github.com/search/repositories"];
     components.queryItems = @[[NSURLQueryItem queryItemWithName:@"q" value:@"language:objc"],
-                              [NSURLQueryItem queryItemWithName:@"sort" value:@"stars"],
-                              [NSURLQueryItem queryItemWithName:@"order" value:@"desc"]];
+                                                                                            [NSURLQueryItem queryItemWithName:@"sort" value:@"stars"],
+                                                                                            [NSURLQueryItem queryItemWithName:@"order" value:@"desc"]];
     [[[NSURLSession sharedSession] dataTaskWithURL:components.URL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        if (!error) {
-            NSError *jsonError = nil;
+                                      if (!error) {
+                                          NSError *jsonError = nil;
             NSDictionary *repositories = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&jsonError];
             if (!jsonError) {
                 NSArray *items = repositories[@"items"];
 
                 RLMRealm *realm = [RLMRealm defaultRealm];
-                [realm transactionWithBlock:^{
-                    for (NSDictionary *item in items) {
-                        Repository *repository = [Repository new];
+                [realm transactionWithBlock:^ {
+                          for (NSDictionary *item in items) {
+                              Repository *repository = [Repository new];
                         repository.identifier = [NSString stringWithFormat:@"%@", item[@"id"]];
                         repository.name = item[@"name"];
                         repository.avatarURL = item[@"owner"][@"avatar_url"];
@@ -87,11 +87,11 @@
     cell.titleLabel.text = repository.name;
 
     [[[NSURLSession sharedSession] dataTaskWithURL:[NSURL URLWithString:repository.avatarURL] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        if (!error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                UIImage *image = [UIImage imageWithData:data];
-                cell.avatarImageView.image = image;
-            });
+                                      if (!error) {
+                                          dispatch_async(dispatch_get_main_queue(), ^ {
+                                              UIImage *image = [UIImage imageWithData:data];
+                                              cell.avatarImageView.image = image;
+                                          });
         } else {
             NSLog(@"%@", error);
         }

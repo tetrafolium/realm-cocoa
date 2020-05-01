@@ -145,10 +145,13 @@ static void RLMNSStringToStdString(std::string &out, NSString *in) {
 
     NSUInteger size = out.size();
     [in getBytes:&out[0]
-       maxLength:size
-      usedLength:&size
+        maxLength:size
+        usedLength:&size
         encoding:NSUTF8StringEncoding
-         options:0 range:{0, in.length} remainingRange:nullptr];
+        options:0 range: {
+         0, in.length
+        }
+        remainingRange:nullptr];
     out.resize(size);
 }
 

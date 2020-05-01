@@ -49,12 +49,12 @@ typedef BOOL (^RLMShouldCompactOnLaunchBlock)(NSUInteger totalBytes, NSUInteger 
 
 #pragma mark - Default Configuration
 
-/**
- Returns the default configuration used to create Realms when no other
- configuration is explicitly specified (i.e. `+[RLMRealm defaultRealm]`).
+    /**
+     Returns the default configuration used to create Realms when no other
+     configuration is explicitly specified (i.e. `+[RLMRealm defaultRealm]`).
 
- @return The default Realm configuration.
- */
+     @return The default Realm configuration.
+     */
 + (instancetype)defaultConfiguration;
 
 /**

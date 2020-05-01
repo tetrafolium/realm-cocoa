@@ -247,9 +247,13 @@ static NSData *data(int i) {
 - (void)testReplace {
     RLMAssertThrowsWithReason([$array replaceObjectAtIndex:0 withObject:$v0], ^n @"Index 0 is out of bounds (must be less than 0).");
 
-    [$array addObject:$v0]; ^nl [$array replaceObjectAtIndex:0 withObject:$v1]; ^nl XCTAssertEqualObjects($array[0], $v1); ^nl 
+    [$array addObject:$v0];
+    ^nl [$array replaceObjectAtIndex:0 withObject:$v1];
+    ^nl XCTAssertEqualObjects($array[0], $v1);
+    ^nl
 
-    %o [$array replaceObjectAtIndex:0 withObject:NSNull.null]; ^nl XCTAssertEqualObjects($array[0], NSNull.null);
+    %o [$array replaceObjectAtIndex:0 withObject:NSNull.null];
+    ^nl XCTAssertEqualObjects($array[0], NSNull.null);
 
     RLMAssertThrowsWithReason([$array replaceObjectAtIndex:0 withObject:$wrong], ^n @"Invalid value '$wdesc' of type '$wtype' for expected type '$type'");
     %r RLMAssertThrowsWithReason([$array replaceObjectAtIndex:0 withObject:NSNull.null], ^n @"Invalid value '<null>' of type 'NSNull' for expected type '$type'");
@@ -396,7 +400,15 @@ static NSData *data(int i) {
         [$array addObjects:$values];
     }
 
-    { ^nl NSUInteger i = 0; ^nl NSArray *values = $values; ^nl for (id value in $array) { ^nl XCTAssertEqualObjects(values[i++ % values.count], value); ^nl } ^nl XCTAssertEqual(i, $array.count); ^nl } ^nl 
+    {
+        ^nl NSUInteger i = 0;
+        ^nl NSArray *values = $values;
+        ^nl for (id value in $array) {
+            ^nl XCTAssertEqualObjects(values[i++ % values.count], value);
+            ^nl
+        } ^nl XCTAssertEqual(i, $array.count);
+        ^nl
+    } ^nl
 }
 
 - (void)testValueForKeySelf {
@@ -425,32 +437,32 @@ static NSData *data(int i) {
 // doesn't preserve the order naturally
 static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
     return [[array valueForKeyPath:[NSString stringWithFormat:@"@distinctUnionOf%@.%@", type, prop]]
-            sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-                bool aIsNull = a == NSNull.null;
-                bool bIsNull = b == NSNull.null;
-                if (aIsNull && bIsNull) {
-                    return 0;
-                }
-                if (aIsNull) {
-                    return 1;
-                }
-                if (bIsNull) {
-                    return -1;
-                }
+                                                                                           sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+                                                                                               bool aIsNull = a == NSNull.null;
+                                                                                               bool bIsNull = b == NSNull.null;
+                                                                                               if (aIsNull && bIsNull) {
+            return 0;
+        }
+        if (aIsNull) {
+            return 1;
+        }
+        if (bIsNull) {
+            return -1;
+        }
 
-                if ([a isKindOfClass:[NSData class]]) {
-                    if ([a length] != [b length]) {
-                        return [a length] < [b length] ? -1 : 1;
-                    }
-                    int result = memcmp([a bytes], [b bytes], [a length]);
-                    if (!result) {
-                        return 0;
-                    }
-                    return result < 0 ? -1 : 1;
-                }
+        if ([a isKindOfClass:[NSData class]]) {
+            if ([a length] != [b length]) {
+                return [a length] < [b length] ? -1 : 1;
+            }
+            int result = memcmp([a bytes], [b bytes], [a length]);
+            if (!result) {
+                return 0;
+            }
+            return result < 0 ? -1 : 1;
+        }
 
-                return [a compare:b];
-            }];
+        return [a compare:b];
+    }];
 }
 
 - (void)testUnionOfObjects {
@@ -501,13 +513,18 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
 }
 
 - (void)testAssignment {
-    $array = (id)@[$v1]; ^nl XCTAssertEqualObjects($array[0], $v1);
+    $array = (id)@[$v1];
+    ^nl XCTAssertEqualObjects($array[0], $v1);
 
     // Should replace and not append
-    $array = (id)$values; ^nl XCTAssertEqualObjects([$array valueForKey:@"self"], ($values)); ^nl 
+    $array = (id)$values;
+    ^nl XCTAssertEqualObjects([$array valueForKey:@"self"], ($values));
+    ^nl
 
     // Should not clear the array
-    $array = $array; ^nl XCTAssertEqualObjects([$array valueForKey:@"self"], ($values)); ^nl 
+    $array = $array;
+    ^nl XCTAssertEqualObjects([$array valueForKey:@"self"], ($values));
+    ^nl
 
     [unmanaged.intObj removeAllObjects];
     unmanaged.intObj = managed.intObj;
@@ -519,13 +536,18 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
 }
 
 - (void)testDynamicAssignment {
-    $obj[@"$prop"] = (id)@[$v1]; ^nl XCTAssertEqualObjects($obj[@"$prop"][0], $v1);
+    $obj[@"$prop"] = (id)@[$v1];
+    ^nl XCTAssertEqualObjects($obj[@"$prop"][0], $v1);
 
     // Should replace and not append
-    $obj[@"$prop"] = (id)$values; ^nl XCTAssertEqualObjects([$obj[@"$prop"] valueForKey:@"self"], ($values)); ^nl 
+    $obj[@"$prop"] = (id)$values;
+    ^nl XCTAssertEqualObjects([$obj[@"$prop"] valueForKey:@"self"], ($values));
+    ^nl
 
     // Should not clear the array
-    $obj[@"$prop"] = $obj[@"$prop"]; ^nl XCTAssertEqualObjects([$obj[@"$prop"] valueForKey:@"self"], ($values)); ^nl 
+    $obj[@"$prop"] = $obj[@"$prop"];
+    ^nl XCTAssertEqualObjects([$obj[@"$prop"] valueForKey:@"self"], ($values));
+    ^nl
 
     [unmanaged[@"intObj"] removeAllObjects];
     unmanaged[@"intObj"] = managed.intObj;
@@ -570,8 +592,8 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
 
 - (void)testAllMethodsCheckThread {
     RLMArray *array = managed.intObj;
-    [self dispatchAsyncAndWait:^{
-        RLMAssertThrowsWithReason([array count], @"thread");
+    [self dispatchAsyncAndWait:^ {
+             RLMAssertThrowsWithReason([array count], @"thread");
         RLMAssertThrowsWithReason([array objectAtIndex:0], @"thread");
         RLMAssertThrowsWithReason([array firstObject], @"thread");
         RLMAssertThrowsWithReason([array lastObject], @"thread");
@@ -695,8 +717,8 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
 
     id expectation = [self expectationWithDescription:@""];
     id token = [managed.intObj addNotificationBlock:^(RLMArray *array, RLMCollectionChange *change, NSError *error) {
-        XCTAssertNotNil(array);
-        XCTAssertNil(change);
+                       XCTAssertNotNil(array);
+                       XCTAssertNil(change);
         XCTAssertNil(error);
         [expectation fulfill];
     }];
@@ -711,8 +733,8 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
     __block bool first = true;
     __block id expectation = [self expectationWithDescription:@""];
     id token = [managed.intObj addNotificationBlock:^(RLMArray *array, RLMCollectionChange *change, NSError *error) {
-        XCTAssertNotNil(array);
-        XCTAssertNil(error);
+                       XCTAssertNotNil(array);
+                       XCTAssertNil(error);
         if (first) {
             XCTAssertNil(change);
         }
@@ -726,10 +748,10 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 
     expectation = [self expectationWithDescription:@""];
-    [self dispatchAsyncAndWait:^{
-        RLMRealm *r = [RLMRealm defaultRealm];
+    [self dispatchAsyncAndWait:^ {
+             RLMRealm *r = [RLMRealm defaultRealm];
         [r transactionWithBlock:^{
-            RLMArray *array = [(AllPrimitiveArrays *)[AllPrimitiveArrays allObjectsInRealm:r].firstObject intObj];
+              RLMArray *array = [(AllPrimitiveArrays *)[AllPrimitiveArrays allObjectsInRealm:r].firstObject intObj];
             [array addObject:@0];
         }];
     }];
@@ -743,20 +765,20 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
 
     id expectation = [self expectationWithDescription:@""];
     id token = [managed.intObj addNotificationBlock:^(__unused RLMArray *array, __unused RLMCollectionChange *change, __unused NSError *error) {
-        // will throw if it's incorrectly called a second time due to the
-        // unrelated write transaction
-        [expectation fulfill];
-    }];
+                       // will throw if it's incorrectly called a second time due to the
+                       // unrelated write transaction
+                       [expectation fulfill];
+                   }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 
     // All notification blocks are called as part of a single runloop event, so
     // waiting for this one also waits for the above one to get a chance to run
-    [self waitForNotification:RLMRealmDidChangeNotification realm:realm block:^{
-        [self dispatchAsyncAndWait:^{
-            RLMRealm *r = [RLMRealm defaultRealm];
+    [self waitForNotification:RLMRealmDidChangeNotification realm:realm block:^ {
+             [self dispatchAsyncAndWait:^{
+                 RLMRealm *r = [RLMRealm defaultRealm];
             [r transactionWithBlock:^{
-                [AllPrimitiveArrays createInRealm:r withValue:@[]];
-            }];
+                  [AllPrimitiveArrays createInRealm:r withValue:@[]];
+              }];
         }];
     }];
     [(RLMNotificationToken *)token invalidate];
@@ -767,8 +789,8 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
 
     __block id expectation = [self expectationWithDescription:@""];
     id token = [managed.intObj addNotificationBlock:^(RLMArray *array, __unused RLMCollectionChange *change, NSError *error) {
-        XCTAssertNotNil(array);
-        XCTAssertNil(error);
+                       XCTAssertNotNil(array);
+                       XCTAssertNil(error);
         // will throw if it's called a second time before we create the new
         // expectation object immediately before manually refreshing
         [expectation fulfill];
@@ -780,11 +802,11 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
 
     // All notification blocks are called as part of a single runloop event, so
     // waiting for this one also waits for the above one to get a chance to run
-    [self waitForNotification:RLMRealmRefreshRequiredNotification realm:realm block:^{
-        [self dispatchAsyncAndWait:^{
-            RLMRealm *r = [RLMRealm defaultRealm];
+    [self waitForNotification:RLMRealmRefreshRequiredNotification realm:realm block:^ {
+             [self dispatchAsyncAndWait:^{
+                 RLMRealm *r = [RLMRealm defaultRealm];
             [r transactionWithBlock:^{
-                RLMArray *array = [(AllPrimitiveArrays *)[AllPrimitiveArrays allObjectsInRealm:r].firstObject intObj];
+                  RLMArray *array = [(AllPrimitiveArrays *)[AllPrimitiveArrays allObjectsInRealm:r].firstObject intObj];
                 [array addObject:@0];
             }];
         }];
@@ -804,8 +826,8 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
     __block bool first = true;
     __block id expectation = [self expectationWithDescription:@""];
     id token = [managed.intObj addNotificationBlock:^(RLMArray *array, RLMCollectionChange *change, NSError *error) {
-        XCTAssertNotNil(array);
-        XCTAssertNil(error);
+                       XCTAssertNotNil(array);
+                       XCTAssertNil(error);
         if (first) {
             XCTAssertNil(change);
             first = false;

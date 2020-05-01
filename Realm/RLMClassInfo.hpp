@@ -21,10 +21,10 @@
 #import <vector>
 
 namespace realm {
-    class ObjectSchema;
-    class Schema;
-    class Table;
-    struct Property;
+class ObjectSchema;
+class Schema;
+class Table;
+struct Property;
 }
 
 class RLMObservationInfo;
@@ -83,7 +83,9 @@ public:
     // Get the info for the target of the given property
     RLMClassInfo &linkTargetType(realm::Property const& property);
 
-    void releaseTable() { m_table = nullptr; }
+    void releaseTable() {
+        m_table = nullptr;
+    }
 
 private:
     mutable realm::Table *_Nullable m_table = nullptr;

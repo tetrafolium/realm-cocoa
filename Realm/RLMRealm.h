@@ -63,20 +63,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Creating & Initializing a Realm
 
-/**
- Obtains an instance of the default Realm.
+    /**
+     Obtains an instance of the default Realm.
 
- The default Realm is used by the `RLMObject` class methods
- which do not take an `RLMRealm` parameter, but is otherwise not special. The
- default Realm is persisted as *default.realm* under the *Documents* directory of
- your Application on iOS, and in your application's *Application Support*
- directory on OS X.
+     The default Realm is used by the `RLMObject` class methods
+     which do not take an `RLMRealm` parameter, but is otherwise not special. The
+     default Realm is persisted as *default.realm* under the *Documents* directory of
+     your Application on iOS, and in your application's *Application Support*
+     directory on OS X.
 
- The default Realm is created using the default `RLMRealmConfiguration`, which
- can be changed via `+[RLMRealmConfiguration setDefaultConfiguration:]`.
+     The default Realm is created using the default `RLMRealmConfiguration`, which
+     can be changed via `+[RLMRealmConfiguration setDefaultConfiguration:]`.
 
- @return The default `RLMRealm` instance for the current thread.
- */
+     @return The default `RLMRealm` instance for the current thread.
+     */
 + (instancetype)defaultRealm;
 
 /**
@@ -122,8 +122,8 @@ NS_ASSUME_NONNULL_BEGIN
        accessed from `callbackQueue`) is unsafe.
  */
 + (RLMAsyncOpenTask *)asyncOpenWithConfiguration:(RLMRealmConfiguration *)configuration
-                     callbackQueue:(dispatch_queue_t)callbackQueue
-                          callback:(RLMAsyncOpenRealmCallback)callback;
+    callbackQueue:(dispatch_queue_t)callbackQueue
+    callback:(RLMAsyncOpenRealmCallback)callback;
 
 /**
  The `RLMSchema` used by the Realm.
@@ -202,7 +202,7 @@ NS_ASSUME_NONNULL_BEGIN
  @return YES if any files were deleted, NO otherwise.
  */
 + (BOOL)deleteFilesForConfiguration:(RLMRealmConfiguration *)config error:(NSError **)error
- __attribute__((swift_error(nonnull_error)));
+    __attribute__((swift_error(nonnull_error)));
 
 #pragma mark - Notifications
 
@@ -520,7 +520,7 @@ typedef void (^RLMNotificationBlock)(RLMNotification notification, RLMRealm *rea
  @see `+[RLMThreadSafeReference referenceWithThreadConfined:]`
  */
 - (nullable id)resolveThreadSafeReference:(RLMThreadSafeReference *)reference
-NS_REFINED_FOR_SWIFT;
+    NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Adding and Removing Objects from a Realm
 
@@ -653,7 +653,7 @@ typedef void (^RLMMigrationBlock)(RLMMigration *migration, uint64_t oldSchemaVer
  @return The version of the Realm at `fileURL`, or `RLMNotVersioned` if the version cannot be read.
  */
 + (uint64_t)schemaVersionAtURL:(NSURL *)fileURL encryptionKey:(nullable NSData *)key error:(NSError **)error
-NS_REFINED_FOR_SWIFT;
+    NS_REFINED_FOR_SWIFT;
 
 /**
  Performs the given Realm configuration's migration block on a Realm at the given path.

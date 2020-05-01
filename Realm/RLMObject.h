@@ -98,13 +98,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Creating & Initializing Objects
 
-/**
- Creates an unmanaged instance of a Realm object.
+    /**
+     Creates an unmanaged instance of a Realm object.
 
- Call `addObject:` on an `RLMRealm` instance to add an unmanaged object into that Realm.
+     Call `addObject:` on an `RLMRealm` instance to add an unmanaged object into that Realm.
 
- @see `[RLMRealm addObject:]`
- */
+     @see `[RLMRealm addObject:]`
+     */
 - (instancetype)init NS_DESIGNATED_INITIALIZER;
 
 
@@ -608,9 +608,9 @@ typedef void (^RLMObjectChangeBlock)(BOOL deleted,
  */
 @interface RLMPropertyChange : NSObject
 
-/**
- The name of the property which changed.
- */
+    /**
+     The name of the property which changed.
+     */
 @property (nonatomic, readonly, strong) NSString *name;
 
 /**

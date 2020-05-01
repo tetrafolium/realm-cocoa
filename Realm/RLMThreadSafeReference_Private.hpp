@@ -31,8 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Constructs an new instance of this type
 + (nullable instancetype)objectWithThreadSafeReference:(std::unique_ptr<realm::ThreadSafeReferenceBase>)reference
-                                              metadata:(nullable id)metadata
-                                                 realm:(RLMRealm *)realm;
+    metadata:(nullable id)metadata
+    realm:(RLMRealm *)realm;
 @end
 
 @interface RLMThreadSafeReference ()

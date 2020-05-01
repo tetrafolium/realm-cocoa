@@ -123,21 +123,21 @@ using namespace realm;
         superClass = class_getSuperclass(superClass);
     }
     NSArray *persistedProperties = [allProperties filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RLMProperty *property, NSDictionary *) {
-        return !RLMPropertyTypeIsComputed(property.type);
-    }]];
+                      return !RLMPropertyTypeIsComputed(property.type);
+                  }]];
     schema.properties = persistedProperties;
 
     NSArray *computedProperties = [allProperties filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RLMProperty *property, NSDictionary *) {
-        return RLMPropertyTypeIsComputed(property.type);
-    }]];
+                      return RLMPropertyTypeIsComputed(property.type);
+                  }]];
     schema.computedProperties = computedProperties;
 
     // verify that we didn't add any properties twice due to inheritance
     if (allProperties.count != [NSSet setWithArray:[allProperties valueForKey:@"name"]].count) {
         NSCountedSet *countedPropertyNames = [NSCountedSet setWithArray:[allProperties valueForKey:@"name"]];
         NSArray *duplicatePropertyNames = [countedPropertyNames filteredSetUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *) {
-            return [countedPropertyNames countForObject:object] > 1;
-        }]].allObjects;
+                                 return [countedPropertyNames countForObject:object] > 1;
+                             }]].allObjects;
 
         if (duplicatePropertyNames.count == 1) {
             @throw RLMException(@"Property '%@' is declared multiple times in the class hierarchy of '%@'", duplicatePropertyNames.firstObject, className);
@@ -200,16 +200,16 @@ using namespace realm;
         RLMProperty *prop = nil;
         if (isSwiftClass) {
             prop = [[RLMProperty alloc] initSwiftPropertyWithName:propertyName
-                                                          indexed:[indexed containsObject:propertyName]
-                                           linkPropertyDescriptor:linkingObjectsProperties[propertyName]
-                                                         property:props[i]
-                                                         instance:swiftObjectInstance];
+                                        indexed:[indexed containsObject:propertyName]
+                                        linkPropertyDescriptor:linkingObjectsProperties[propertyName]
+                                        property:props[i]
+                                        instance:swiftObjectInstance];
         }
         else {
             prop = [[RLMProperty alloc] initWithName:propertyName
-                                             indexed:[indexed containsObject:propertyName]
-                              linkPropertyDescriptor:linkingObjectsProperties[propertyName]
-                                            property:props[i]];
+                                        indexed:[indexed containsObject:propertyName]
+                                        linkPropertyDescriptor:linkingObjectsProperties[propertyName]
+                                        property:props[i]];
         }
 
         if (prop) {

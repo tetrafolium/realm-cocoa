@@ -31,12 +31,12 @@ typedef RLM_CLOSED_ENUM(NSUInteger, RLMSyncStopPolicy) {
 @interface RLMSyncConfiguration ()
 
 - (instancetype)initWithUser:(RLMSyncUser *)user
-                    realmURL:(NSURL *)url
-                   isPartial:(BOOL)isPartial
-                   urlPrefix:(nullable NSString *)urlPrefix
-                  stopPolicy:(RLMSyncStopPolicy)stopPolicy
-         enableSSLValidation:(BOOL)enableSSLValidation
-             certificatePath:(nullable NSURL *)certificatePath;
+    realmURL:(NSURL *)url
+    isPartial:(BOOL)isPartial
+    urlPrefix:(nullable NSString *)urlPrefix
+    stopPolicy:(RLMSyncStopPolicy)stopPolicy
+    enableSSLValidation:(BOOL)enableSSLValidation
+    certificatePath:(nullable NSURL *)certificatePath;
 
 @property (nonatomic, readwrite) RLMSyncStopPolicy stopPolicy;
 

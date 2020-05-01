@@ -67,7 +67,7 @@
 - (void)testInvalidThreadSafeReferenceUsage {
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm beginWriteTransaction];
-    StringObject *stringObject = [StringObject createInDefaultRealmWithValue:@{@"stringCol": @"hello"}];
+    StringObject *stringObject = [StringObject createInDefaultRealmWithValue:@ {@"stringCol": @"hello"}];
     RLMAssertThrowsWithReasonMatching([RLMThreadSafeReference referenceWithThreadConfined:stringObject],
                                       @"Cannot obtain thread safe reference during a write transaction");
     [realm commitWriteTransaction];
@@ -75,8 +75,8 @@
     RLMThreadSafeReference *ref1 = [RLMThreadSafeReference referenceWithThreadConfined:stringObject];
     RLMThreadSafeReference *ref2 = [RLMThreadSafeReference referenceWithThreadConfined:stringObject];
     RLMThreadSafeReference *ref3 = [RLMThreadSafeReference referenceWithThreadConfined:stringObject];
-    [self dispatchAsyncAndWait:^{
-        RLMRealm *realm = [RLMRealm defaultRealm];
+    [self dispatchAsyncAndWait:^ {
+             RLMRealm *realm = [RLMRealm defaultRealm];
         RLMAssertThrowsWithReasonMatching([[self realmWithTestPath] resolveThreadSafeReference:ref1],
                                           @"Cannot resolve thread safe reference in Realm with different configuration than the source Realm");
         [realm beginWriteTransaction];
@@ -95,18 +95,18 @@
 - (void)testPassThreadSafeReferenceToDeletedObject {
     RLMRealm *realm = [RLMRealm defaultRealm];
     IntObject *intObject = [[IntObject alloc] init];
-    [realm transactionWithBlock:^{
-        [realm addObject:intObject];
-    }];
+    [realm transactionWithBlock:^ {
+              [realm addObject:intObject];
+          }];
 
     RLMThreadSafeReference *ref1 = [RLMThreadSafeReference referenceWithThreadConfined:intObject];
     RLMThreadSafeReference *ref2 = [RLMThreadSafeReference referenceWithThreadConfined:intObject];
     XCTAssertEqual(0, intObject.intCol);
-    [realm transactionWithBlock:^{
-        [realm deleteObject:intObject];
-    }];
-    [self dispatchAsyncAndWait:^{
-        RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm transactionWithBlock:^ {
+              [realm deleteObject:intObject];
+          }];
+    [self dispatchAsyncAndWait:^ {
+             RLMRealm *realm = [RLMRealm defaultRealm];
         XCTAssertEqualObjects([self assertResolve:realm reference:ref1][@"intCol"], @0);
         [realm refresh];
         XCTAssertNil([self assertResolve:realm reference:ref2]);
@@ -117,8 +117,8 @@
     RLMRealm *realm = [RLMRealm defaultRealm];
     StringObject *stringObject = [[StringObject alloc] init];
     IntObject *intObject = [[IntObject alloc] init];
-    [realm transactionWithBlock:^{
-        [realm addObject:stringObject];
+    [realm transactionWithBlock:^ {
+              [realm addObject:stringObject];
         [realm addObject:intObject];
     }];
 
@@ -126,15 +126,15 @@
     RLMThreadSafeReference *intObjectRef = [RLMThreadSafeReference referenceWithThreadConfined:intObject];
     XCTAssertEqualObjects(nil, stringObject.stringCol);
     XCTAssertEqual(0, intObject.intCol);
-    [self dispatchAsyncAndWait:^{
-        RLMRealm *realm = [RLMRealm defaultRealm];
+    [self dispatchAsyncAndWait:^ {
+             RLMRealm *realm = [RLMRealm defaultRealm];
         StringObject *stringObject = [self assertResolve:realm reference:stringObjectRef];
         IntObject *intObject = [self assertResolve:realm reference:intObjectRef];
 
         [realm transactionWithBlock:^{
-            stringObject.stringCol = @"the meaning of life";
-            intObject.intCol = 42;
-        }];
+                  stringObject.stringCol = @"the meaning of life";
+                  intObject.intCol = 42;
+              }];
     }];
     XCTAssertEqualObjects(nil, stringObject.stringCol);
     XCTAssertEqual(0, intObject.intCol);
@@ -146,24 +146,24 @@
 - (void)testPassThreadSafeReferenceToArray {
     RLMRealm *realm = [RLMRealm defaultRealm];
     DogArrayObject *object = [[DogArrayObject alloc] init];
-    [realm transactionWithBlock:^{
-        [realm addObject:object];
-        DogObject *friday = [DogObject createInDefaultRealmWithValue:@{@"dogName": @"Friday", @"age": @15}];
+    [realm transactionWithBlock:^ {
+              [realm addObject:object];
+DogObject *friday = [DogObject createInDefaultRealmWithValue:@{@"dogName": @"Friday", @"age": @15}];
         [object.dogs addObject:friday];
     }];
     RLMThreadSafeReference *dogsArrayRef = [RLMThreadSafeReference referenceWithThreadConfined:object.dogs];
     XCTAssertEqual(1ul, object.dogs.count);
     XCTAssertEqualObjects(@"Friday", object.dogs[0].dogName);
-    [self dispatchAsyncAndWait:^{
-        RLMRealm *realm = [RLMRealm defaultRealm];
+    [self dispatchAsyncAndWait:^ {
+             RLMRealm *realm = [RLMRealm defaultRealm];
         RLMArray<DogObject *> *dogs = [self assertResolve:realm reference:dogsArrayRef];
         XCTAssertEqual(1ul, dogs.count);
         XCTAssertEqualObjects(@"Friday", dogs[0].dogName);
 
         [realm transactionWithBlock:^{
-            [dogs removeAllObjects];
-            DogObject *cookie = [DogObject createInDefaultRealmWithValue:@{@"dogName": @"Cookie", @"age": @8}];
-            DogObject *breezy = [DogObject createInDefaultRealmWithValue:@{@"dogName": @"Breezy", @"age": @6}];
+                  [dogs removeAllObjects];
+DogObject *cookie = [DogObject createInDefaultRealmWithValue:@{@"dogName": @"Cookie", @"age": @8}];
+DogObject *breezy = [DogObject createInDefaultRealmWithValue:@{@"dogName": @"Breezy", @"age": @6}];
             [dogs addObjects:@[cookie, breezy]];
         }];
         XCTAssertEqual(2ul, dogs.count);
@@ -184,8 +184,8 @@
     RLMResults<StringObject *> *results = [[StringObject objectsWhere:@"stringCol != 'C'"]
                                            sortedResultsUsingKeyPath:@"stringCol" ascending:NO];
     RLMThreadSafeReference *resultsRef = [RLMThreadSafeReference referenceWithThreadConfined:results];
-    [realm transactionWithBlock:^{
-        [StringObject createInDefaultRealmWithValue:@[@"A"]];
+    [realm transactionWithBlock:^ {
+              [StringObject createInDefaultRealmWithValue:@[@"A"]];
         [StringObject createInDefaultRealmWithValue:@[@"B"]];
         [StringObject createInDefaultRealmWithValue:@[@"C"]];
         [StringObject createInDefaultRealmWithValue:@[@"D"]];
@@ -195,8 +195,8 @@
     XCTAssertEqualObjects(@"D", results[0].stringCol);
     XCTAssertEqualObjects(@"B", results[1].stringCol);
     XCTAssertEqualObjects(@"A", results[2].stringCol);
-    [self dispatchAsyncAndWait:^{
-        RLMRealm *realm = [RLMRealm defaultRealm];
+    [self dispatchAsyncAndWait:^ {
+             RLMRealm *realm = [RLMRealm defaultRealm];
         RLMResults<StringObject *> *results = [self assertResolve:realm reference:resultsRef];
         RLMResults<StringObject *> *allObjects = [StringObject allObjects];
         XCTAssertEqual(0ul, [StringObject allObjects].count);
@@ -208,7 +208,7 @@
         XCTAssertEqualObjects(@"B", results[1].stringCol);
         XCTAssertEqualObjects(@"A", results[2].stringCol);
         [realm transactionWithBlock:^{
-            [realm deleteObject:results[2]];
+                  [realm deleteObject:results[2]];
             [realm deleteObject:results[0]];
             [StringObject createInDefaultRealmWithValue:@[@"E"]];
         }];
@@ -231,20 +231,20 @@
 
 - (void)testPassThreadSafeReferenceToLinkingObjects {
     RLMRealm *realm = [RLMRealm defaultRealm];
-    DogObject *dogA = [[DogObject alloc] initWithValue:@{@"dogName": @"Cookie", @"age": @10}];
-    DogObject *unaccessedDogB = [[DogObject alloc] initWithValue:@{@"dogName": @"Skipper", @"age": @7}];
+    DogObject *dogA = [[DogObject alloc] initWithValue:@ {@"dogName": @"Cookie", @"age": @10}];
+    DogObject *unaccessedDogB = [[DogObject alloc] initWithValue:@ {@"dogName": @"Skipper", @"age": @7}];
     // Ensures that an `RLMLinkingObjects` without cached results can be handed over
 
-    [realm transactionWithBlock:^{
-        [realm addObject:[[OwnerObject alloc] initWithValue:@{@"name": @"Andrea", @"dog": dogA}]];
-        [realm addObject:[[OwnerObject alloc] initWithValue:@{@"name": @"Mike", @"dog": unaccessedDogB}]];
+    [realm transactionWithBlock:^ {
+      [realm addObject:[[OwnerObject alloc] initWithValue:@{@"name": @"Andrea", @"dog": dogA}]];
+[realm addObject:[[OwnerObject alloc] initWithValue:@{@"name": @"Mike", @"dog": unaccessedDogB}]];
     }];
     XCTAssertEqual(1ul, dogA.owners.count);
     XCTAssertEqualObjects(@"Andrea", ((OwnerObject *)dogA.owners[0]).name);
     RLMThreadSafeReference *ownersARef = [RLMThreadSafeReference referenceWithThreadConfined:dogA.owners];
     RLMThreadSafeReference *ownersBRef = [RLMThreadSafeReference referenceWithThreadConfined:unaccessedDogB.owners];
-    [self dispatchAsyncAndWait:^{
-        RLMRealm *realm = [RLMRealm defaultRealm];
+    [self dispatchAsyncAndWait:^ {
+             RLMRealm *realm = [RLMRealm defaultRealm];
         RLMLinkingObjects<OwnerObject *> *ownersA = [self assertResolve:realm reference:ownersARef];
         RLMLinkingObjects<OwnerObject *> *ownersB = [self assertResolve:realm reference:ownersBRef];
 
@@ -254,8 +254,8 @@
         XCTAssertEqualObjects(@"Mike", ((OwnerObject *)ownersB[0]).name);
 
         [realm transactionWithBlock:^{
-            // Swap dogs
-            OwnerObject *ownerA = ownersA[0];
+                  // Swap dogs
+                  OwnerObject *ownerA = ownersA[0];
             OwnerObject *ownerB = ownersB[0];
             DogObject *dogA = ownerA.dog;
             DogObject *dogB = ownerB.dog;

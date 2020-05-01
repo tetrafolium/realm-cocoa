@@ -67,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Whether this Realm should be a fully synchronized Realm.
- 
+
  Synchronized Realms comes in two flavors: Query-based and Fully synchronized.
  A fully synchronized Realm will automatically synchronize the entire Realm in
  the background while a query-based Realm will only synchronize the data being

@@ -90,7 +90,7 @@ id RLMPermissionForRole(RLMArray *array, id role) {
     return @[@"name"];
 }
 + (NSDictionary *)_realmColumnNames {
-    return @{@"users": @"members"};
+    return @ {@"users": @"members"};
 }
 @end
 
@@ -105,10 +105,10 @@ id RLMPermissionForRole(RLMArray *array, id role) {
     return @[@"identity"];
 }
 + (NSDictionary *)_realmColumnNames {
-    return @{@"identity": @"id", @"role": @"role"};
+    return @ {@"identity": @"id", @"role": @"role"};
 }
 + (NSDictionary *)linkingObjectsProperties {
-    return @{@"roles": [RLMPropertyDescriptor descriptorWithClass:RLMPermissionRole.class propertyName:@"users"]};
+    return @ {@"roles": [RLMPropertyDescriptor descriptorWithClass:RLMPermissionRole.class propertyName:@"users"]};
 }
 
 + (RLMPermissionUser *)userInRealm:(RLMRealm *)realm withIdentity:(NSString *)identity {
@@ -121,13 +121,21 @@ id RLMPermissionForRole(RLMArray *array, id role) {
     return @"__Permission";
 }
 + (NSDictionary *)defaultPropertyValues {
-    return @{@"canRead": @NO,
-             @"canUpdate": @NO,
-             @"canDelete": @NO,
-             @"canSetPermissions": @NO,
-             @"canQuery": @NO,
-             @"canCreate": @NO,
-             @"canModifySchema": @NO};
+    return @ {@"canRead":
+              @NO,
+              @"canUpdate":
+              @NO,
+              @"canDelete":
+              @NO,
+              @"canSetPermissions":
+              @NO,
+              @"canQuery":
+              @NO,
+              @"canCreate":
+              @NO,
+              @"canModifySchema":
+              @NO
+             };
 }
 
 + (RLMPermission *)permissionForRole:(RLMPermissionRole *)role inArray:(RLMArray<RLMPermission *><RLMPermission> *)array {
@@ -143,26 +151,26 @@ id RLMPermissionForRole(RLMArray *array, id role) {
 
 + (RLMPermission *)permissionForRoleNamed:(NSString *)roleName inArray:(RLMArray<RLMPermission *><RLMPermission> *)array {
     verifyInWriteTransaction(array.realm, _cmd);
-    return RLMPermissionForRole(array, [RLMPermissionRole createOrUpdateInRealm:array.realm withValue:@{@"name": roleName}]);
+    return RLMPermissionForRole(array, [RLMPermissionRole createOrUpdateInRealm:array.realm withValue:@ {@"name": roleName}]);
 }
 
 + (RLMPermission *)permissionForRoleNamed:(NSString *)roleName onRealm:(RLMRealm *)realm {
     verifyInWriteTransaction(realm, _cmd);
     return [self permissionForRoleNamed:roleName
-                                inArray:[RLMRealmPermission objectInRealm:realm].permissions];
+                 inArray:[RLMRealmPermission objectInRealm:realm].permissions];
 
 }
 
 + (RLMPermission *)permissionForRoleNamed:(NSString *)roleName onClass:(Class)cls realm:(RLMRealm *)realm {
     verifyInWriteTransaction(realm, _cmd);
     return [self permissionForRoleNamed:roleName
-                                inArray:[RLMClassPermission objectInRealm:realm forClass:cls].permissions];
+                 inArray:[RLMClassPermission objectInRealm:realm forClass:cls].permissions];
 }
 
 + (RLMPermission *)permissionForRoleNamed:(NSString *)roleName onClassNamed:(NSString *)className realm:(RLMRealm *)realm {
     verifyInWriteTransaction(realm, _cmd);
     return [self permissionForRoleNamed:roleName
-                                inArray:[RLMClassPermission objectInRealm:realm forClassNamed:className].permissions];
+                 inArray:[RLMClassPermission objectInRealm:realm forClassNamed:className].permissions];
 }
 
 + (RLMPermission *)permissionForRoleNamed:(NSString *)roleName onObject:(RLMObject *)object {
@@ -170,7 +178,7 @@ id RLMPermissionForRole(RLMArray *array, id role) {
     for (RLMProperty *prop in object.objectSchema.properties) {
         if (prop.array && [prop.objectClassName isEqualToString:@"RLMPermission"]) {
             return [self permissionForRoleNamed:roleName
-                                        inArray:[object valueForKey:prop.name]];
+                         inArray:[object valueForKey:prop.name]];
         }
     }
     @throw RLMException(@"Object %@ does not have a RLMArray<RLMPermission *> property.", object);
@@ -205,7 +213,7 @@ id RLMPermissionForRole(RLMArray *array, id role) {
     return @"__Realm";
 }
 + (NSDictionary *)_realmColumnNames {
-    return @{@"pk": @"id"};
+    return @ {@"pk": @"id"};
 }
 + (NSString *)primaryKey {
     return @"pk";
@@ -221,8 +229,8 @@ id RLMPermissionForRole(RLMArray *array, id role) {
 @implementation RLMSyncPermission
 
 - (instancetype)initWithRealmPath:(NSString *)path
-                         identity:(NSString *)identity
-                      accessLevel:(RLMSyncAccessLevel)accessLevel {
+    identity:(NSString *)identity
+    accessLevel:(RLMSyncAccessLevel)accessLevel {
     if (self = [super init]) {
         _accessLevel = accessLevel;
         _path = path;
@@ -236,8 +244,8 @@ id RLMPermissionForRole(RLMArray *array, id role) {
 }
 
 - (instancetype)initWithRealmPath:(NSString *)path
-                         username:(NSString *)username
-                      accessLevel:(RLMSyncAccessLevel)accessLevel {
+    username:(NSString *)username
+    accessLevel:(RLMSyncAccessLevel)accessLevel {
     if (self = [super init]) {
         _accessLevel = accessLevel;
         _path = path;
@@ -301,7 +309,10 @@ id RLMPermissionForRole(RLMArray *array, id role) {
     if (![self.path hasPrefix:@"/~/"]) {
         return self;
     }
-    NSString *path = [self.path stringByReplacingCharactersInRange:{1, 1} withString:user.identity];
+    NSString *path = [self.path stringByReplacingCharactersInRange: {
+                                    1, 1
+                                }
+                                withString:user.identity];
     if (_identity) {
         return [[RLMSyncPermission alloc] initWithRealmPath:path identity:_identity accessLevel:_accessLevel];
     }
@@ -316,15 +327,19 @@ id RLMPermissionForRole(RLMArray *array, id role) {
         typeDescription = [NSString stringWithFormat:@"key: %@, value: %@", self.key, self.value];
     }
     return [NSString stringWithFormat:@"<RLMSyncPermission> %@, path: %@, access level: %@",
-            typeDescription, self.path, RLMSyncAccessLevelToString(self.accessLevel)];
+                     typeDescription, self.path, RLMSyncAccessLevelToString(self.accessLevel)];
 }
 
 NSString *RLMSyncAccessLevelToString(RLMSyncAccessLevel level) {
     switch (level) {
-        case RLMSyncAccessLevelNone:  return @"none";
-        case RLMSyncAccessLevelRead:  return @"read";
-        case RLMSyncAccessLevelWrite: return @"write";
-        case RLMSyncAccessLevelAdmin: return @"admin";
+    case RLMSyncAccessLevelNone:
+        return @"none";
+    case RLMSyncAccessLevelRead:
+        return @"read";
+    case RLMSyncAccessLevelWrite:
+        return @"write";
+    case RLMSyncAccessLevelAdmin:
+        return @"admin";
     }
     return @"unknown";
 }
@@ -349,10 +364,10 @@ RLMSyncAccessLevel RLMSyncAccessLevelFromString(NSString *level) {
 
 @implementation RLMSyncPermissionOffer
 - (instancetype)initWithRealmPath:(NSString *)path
-                            token:(NSString *)token
-                        expiresAt:(NSDate *)expiresAt
-                        createdAt:(NSDate *)createdAt
-                      accessLevel:(RLMSyncAccessLevel)accessLevel {
+    token:(NSString *)token
+    expiresAt:(NSDate *)expiresAt
+    createdAt:(NSDate *)createdAt
+    accessLevel:(RLMSyncAccessLevel)accessLevel {
     if (self = [super init]) {
         _realmPath = path;
         _token = token;
@@ -369,7 +384,7 @@ RLMSyncAccessLevel RLMSyncAccessLevelFromString(NSString *level) {
 
 - (NSString *)description {
     return [NSString stringWithFormat:@"<RLMSyncPermissionOffer: %p> path: %@, access level: %@, token: %@, createdAt: %@, expiresAt: %@",
-            self, _realmPath, RLMSyncAccessLevelToString(_accessLevel),
-            _token, _createdAt, _expiresAt];
+                     self, _realmPath, RLMSyncAccessLevelToString(_accessLevel),
+                     _token, _createdAt, _expiresAt];
 }
 @end

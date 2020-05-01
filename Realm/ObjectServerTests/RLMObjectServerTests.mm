@@ -74,11 +74,11 @@
 /// same user object.
 - (void)testUsernamePasswordAuthentication {
     RLMSyncUser *firstUser = [self logInUserForCredentials:[RLMSyncTestCase basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:YES]
-                                                    server:[RLMSyncTestCase authServerURL]];
+                                   register:YES]
+                                   server:[RLMSyncTestCase authServerURL]];
     RLMSyncUser *secondUser = [self logInUserForCredentials:[RLMSyncTestCase basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                             register:NO]
-                                                     server:[RLMSyncTestCase authServerURL]];
+                                    register:NO]
+                                    server:[RLMSyncTestCase authServerURL]];
     // Two users created with the same credential should resolve to the same actual user.
     XCTAssertTrue([firstUser.identity isEqualToString:secondUser.identity]);
     // Authentication server property should be properly set.
@@ -116,18 +116,18 @@
 /// An invalid username/password credential should not be able to log in a user and a corresponding error should be generated.
 - (void)testInvalidPasswordAuthentication {
     [self logInUserForCredentials:[RLMSyncTestCase basicCredentialsWithName:NSStringFromSelector(_cmd) register:YES]
-                          server:[RLMSyncTestCase authServerURL]];
+          server:[RLMSyncTestCase authServerURL]];
 
     RLMSyncCredentials *credentials = [RLMSyncCredentials credentialsWithUsername:NSStringFromSelector(_cmd)
-                                                                         password:@"INVALID_PASSWORD"
-                                                                         register:NO];
+                                                          password:@"INVALID_PASSWORD"
+                                                          register:NO];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@""];
     [RLMSyncUser logInWithCredentials:credentials
-                        authServerURL:[RLMObjectServerTests authServerURL]
-                         onCompletion:^(RLMSyncUser *user, NSError *error) {
-        XCTAssertNil(user);
-        XCTAssertNotNil(error);
+                 authServerURL:[RLMObjectServerTests authServerURL]
+                onCompletion:^(RLMSyncUser *user, NSError *error) {
+                    XCTAssertNil(user);
+                    XCTAssertNotNil(error);
         XCTAssertEqual(error.domain, RLMSyncAuthErrorDomain);
         XCTAssertEqual(error.code, RLMSyncAuthErrorInvalidCredential);
         XCTAssertNotNil(error.localizedDescription);
@@ -140,14 +140,14 @@
 /// A non-existsing user should not be able to log in and a corresponding error should be generated.
 - (void)testNonExistingUsernameAuthentication {
     RLMSyncCredentials *credentials = [RLMSyncTestCase basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                       register:NO];
+                                                       register:NO];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@""];
     [RLMSyncUser logInWithCredentials:credentials
-                        authServerURL:[RLMObjectServerTests authServerURL]
-                         onCompletion:^(RLMSyncUser *user, NSError *error) {
-        XCTAssertNil(user);
-        XCTAssertNotNil(error);
+                 authServerURL:[RLMObjectServerTests authServerURL]
+                onCompletion:^(RLMSyncUser *user, NSError *error) {
+                    XCTAssertNil(user);
+                    XCTAssertNotNil(error);
         XCTAssertEqual(error.domain, RLMSyncAuthErrorDomain);
         XCTAssertEqual(error.code, RLMSyncAuthErrorInvalidCredential);
         XCTAssertNotNil(error.localizedDescription);
@@ -160,16 +160,16 @@
 /// Registering a user with existing username should return corresponding error.
 - (void)testExistingUsernameRegistration {
     RLMSyncCredentials *credentials = [RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                            register:YES];
+                                                            register:YES];
 
     [self logInUserForCredentials:credentials server:[RLMSyncTestCase authServerURL]];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@""];
     [RLMSyncUser logInWithCredentials:credentials
-                        authServerURL:[RLMObjectServerTests authServerURL]
-                        onCompletion:^(RLMSyncUser *user, NSError *error) {
-        XCTAssertNil(user);
-        XCTAssertNotNil(error);
+                 authServerURL:[RLMObjectServerTests authServerURL]
+                onCompletion:^(RLMSyncUser *user, NSError *error) {
+                    XCTAssertNil(user);
+                    XCTAssertNotNil(error);
         XCTAssertEqual(error.domain, RLMSyncAuthErrorDomain);
         XCTAssertEqual(error.code, RLMSyncAuthErrorInvalidCredential);
         XCTAssertNotNil(error.localizedDescription);
@@ -182,8 +182,8 @@
 /// Errors reported in RLMSyncManager.errorHandler shouldn't contain sync error domain errors as underlying error
 - (void)testSyncErrorHandlerErrorDomain {
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:YES]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:YES]
+                              server:[RLMObjectServerTests authServerURL]];
     XCTAssertNotNil(user);
 
     NSURL *realmURL = [NSURL URLWithString:@"realm://127.0.0.1:9080/THE_PATH_USER_DONT_HAVE_ACCESS_TO/test"];
@@ -197,7 +197,7 @@
 
     XCTestExpectation *expectation = [self expectationWithDescription:@""];
     [RLMSyncManager sharedManager].errorHandler = ^(__unused NSError *error,
-                                                    __unused RLMSyncSession *session) {
+    __unused RLMSyncSession *session) {
         XCTAssertTrue([error.domain isEqualToString:RLMSyncErrorDomain]);
         XCTAssertFalse([[error.userInfo[kRLMSyncUnderlyingErrorKey] domain] isEqualToString:RLMSyncErrorDomain]);
         [expectation fulfill];
@@ -212,23 +212,23 @@
     __block NSInteger refreshCount = 0;
     __block NSInteger errorCount = 0;
     [RLMSyncManager sharedManager].errorHandler = ^(__unused NSError *error,
-                                                    __unused RLMSyncSession *session) {
+    __unused RLMSyncSession *session) {
         errorCount++;
     };
 
     __block XCTestExpectation *ex;
     [RLMSyncSessionRefreshHandle calculateFireDateUsingTestLogic:YES
-                                        blockOnRefreshCompletion:^(BOOL success) {
-        XCTAssertTrue(success);
-        if (refreshCount++ == 3) { // arbitrary choice; refreshes every second
+                                blockOnRefreshCompletion:^(BOOL success) {
+                                    XCTAssertTrue(success);
+                                    if (refreshCount++ == 3) { // arbitrary choice; refreshes every second
             [ex fulfill];
         }
     }];
     // Open the Realm.
     NSURL *url = REALM_URL();
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:true]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:true]
+                              server:[RLMObjectServerTests authServerURL]];
     __attribute__((objc_precise_lifetime)) RLMRealm *realm = [self openRealmForURL:url user:user];
     ex = [self expectationWithDescription:@"Timer fired"];
     [self waitForExpectationsWithTimeout:10 handler:nil];
@@ -257,9 +257,9 @@
     RLMSyncCredentials *credentials = [RLMObjectServerTests basicCredentialsWithName:userName register:NO];
     XCTestExpectation *ex = [self expectationWithDescription:@"Login should time out"];
     [RLMSyncUser logInWithCredentials:credentials authServerURL:authURL
-                         onCompletion:^(RLMSyncUser *user, NSError *error) {
-        XCTAssertNil(user);
-        XCTAssertNotNil(error);
+                onCompletion:^(RLMSyncUser *user, NSError *error) {
+                    XCTAssertNil(user);
+                    XCTAssertNotNil(error);
         XCTAssertEqualObjects(error.domain, NSURLErrorDomain);
         XCTAssertEqual(error.code, NSURLErrorTimedOut);
         [ex fulfill];
@@ -272,9 +272,9 @@
 
     ex = [self expectationWithDescription:@"Login should succeed"];
     [RLMSyncUser logInWithCredentials:credentials authServerURL:authURL
-                         onCompletion:^(RLMSyncUser *user, NSError *error) {
-        [user logOut];
-        XCTAssertNotNil(user);
+                onCompletion:^(RLMSyncUser *user, NSError *error) {
+                    [user logOut];
+                    XCTAssertNotNil(user);
         XCTAssertNil(error);
         [ex fulfill];
     }];
@@ -297,10 +297,10 @@
     RLMSyncCredentials *credentials = [RLMObjectServerTests basicCredentialsWithName:userName register:NO];
     XCTestExpectation *ex = [self expectationWithDescription:@"Login should time out"];
     [RLMSyncUser logInWithCredentials:credentials authServerURL:authURL
-                              timeout:1.0 callbackQueue:dispatch_get_main_queue()
-                         onCompletion:^(RLMSyncUser *user, NSError *error) {
-        XCTAssertNil(user);
-        XCTAssertNotNil(error);
+                 timeout:1.0 callbackQueue:dispatch_get_main_queue()
+                onCompletion:^(RLMSyncUser *user, NSError *error) {
+                    XCTAssertNil(user);
+                    XCTAssertNotNil(error);
         XCTAssertEqualObjects(error.domain, NSURLErrorDomain);
         XCTAssertEqual(error.code, NSURLErrorTimedOut);
         [ex fulfill];
@@ -310,10 +310,10 @@
     // Login attempt should succeeed
     ex = [self expectationWithDescription:@"Login should succeed"];
     [RLMSyncUser logInWithCredentials:credentials authServerURL:authURL
-                              timeout:3.0 callbackQueue:dispatch_get_main_queue()
-                         onCompletion:^(RLMSyncUser *user, NSError *error) {
-        [user logOut];
-        XCTAssertNotNil(user);
+                 timeout:3.0 callbackQueue:dispatch_get_main_queue()
+                onCompletion:^(RLMSyncUser *user, NSError *error) {
+                    [user logOut];
+                    XCTAssertNotNil(user);
         XCTAssertNil(error);
         [ex fulfill];
     }];
@@ -327,18 +327,18 @@
     XCTAssertNil([RLMSyncUser currentUser]);
     XCTAssertEqual([[RLMSyncUser allUsers] count], 0U);
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:YES]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:YES]
+                              server:[RLMObjectServerTests authServerURL]];
     XCTAssertNotNil(user);
     XCTAssertEqual([[RLMSyncUser allUsers] count], 1U);
-    XCTAssertEqualObjects([RLMSyncUser allUsers], @{user.identity: user});
+    XCTAssertEqualObjects([RLMSyncUser allUsers], @ {user.identity: user});
     XCTAssertEqualObjects([RLMSyncUser currentUser], user);
 
     RLMSyncUser *user2 = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:[NSStringFromSelector(_cmd) stringByAppendingString:@"2"]
-                                                                                             register:YES]
-                                               server:[RLMObjectServerTests authServerURL]];
+                               register:YES]
+                               server:[RLMObjectServerTests authServerURL]];
     XCTAssertEqual([[RLMSyncUser allUsers] count], 2U);
-    NSDictionary *dict2 = @{user.identity: user, user2.identity: user2};
+    NSDictionary *dict2 = @ {user.identity: user, user2.identity: user2};
     XCTAssertEqualObjects([RLMSyncUser allUsers], dict2);
     RLMAssertThrowsWithReasonMatching([RLMSyncUser currentUser], @"currentUser cannot be called if more that one valid, logged-in user exists");
 }
@@ -347,8 +347,8 @@
 - (void)testCurrentUserLogout {
     XCTAssertNil([RLMSyncUser currentUser]);
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:YES]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:YES]
+                              server:[RLMObjectServerTests authServerURL]];
     XCTAssertNotNil(user);
     XCTAssertEqualObjects([RLMSyncUser currentUser], user);
     [user logOut];
@@ -358,12 +358,12 @@
 /// A sync user should return a session when asked for it based on the path.
 - (void)testUserGetSessionForValidURL {
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:YES]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:YES]
+                              server:[RLMObjectServerTests authServerURL]];
     NSURL *url = REALM_URL();
-    [self openRealmForURL:url user:user immediatelyBlock:^{
-        RLMSyncSession *session = [user sessionForURL:url];
-        XCTAssertNotNil(session);
+    [self openRealmForURL:url user:user immediatelyBlock:^ {
+             RLMSyncSession *session = [user sessionForURL:url];
+             XCTAssertNotNil(session);
     }];
     // Check session existence after binding.
     RLMSyncSession *session = [user sessionForURL:url];
@@ -373,8 +373,8 @@
 /// A sync user should return nil when asked for a URL that doesn't exist.
 - (void)testUserGetSessionForInvalidURL {
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:YES]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:YES]
+                              server:[RLMObjectServerTests authServerURL]];
     RLMSyncSession *badSession = [user sessionForURL:[NSURL URLWithString:@"realm://127.0.0.1:9080/noSuchRealm"]];
     XCTAssertNil(badSession);
 }
@@ -388,19 +388,19 @@
     // then fail to change password again due to being logged out.
     {
         RLMSyncCredentials *creds = [RLMSyncCredentials credentialsWithUsername:userName password:firstPassword
-                                                                       register:YES];
+                                                        register:YES];
         RLMSyncUser *user = [self logInUserForCredentials:creds
-                                                   server:[RLMObjectServerTests authServerURL]];
+                                  server:[RLMObjectServerTests authServerURL]];
         XCTestExpectation *ex = [self expectationWithDescription:@"change password callback invoked"];
         [user changePassword:secondPassword completion:^(NSError * _Nullable error) {
-            XCTAssertNil(error);
+                 XCTAssertNil(error);
             [ex fulfill];
         }];
         [self waitForExpectationsWithTimeout:2.0 handler:nil];
         [user logOut];
         ex = [self expectationWithDescription:@"change password callback invoked"];
         [user changePassword:@"fail" completion:^(NSError * _Nullable error) {
-            XCTAssertNotNil(error);
+                 XCTAssertNotNil(error);
             [ex fulfill];
         }];
         [self waitForExpectationsWithTimeout:2.0 handler:nil];
@@ -408,14 +408,14 @@
     // Fail to log in with original password.
     {
         RLMSyncCredentials *creds = [RLMSyncCredentials credentialsWithUsername:userName password:firstPassword
-                                                                       register:NO];
+                                                        register:NO];
 
         XCTestExpectation *ex = [self expectationWithDescription:@"login callback invoked"];
         [RLMSyncUser logInWithCredentials:creds
-                            authServerURL:[RLMObjectServerTests authServerURL]
-                             onCompletion:^(RLMSyncUser *user, NSError *error) {
-            XCTAssertNil(user);
-            XCTAssertNotNil(error);
+                     authServerURL:[RLMObjectServerTests authServerURL]
+                    onCompletion:^(RLMSyncUser *user, NSError *error) {
+                        XCTAssertNil(user);
+                        XCTAssertNotNil(error);
             XCTAssertEqual(error.domain, RLMSyncAuthErrorDomain);
             XCTAssertEqual(error.code, RLMSyncAuthErrorInvalidCredential);
             XCTAssertNotNil(error.localizedDescription);
@@ -427,7 +427,7 @@
     // Successfully log in with new password.
     {
         RLMSyncCredentials *creds = [RLMSyncCredentials credentialsWithUsername:userName password:secondPassword
-                                                                       register:NO];
+                                                        register:NO];
         RLMSyncUser *user = [self logInUserForCredentials:creds server:[RLMObjectServerTests authServerURL]];
         XCTAssertNotNil(user);
         XCTAssertEqualObjects(RLMSyncUser.currentUser, user);
@@ -449,8 +449,8 @@
     // Successfully create user.
     {
         RLMSyncCredentials *creds = [RLMSyncCredentials credentialsWithUsername:username
-                                                                       password:firstPassword
-                                                                       register:YES];
+                                                        password:firstPassword
+                                                        register:YES];
         RLMSyncUser *user = [self logInUserForCredentials:creds server:url];
         nonAdminUserID = user.identity;
         [user logOut];
@@ -459,12 +459,12 @@
     {
         NSString *username2 = [NSString stringWithFormat:@"%@_2", username];
         RLMSyncCredentials *creds2 = [RLMSyncCredentials credentialsWithUsername:username2
-                                                                             password:@"a"
-                                                                             register:YES];
+                                                         password:@"a"
+                                                         register:YES];
         RLMSyncUser *user2 = [self logInUserForCredentials:creds2 server:url];
         XCTestExpectation *ex = [self expectationWithDescription:@"change password callback invoked"];
         [user2 changePassword:@"foobar" forUserID:nonAdminUserID completion:^(NSError *error) {
-            XCTAssertNotNil(error);
+                  XCTAssertNotNil(error);
             [ex fulfill];
         }];
         [self waitForExpectationsWithTimeout:2.0 handler:nil];
@@ -473,7 +473,7 @@
     {
         XCTestExpectation *ex = [self expectationWithDescription:@"change password callback invoked"];
         [adminUser changePassword:secondPassword forUserID:nonAdminUserID completion:^(NSError *error) {
-            XCTAssertNil(error);
+                      XCTAssertNil(error);
             [ex fulfill];
         }];
         [self waitForExpectationsWithTimeout:2.0 handler:nil];
@@ -481,15 +481,15 @@
     // Fail to log in with original password.
     {
         RLMSyncCredentials *creds = [RLMSyncCredentials credentialsWithUsername:username
-                                                                       password:firstPassword
-                                                                       register:NO];
+                                                        password:firstPassword
+                                                        register:NO];
 
         XCTestExpectation *ex = [self expectationWithDescription:@"login callback invoked"];
         [RLMSyncUser logInWithCredentials:creds
-                            authServerURL:[RLMObjectServerTests authServerURL]
-                             onCompletion:^(RLMSyncUser *user, NSError *error) {
-            XCTAssertNil(user);
-            XCTAssertNotNil(error);
+                     authServerURL:[RLMObjectServerTests authServerURL]
+                    onCompletion:^(RLMSyncUser *user, NSError *error) {
+                        XCTAssertNil(user);
+                        XCTAssertNotNil(error);
             XCTAssertEqual(error.domain, RLMSyncAuthErrorDomain);
             XCTAssertEqual(error.code, RLMSyncAuthErrorInvalidCredential);
             XCTAssertNotNil(error.localizedDescription);
@@ -501,8 +501,8 @@
     // Successfully log in with new password.
     {
         RLMSyncCredentials *creds = [RLMSyncCredentials credentialsWithUsername:username
-                                                                       password:secondPassword
-                                                                       register:NO];
+                                                        password:secondPassword
+                                                        register:NO];
         RLMSyncUser *user = [self logInUserForCredentials:creds server:[RLMObjectServerTests authServerURL]];
         XCTAssertNotNil(user);
         [user logOut];
@@ -516,7 +516,7 @@
 
     XCTestExpectation *ex = [self expectationWithDescription:@"callback invoked"];
     [RLMSyncUser requestPasswordResetForAuthServer:[RLMObjectServerTests authServerURL] userEmail:userName completion:^(NSError *error) {
-        XCTAssertNil(error);
+                    XCTAssertNil(error);
         [ex fulfill];
     }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
@@ -527,17 +527,17 @@
     // Use the password reset token
     ex = [self expectationWithDescription:@"callback invoked"];
     [RLMSyncUser completePasswordResetForAuthServer:[RLMObjectServerTests authServerURL] token:token password:@"new password"
-                                         completion:^(NSError *error) {
-                                             XCTAssertNil(error);
-                                             [ex fulfill];
-                                         }];
+                completion:^(NSError *error) {
+                    XCTAssertNil(error);
+        [ex fulfill];
+    }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 
     // Should now be able to log in with the new password
     {
         RLMSyncCredentials *creds = [RLMSyncCredentials credentialsWithUsername:userName
-                                                                       password:@"new password"
-                                                                       register:NO];
+                                                        password:@"new password"
+                                                        register:NO];
         RLMSyncUser *user = [self logInUserForCredentials:creds server:[RLMObjectServerTests authServerURL]];
         XCTAssertNotNil(user);
         [user logOut];
@@ -546,10 +546,10 @@
     // Reusing the token should fail
     ex = [self expectationWithDescription:@"callback invoked"];
     [RLMSyncUser completePasswordResetForAuthServer:[RLMObjectServerTests authServerURL] token:token password:@"new password 2"
-                                         completion:^(NSError *error) {
-                                             XCTAssertNotNil(error);
-                                             [ex fulfill];
-                                         }];
+                completion:^(NSError *error) {
+                    XCTAssertNotNil(error);
+        [ex fulfill];
+    }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
@@ -558,8 +558,8 @@
 
     XCTestExpectation *ex = [self expectationWithDescription:@"callback invoked"];
     [RLMSyncUser requestPasswordResetForAuthServer:[RLMObjectServerTests authServerURL] userEmail:userName completion:^(NSError *error) {
-        // Not an error even though the user doesn't exist
-        XCTAssertNil(error);
+                    // Not an error even though the user doesn't exist
+                    XCTAssertNil(error);
         [ex fulfill];
     }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
@@ -574,7 +574,7 @@
     XCTestExpectation *ex = [self expectationWithDescription:@"callback invoked"];
     NSURL *badAuthUrl = [[RLMObjectServerTests authServerURL] URLByAppendingPathComponent:@"/bad"];
     [RLMSyncUser requestPasswordResetForAuthServer:badAuthUrl userEmail:userName completion:^(NSError *error) {
-        XCTAssertNotNil(error);
+                    XCTAssertNotNil(error);
         XCTAssertEqualObjects(error.userInfo[@"statusCode"], @404);
         [ex fulfill];
     }];
@@ -592,10 +592,10 @@
 
     XCTestExpectation *ex = [self expectationWithDescription:@"callback invoked"];
     [RLMSyncUser requestEmailConfirmationForAuthServer:[RLMObjectServerTests authServerURL]
-                                             userEmail:userName completion:^(NSError *error) {
-                                                 XCTAssertNil(error);
-                                                 [ex fulfill];
-                                             }];
+                userEmail:userName completion:^(NSError *error) {
+                    XCTAssertNil(error);
+        [ex fulfill];
+    }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 
     // This token should have been created when requestEmailConfirmationForAuthServer was called
@@ -606,19 +606,19 @@
     // Use the token
     ex = [self expectationWithDescription:@"callback invoked"];
     [RLMSyncUser confirmEmailForAuthServer:[RLMObjectServerTests authServerURL] token:token
-                                            completion:^(NSError *error) {
-                                                XCTAssertNil(error);
-                                                [ex fulfill];
-                                            }];
+                completion:^(NSError *error) {
+                    XCTAssertNil(error);
+        [ex fulfill];
+    }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 
     // Reusing the token should fail
     ex = [self expectationWithDescription:@"callback invoked"];
     [RLMSyncUser confirmEmailForAuthServer:[RLMObjectServerTests authServerURL] token:token
-                                            completion:^(NSError *error) {
-                                                XCTAssertNotNil(error);
-                                                [ex fulfill];
-                                            }];
+                completion:^(NSError *error) {
+                    XCTAssertNotNil(error);
+        [ex fulfill];
+    }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
@@ -627,11 +627,11 @@
 
     XCTestExpectation *ex = [self expectationWithDescription:@"callback invoked"];
     [RLMSyncUser requestEmailConfirmationForAuthServer:[RLMObjectServerTests authServerURL]
-                                             userEmail:userName completion:^(NSError *error) {
-                                                 // Not an error even though the user doesn't exist
-                                                 XCTAssertNil(error);
-                                                 [ex fulfill];
-                                             }];
+                userEmail:userName completion:^(NSError *error) {
+                    // Not an error even though the user doesn't exist
+                    XCTAssertNil(error);
+        [ex fulfill];
+    }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 
     // Should not have sent an email to the non-registered user
@@ -658,60 +658,60 @@
     // Get the non-admin user's info.
     XCTestExpectation *ex1 = [self expectationWithDescription:@"should be able to get info about non-admin user"];
     [userDoingLookups retrieveInfoForUser:nonAdminUsername
-                         identityProvider:RLMIdentityProviderUsernamePassword
-                               completion:^(RLMSyncUserInfo *info, NSError *err) {
-                                   XCTAssertNil(err);
-                                   XCTAssertNotNil(info);
-                                   XCTAssertGreaterThan([info.accounts count], ((NSUInteger) 0));
-                                   RLMSyncUserAccountInfo *acctInfo = [info.accounts firstObject];
-                                   XCTAssertEqualObjects(acctInfo.providerUserIdentity, nonAdminUsername);
-                                   XCTAssertEqualObjects(acctInfo.provider, RLMIdentityProviderUsernamePassword);
-                                   XCTAssertFalse(info.isAdmin);
-                                   [ex1 fulfill];
-                               }];
+                      identityProvider:RLMIdentityProviderUsernamePassword
+                     completion:^(RLMSyncUserInfo *info, NSError *err) {
+                         XCTAssertNil(err);
+                         XCTAssertNotNil(info);
+        XCTAssertGreaterThan([info.accounts count], ((NSUInteger) 0));
+        RLMSyncUserAccountInfo *acctInfo = [info.accounts firstObject];
+        XCTAssertEqualObjects(acctInfo.providerUserIdentity, nonAdminUsername);
+        XCTAssertEqualObjects(acctInfo.provider, RLMIdentityProviderUsernamePassword);
+        XCTAssertFalse(info.isAdmin);
+        [ex1 fulfill];
+    }];
     [self waitForExpectationsWithTimeout:10 handler:nil];
 
     // Get the admin user's info.
     XCTestExpectation *ex2 = [self expectationWithDescription:@"should be able to get info about admin user"];
     [userDoingLookups retrieveInfoForUser:adminUsername
-                         identityProvider:RLMIdentityProviderDebug
-                               completion:^(RLMSyncUserInfo *info, NSError *err) {
-                                   XCTAssertNil(err);
-                                   XCTAssertNotNil(info);
-                                   XCTAssertGreaterThan([info.accounts count], ((NSUInteger) 0));
-                                   RLMSyncUserAccountInfo *acctInfo = [info.accounts firstObject];
-                                   XCTAssertEqualObjects(acctInfo.providerUserIdentity, adminUsername);
-                                   XCTAssertEqualObjects(acctInfo.provider, RLMIdentityProviderDebug);
-                                   XCTAssertTrue(info.isAdmin);
-                                   [ex2 fulfill];
-                               }];
+                      identityProvider:RLMIdentityProviderDebug
+                     completion:^(RLMSyncUserInfo *info, NSError *err) {
+                         XCTAssertNil(err);
+                         XCTAssertNotNil(info);
+        XCTAssertGreaterThan([info.accounts count], ((NSUInteger) 0));
+        RLMSyncUserAccountInfo *acctInfo = [info.accounts firstObject];
+        XCTAssertEqualObjects(acctInfo.providerUserIdentity, adminUsername);
+        XCTAssertEqualObjects(acctInfo.provider, RLMIdentityProviderDebug);
+        XCTAssertTrue(info.isAdmin);
+        [ex2 fulfill];
+    }];
     [self waitForExpectationsWithTimeout:10 handler:nil];
 
     // Get invalid user's info.
     XCTestExpectation *ex3 = [self expectationWithDescription:@"should fail for non-existent user"];
     [userDoingLookups retrieveInfoForUser:@"invalid_user@realm.example.org"
-                         identityProvider:RLMIdentityProviderUsernamePassword
-                               completion:^(RLMSyncUserInfo *info, NSError *err) {
-                                   XCTAssertNotNil(err);
-                                   XCTAssertEqualObjects(err.domain, RLMSyncAuthErrorDomain);
-                                   XCTAssertEqual(err.code, RLMSyncAuthErrorUserDoesNotExist);
-                                   XCTAssertNil(info);
-                                   [ex3 fulfill];
-                               }];
+                      identityProvider:RLMIdentityProviderUsernamePassword
+                     completion:^(RLMSyncUserInfo *info, NSError *err) {
+                         XCTAssertNotNil(err);
+                         XCTAssertEqualObjects(err.domain, RLMSyncAuthErrorDomain);
+        XCTAssertEqual(err.code, RLMSyncAuthErrorUserDoesNotExist);
+        XCTAssertNil(info);
+        [ex3 fulfill];
+    }];
     [self waitForExpectationsWithTimeout:10 handler:nil];
 
     // Get info using user without admin privileges.
     XCTestExpectation *ex4 = [self expectationWithDescription:@"should fail for user without admin privileges"];
     [nonAdminUser retrieveInfoForUser:adminUsername
-                     identityProvider:RLMIdentityProviderUsernamePassword
-                           completion:^(RLMSyncUserInfo *info, NSError *err) {
-                               XCTAssertNotNil(err);
-                               XCTAssertEqualObjects(err.domain, RLMSyncAuthErrorDomain);
-                               // FIXME: Shouldn't this be RLMSyncAuthErrorAccessDeniedOrInvalidPath?
-                               XCTAssertEqual(err.code, RLMSyncAuthErrorUserDoesNotExist);
-                               XCTAssertNil(info);
-                               [ex4 fulfill];
-                           }];
+                  identityProvider:RLMIdentityProviderUsernamePassword
+                 completion:^(RLMSyncUserInfo *info, NSError *err) {
+                     XCTAssertNotNil(err);
+                     XCTAssertEqualObjects(err.domain, RLMSyncAuthErrorDomain);
+        // FIXME: Shouldn't this be RLMSyncAuthErrorAccessDeniedOrInvalidPath?
+        XCTAssertEqual(err.code, RLMSyncAuthErrorUserDoesNotExist);
+        XCTAssertNil(info);
+        [ex4 fulfill];
+    }];
     [self waitForExpectationsWithTimeout:10 handler:nil];
 }
 
@@ -721,33 +721,33 @@
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 
     RLMSyncCredentials *c1 = [RLMSyncCredentials credentialsWithUsername:[[NSUUID UUID] UUIDString]
-                                                                password:@"p"
-                                                                register:YES];
+                                                 password:@"p"
+                                                 register:YES];
     XCTestExpectation *ex1 = [self expectationWithDescription:@"User logs in successfully on background queue"];
     [RLMSyncUser logInWithCredentials:c1
-                        authServerURL:[RLMObjectServerTests authServerURL]
-                              timeout:30.0
-                        callbackQueue:queue
-                         onCompletion:^(RLMSyncUser *user, __unused NSError *error) {
-                             XCTAssertNotNil(user);
-                             XCTAssertFalse([NSThread isMainThread]);
-                             [ex1 fulfill];
-                         }];
+                 authServerURL:[RLMObjectServerTests authServerURL]
+                 timeout:30.0
+                 callbackQueue:queue
+                onCompletion:^(RLMSyncUser *user, __unused NSError *error) {
+                    XCTAssertNotNil(user);
+        XCTAssertFalse([NSThread isMainThread]);
+        [ex1 fulfill];
+    }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 
     RLMSyncCredentials *c2 = [RLMSyncCredentials credentialsWithUsername:[[NSUUID UUID] UUIDString]
-                                                                password:@"p"
-                                                                register:YES];
+                                                 password:@"p"
+                                                 register:YES];
     XCTestExpectation *ex2 = [self expectationWithDescription:@"User logs in successfully on main queue"];
     [RLMSyncUser logInWithCredentials:c2
-                        authServerURL:[RLMObjectServerTests authServerURL]
-                              timeout:30.0
-                        callbackQueue:dispatch_get_main_queue()
-                         onCompletion:^(RLMSyncUser *user, __unused NSError *error) {
-                             XCTAssertNotNil(user);
-                             XCTAssertTrue([NSThread isMainThread]);
-                             [ex2 fulfill];
-                         }];
+                 authServerURL:[RLMObjectServerTests authServerURL]
+                 timeout:30.0
+                 callbackQueue:dispatch_get_main_queue()
+                onCompletion:^(RLMSyncUser *user, __unused NSError *error) {
+                    XCTAssertNotNil(user);
+        XCTAssertTrue([NSThread isMainThread]);
+        [ex2 fulfill];
+    }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
@@ -757,43 +757,43 @@
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 
     RLMSyncCredentials *c1 = [RLMSyncCredentials credentialsWithUsername:[[NSUUID UUID] UUIDString]
-                                                                password:@"p"
-                                                                register:NO];
+                                                 password:@"p"
+                                                 register:NO];
     XCTestExpectation *ex1 = [self expectationWithDescription:@"Error returned on background queue"];
     [RLMSyncUser logInWithCredentials:c1
-                        authServerURL:[RLMObjectServerTests authServerURL]
-                              timeout:30.0
-                        callbackQueue:queue
-                         onCompletion:^(__unused RLMSyncUser *user, NSError *error) {
-                             XCTAssertNotNil(error);
-                             XCTAssertFalse([NSThread isMainThread]);
-                             [ex1 fulfill];
-                         }];
+                 authServerURL:[RLMObjectServerTests authServerURL]
+                 timeout:30.0
+                 callbackQueue:queue
+                onCompletion:^(__unused RLMSyncUser *user, NSError *error) {
+                    XCTAssertNotNil(error);
+        XCTAssertFalse([NSThread isMainThread]);
+        [ex1 fulfill];
+    }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 
     RLMSyncCredentials *c2 = [RLMSyncCredentials credentialsWithUsername:[[NSUUID UUID] UUIDString]
-                                                                password:@"p"
-                                                                register:NO];
+                                                 password:@"p"
+                                                 register:NO];
     XCTestExpectation *ex2 = [self expectationWithDescription:@"Error returned on main queue"];
     [RLMSyncUser logInWithCredentials:c2
-                        authServerURL:[RLMObjectServerTests authServerURL]
-                              timeout:30.0
-                        callbackQueue:dispatch_get_main_queue()
-                         onCompletion:^(__unused RLMSyncUser *user, NSError *error) {
-                             XCTAssertNotNil(error);
-                             XCTAssertTrue([NSThread isMainThread]);
-                             [ex2 fulfill];
-                         }];
+                 authServerURL:[RLMObjectServerTests authServerURL]
+                 timeout:30.0
+                 callbackQueue:dispatch_get_main_queue()
+                onCompletion:^(__unused RLMSyncUser *user, NSError *error) {
+                    XCTAssertNotNil(error);
+        XCTAssertTrue([NSThread isMainThread]);
+        [ex2 fulfill];
+    }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
 - (void)testUserExpirationCallback {
     NSString *username = NSStringFromSelector(_cmd);
     RLMSyncCredentials *credentials = [RLMSyncCredentials credentialsWithUsername:username
-                                                                         password:@"a"
-                                                                         register:YES];
+                                                          password:@"a"
+                                                          register:YES];
     RLMSyncUser *user = [self logInUserForCredentials:credentials
-                                               server:[RLMObjectServerTests authServerURL]];
+                              server:[RLMObjectServerTests authServerURL]];
 
     XCTestExpectation *ex = [self expectationWithDescription:@"callback should fire"];
     // Set a callback on the user
@@ -824,7 +824,7 @@
     RLMSyncCredentials *credentials = [RLMSyncCredentials credentialsWithAccessToken:self.adminToken identity:@"test"];
     XCTAssertNotNil(credentials);
     RLMSyncUser *user = [self logInUserForCredentials:credentials
-                                               server:[RLMObjectServerTests authServerURL]];
+                              server:[RLMObjectServerTests authServerURL]];
     NSURL *url = [NSURL URLWithString:@"realm://127.0.0.1:9080/testSyncWithAdminToken"];
     RLMRealmConfiguration *c = [user configurationWithURL:url fullSynchronization:YES];
     NSError *error = nil;
@@ -836,8 +836,8 @@
 /// It should be possible to successfully open a Realm configured for sync with a normal user.
 - (void)testOpenRealmWithNormalCredentials {
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:YES]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:YES]
+                              server:[RLMObjectServerTests authServerURL]];
     NSURL *url = REALM_URL();
     RLMRealm *realm = [self openRealmForURL:url user:user];
     XCTAssertTrue(realm.isEmpty);
@@ -847,8 +847,8 @@
 - (void)testAddObjects {
     NSURL *url = REALM_URL();
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:self.isParent]
-                                              server:[RLMObjectServerTests authServerURL]];
+                              register:self.isParent]
+                              server:[RLMObjectServerTests authServerURL]];
     RLMRealm *realm = [self openRealmForURL:url user:user];
     if (self.isParent) {
         CHECK_COUNT(0, SyncObject, realm);
@@ -866,8 +866,8 @@
 - (void)testDeleteObjects {
     NSURL *url = REALM_URL();
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:self.isParent]
+                              server:[RLMObjectServerTests authServerURL]];
     RLMRealm *realm = [self openRealmForURL:url user:user];
     if (self.isParent) {
         // Add objects.
@@ -894,12 +894,12 @@
 - (void)testEncryptedSyncedRealm {
     NSURL *url = REALM_URL();
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:self.isParent]
+                              server:[RLMObjectServerTests authServerURL]];
 
     NSData *key = RLMGenerateKey();
     RLMRealm *realm = [self openRealmForURL:url user:user encryptionKey:key
-                                 stopPolicy:RLMSyncStopPolicyAfterChangesUploaded immediatelyBlock:nil];
+                            stopPolicy:RLMSyncStopPolicyAfterChangesUploaded immediatelyBlock:nil];
     if (self.isParent) {
         CHECK_COUNT(0, SyncObject, realm);
         RLMRunChildAndWait();
@@ -916,14 +916,14 @@
 - (void)testEncryptedSyncedRealmWrongKey {
     NSURL *url = REALM_URL();
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:self.isParent]
+                              server:[RLMObjectServerTests authServerURL]];
 
     if (self.isParent) {
         NSString *path;
         @autoreleasepool {
             RLMRealm *realm = [self openRealmForURL:url user:user encryptionKey:RLMGenerateKey()
-                                         stopPolicy:RLMSyncStopPolicyImmediately immediatelyBlock:nil];
+                                    stopPolicy:RLMSyncStopPolicyImmediately immediatelyBlock:nil];
             path = realm.configuration.pathOnDisk;
             CHECK_COUNT(0, SyncObject, realm);
             RLMRunChildAndWait();
@@ -942,7 +942,7 @@
                                  @"Realm file decryption failed");
     } else {
         RLMRealm *realm = [self openRealmForURL:url user:user encryptionKey:RLMGenerateKey()
-                                     stopPolicy:RLMSyncStopPolicyImmediately immediatelyBlock:nil];
+                                stopPolicy:RLMSyncStopPolicyImmediately immediatelyBlock:nil];
         [self addSyncObjectsToRealm:realm descriptions:@[@"child-1", @"child-2", @"child-3"]];
         [self waitForUploadsForRealm:realm];
         CHECK_COUNT(3, SyncObject, realm);
@@ -957,8 +957,8 @@
     NSURL *urlB = CUSTOM_REALM_URL(@"b");
     NSURL *urlC = CUSTOM_REALM_URL(@"c");
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:self.isParent]
+                              server:[RLMObjectServerTests authServerURL]];
     // Open three Realms.
     __attribute__((objc_precise_lifetime)) RLMRealm *realmealmA = [self openRealmForURL:urlA user:user];
     __attribute__((objc_precise_lifetime)) RLMRealm *realmealmB = [self openRealmForURL:urlB user:user];
@@ -979,8 +979,8 @@
     NSURL *urlB = CUSTOM_REALM_URL(@"b");
     NSURL *urlC = CUSTOM_REALM_URL(@"c");
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:self.isParent]
+                              server:[RLMObjectServerTests authServerURL]];
     RLMRealm *realmA = [self openRealmForURL:urlA user:user];
     RLMRealm *realmB = [self openRealmForURL:urlB user:user];
     RLMRealm *realmC = [self openRealmForURL:urlC user:user];
@@ -993,17 +993,17 @@
         CHECK_COUNT(0, SyncObject, realmC);
         RLMRunChildAndWait();
         [self waitForDownloadsForUser:user
-                               realms:@[realmA, realmB, realmC]
-                            realmURLs:@[urlA, urlB, urlC]
-                       expectedCounts:@[@3, @2, @5]];
+              realms:@[realmA, realmB, realmC]
+              realmURLs:@[urlA, urlB, urlC]
+              expectedCounts:@[@3, @2, @5]];
     } else {
         // Add objects.
         [self addSyncObjectsToRealm:realmA
-                       descriptions:@[@"child-A1", @"child-A2", @"child-A3"]];
+              descriptions:@[@"child-A1", @"child-A2", @"child-A3"]];
         [self addSyncObjectsToRealm:realmB
-                       descriptions:@[@"child-B1", @"child-B2"]];
+              descriptions:@[@"child-B1", @"child-B2"]];
         [self addSyncObjectsToRealm:realmC
-                       descriptions:@[@"child-C1", @"child-C2", @"child-C3", @"child-C4", @"child-C5"]];
+              descriptions:@[@"child-C1", @"child-C2", @"child-C3", @"child-C4", @"child-C5"]];
         [self waitForUploadsForRealm:realmA];
         [self waitForUploadsForRealm:realmB];
         [self waitForUploadsForRealm:realmC];
@@ -1019,8 +1019,8 @@
     NSURL *urlB = CUSTOM_REALM_URL(@"b");
     NSURL *urlC = CUSTOM_REALM_URL(@"c");
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:self.isParent]
+                              server:[RLMObjectServerTests authServerURL]];
     RLMRealm *realmA = [self openRealmForURL:urlA user:user];
     RLMRealm *realmB = [self openRealmForURL:urlB user:user];
     RLMRealm *realmC = [self openRealmForURL:urlC user:user];
@@ -1030,11 +1030,11 @@
         [self waitForDownloadsForRealm:realmC];
         // Add objects.
         [self addSyncObjectsToRealm:realmA
-                       descriptions:@[@"parent-A1", @"parent-A2", @"parent-A3", @"parent-A4"]];
+              descriptions:@[@"parent-A1", @"parent-A2", @"parent-A3", @"parent-A4"]];
         [self addSyncObjectsToRealm:realmB
-                       descriptions:@[@"parent-B1", @"parent-B2", @"parent-B3", @"parent-B4", @"parent-B5"]];
+              descriptions:@[@"parent-B1", @"parent-B2", @"parent-B3", @"parent-B4", @"parent-B5"]];
         [self addSyncObjectsToRealm:realmC
-                       descriptions:@[@"parent-C1", @"parent-C2"]];
+              descriptions:@[@"parent-C1", @"parent-C2"]];
         [self waitForUploadsForRealm:realmA];
         [self waitForUploadsForRealm:realmB];
         [self waitForUploadsForRealm:realmC];
@@ -1043,9 +1043,9 @@
         CHECK_COUNT(2, SyncObject, realmC);
         RLMRunChildAndWait();
         [self waitForDownloadsForUser:user
-                               realms:@[realmA, realmB, realmC]
-                            realmURLs:@[urlA, urlB, urlC]
-                       expectedCounts:@[@0, @0, @0]];
+              realms:@[realmA, realmB, realmC]
+              realmURLs:@[urlA, urlB, urlC]
+              expectedCounts:@[@0, @0, @0]];
     } else {
         // Delete all the objects from the Realms.
         [self waitForDownloadsForRealm:realmA];
@@ -1080,8 +1080,8 @@
     NSURL *url = REALM_URL();
     // Log in the user.
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:self.isParent]
+                              server:[RLMObjectServerTests authServerURL]];
 
     if (self.isParent) {
         // Open the Realm in an autorelease pool so that it is destroyed as soon as possible.
@@ -1115,8 +1115,8 @@
     NSURL *url = REALM_URL();
     // Log in the user.
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:self.isParent]
+                              server:[RLMObjectServerTests authServerURL]];
     RLMRealm *realm = [self openRealmForURL:url user:user];
 
     if (self.isParent) {
@@ -1127,8 +1127,8 @@
         [user logOut];
         // Log the user back in.
         user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                   register:NO]
-                                      server:[RLMObjectServerTests authServerURL]];
+                                              register:NO]
+                     server:[RLMObjectServerTests authServerURL]];
         [self addSyncObjectsToRealm:realm descriptions:@[@"parent-2", @"parent-3"]];
         [self waitForUploadsForRealm:realm];
         CHECK_COUNT(3, SyncObject, realm);
@@ -1144,8 +1144,8 @@
     NSURL *url = REALM_URL();
     // Log in the user.
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:self.isParent]
+                              server:[RLMObjectServerTests authServerURL]];
     RLMRealm *realm = [self openRealmForURL:url user:user];
 
     if (self.isParent) {
@@ -1156,8 +1156,8 @@
         [user logOut];
         // Log the user back in.
         user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                   register:NO]
-                                      server:[RLMObjectServerTests authServerURL]];
+                                              register:NO]
+                     server:[RLMObjectServerTests authServerURL]];
         RLMRunChildAndWait();
         [self waitForDownloadsForRealm:realm];
         CHECK_COUNT(3, SyncObject, realm);
@@ -1174,8 +1174,8 @@
     NSURL *url = REALM_URL();
     // Log in the user.
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:self.isParent]
+                              server:[RLMObjectServerTests authServerURL]];
     NSError *error = nil;
     if (self.isParent) {
         // Semaphore for knowing when the Realm is successfully opened for sync.
@@ -1189,8 +1189,8 @@
         [self addSyncObjectsToRealm:realm descriptions:@[@"parent-1"]];
         CHECK_COUNT(1, SyncObject, realm);
         user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                   register:NO]
-                                      server:[RLMObjectServerTests authServerURL]];
+                                              register:NO]
+                     server:[RLMObjectServerTests authServerURL]];
         // Wait for the Realm's session to be bound.
         WAIT_FOR_SEMAPHORE(sema, 30);
         [self addSyncObjectsToRealm:realm descriptions:@[@"parent-2", @"parent-3"]];
@@ -1210,8 +1210,8 @@
     NSURL *url = REALM_URL();
     // Log in the user.
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:self.isParent]
+                              server:[RLMObjectServerTests authServerURL]];
     NSError *error = nil;
     if (self.isParent) {
         dispatch_semaphore_t sema = dispatch_semaphore_create(0);
@@ -1225,8 +1225,8 @@
         [self addSyncObjectsToRealm:realm descriptions:@[@"parent-1"]];
         CHECK_COUNT(1, SyncObject, realm);
         user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                   register:NO]
-                                      server:[RLMObjectServerTests authServerURL]];
+                                              register:NO]
+                     server:[RLMObjectServerTests authServerURL]];
         // Wait for the Realm's session to be bound.
         WAIT_FOR_SEMAPHORE(sema, 30);
         [self waitForDownloadsForUser:user realms:@[realm] realmURLs:@[url] expectedCounts:@[@4]];
@@ -1244,8 +1244,8 @@
     NSURL *url = REALM_URL();
     // Log in the user.
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:self.isParent]
+                              server:[RLMObjectServerTests authServerURL]];
 
     // Now run a basic multi-client test.
     if (self.isParent) {
@@ -1253,8 +1253,8 @@
         [user logOut];
         // Log the user back in.
         user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                   register:NO]
-                                     server:[RLMObjectServerTests authServerURL]];
+                                              register:NO]
+                     server:[RLMObjectServerTests authServerURL]];
         // Open the Realm (for the first time).
         RLMRealm *realm = [self openRealmForURL:url user:user];
         [self addSyncObjectsToRealm:realm descriptions:@[@"child-1", @"child-2"]];
@@ -1274,8 +1274,8 @@
     NSURL *url = REALM_URL();
     // Log in the user.
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:self.isParent]
+                              server:[RLMObjectServerTests authServerURL]];
 
     // Now run a basic multi-client test.
     if (self.isParent) {
@@ -1283,8 +1283,8 @@
         [user logOut];
         // Log the user back in.
         user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                   register:NO]
-                                      server:[RLMObjectServerTests authServerURL]];
+                                              register:NO]
+                     server:[RLMObjectServerTests authServerURL]];
         // Open the Realm (for the first time).
         RLMRealm *realm = [self openRealmForURL:url user:user];
         // Run the sub-test.
@@ -1307,8 +1307,8 @@
     NSURL *url = REALM_URL();
     // Log in the user.
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:self.isParent]
+                              server:[RLMObjectServerTests authServerURL]];
     // Open the Realm
     RLMRealm *realm = [self openRealmForURL:url user:user];
     if (self.isParent) {
@@ -1319,8 +1319,8 @@
         [user logOut];
         // Log the user back in.
         user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                   register:NO]
-                                      server:[RLMObjectServerTests authServerURL]];
+                                              register:NO]
+                     server:[RLMObjectServerTests authServerURL]];
         // Open the Realm again.
         realm = [self immediatelyOpenRealmForURL:url user:user];
         [self addSyncObjectsToRealm:realm descriptions:@[@"child-1", @"child-2", @"child-3", @"child-4"]];
@@ -1339,8 +1339,8 @@
     NSURL *url = REALM_URL();
     // Log in the user.
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:self.isParent]
-                                              server:[RLMObjectServerTests authServerURL]];
+                              register:self.isParent]
+                              server:[RLMObjectServerTests authServerURL]];
     // Open the Realm
     RLMRealm *realm = [self openRealmForURL:url user:user];
     if (self.isParent) {
@@ -1351,8 +1351,8 @@
         [user logOut];
         // Log the user back in.
         user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                   register:NO]
-                                      server:[RLMObjectServerTests authServerURL]];
+                                              register:NO]
+                     server:[RLMObjectServerTests authServerURL]];
         // Run the sub-test.
         RLMRunChildAndWait();
         // Open the Realm again and get the items.
@@ -1374,8 +1374,8 @@
     NSURL *urlA = CUSTOM_REALM_URL(@"a");
     NSURL *urlB = CUSTOM_REALM_URL(@"b");
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:self.isParent]
+                              server:[RLMObjectServerTests authServerURL]];
     RLMRealm *realmA = [self openRealmForURL:urlA user:user];
     RLMRealm *realmB = [self openRealmForURL:urlB user:user];
     if (self.isParent) {
@@ -1427,8 +1427,8 @@
     NSURL *url = REALM_URL();
     NSString *sessionName = NSStringFromSelector(_cmd);
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:sessionName
-                                                                                            register:true]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:true]
+                              server:[RLMObjectServerTests authServerURL]];
     // Open the Realm
     __attribute__((objc_precise_lifetime)) RLMRealm *realm = [self openRealmForURL:url user:user];
 
@@ -1457,8 +1457,8 @@
     NSURL *url = REALM_URL();
     NSString *sessionName = NSStringFromSelector(_cmd);
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:sessionName
-                                                                                            register:true]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:true]
+                              server:[RLMObjectServerTests authServerURL]];
     __block NSError *theError = nil;
     @autoreleasepool {
         __attribute__((objc_precise_lifetime)) RLMRealm *realm = [self openRealmForURL:url user:user];
@@ -1498,7 +1498,7 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
 - (void)testStreamingDownloadNotifier {
     NSURL *url = REALM_URL();
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd) register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              server:[RLMObjectServerTests authServerURL]];
     if (!self.isParent) {
         [self populateDataForUser:user url:url];
         return;
@@ -1514,19 +1514,19 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
     XCTAssertNotNil(session);
     XCTestExpectation *ex = [self expectationWithDescription:@"streaming-download-notifier"];
     id token = [session addProgressNotificationForDirection:RLMSyncProgressDirectionDownload
-                                                       mode:RLMSyncProgressModeReportIndefinitely
-                                                      block:^(NSUInteger xfr, NSUInteger xfb) {
-                                                          // Make sure the values are increasing, and update our stored copies.
-                                                          XCTAssert(xfr >= transferred);
-                                                          XCTAssert(xfb >= transferrable);
-                                                          transferred = xfr;
-                                                          transferrable = xfb;
-                                                          callCount++;
-                                                          if (transferrable > 0 && transferred >= transferrable && !hasBeenFulfilled) {
-                                                              [ex fulfill];
-                                                              hasBeenFulfilled = YES;
-                                                          }
-                                                      }];
+                        mode:RLMSyncProgressModeReportIndefinitely
+            block:^(NSUInteger xfr, NSUInteger xfb) {
+                // Make sure the values are increasing, and update our stored copies.
+                XCTAssert(xfr >= transferred);
+                XCTAssert(xfb >= transferrable);
+        transferred = xfr;
+        transferrable = xfb;
+        callCount++;
+        if (transferrable > 0 && transferred >= transferrable && !hasBeenFulfilled) {
+            [ex fulfill];
+            hasBeenFulfilled = YES;
+        }
+    }];
     // Wait for the child process to upload everything.
     RLMRunChildAndWait();
     [self waitForExpectationsWithTimeout:10.0 handler:nil];
@@ -1542,7 +1542,7 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
 - (void)testStreamingUploadNotifier {
     NSURL *url = REALM_URL();
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd) register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              server:[RLMObjectServerTests authServerURL]];
     __block NSInteger callCount = 0;
     __block NSUInteger transferred = 0;
     __block NSUInteger transferrable = 0;
@@ -1554,20 +1554,20 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
     XCTAssertNotNil(session);
     XCTestExpectation *ex = [self expectationWithDescription:@"streaming-upload-expectation"];
     auto token = [session addProgressNotificationForDirection:RLMSyncProgressDirectionUpload
-                                                         mode:RLMSyncProgressModeReportIndefinitely
-                                                        block:^(NSUInteger xfr, NSUInteger xfb) {
-                                                            // Make sure the values are
-                                                            // increasing, and update our
-                                                            // stored copies.
-                                                            XCTAssert(xfr >= transferred);
-                                                            XCTAssert(xfb >= transferrable);
-                                                            transferred = xfr;
-                                                            transferrable = xfb;
-                                                            callCount++;
-                                                            if (transferred > 0 && transferred >= transferrable && transferrable > 1000000 * NUMBER_OF_BIG_OBJECTS) {
-                                                                [ex fulfill];
-                                                            }
-                                                        }];
+                          mode:RLMSyncProgressModeReportIndefinitely
+            block:^(NSUInteger xfr, NSUInteger xfb) {
+                // Make sure the values are
+                // increasing, and update our
+                // stored copies.
+                XCTAssert(xfr >= transferred);
+                XCTAssert(xfb >= transferrable);
+        transferred = xfr;
+        transferrable = xfb;
+        callCount++;
+        if (transferred > 0 && transferred >= transferrable && transferrable > 1000000 * NUMBER_OF_BIG_OBJECTS) {
+            [ex fulfill];
+        }
+    }];
     // Upload lots of data
     [realm beginWriteTransaction];
     for (NSInteger i=0; i<NUMBER_OF_BIG_OBJECTS; i++) {
@@ -1591,7 +1591,7 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
     const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
     NSURL *url = REALM_URL();
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd) register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              server:[RLMObjectServerTests authServerURL]];
     if (!self.isParent) {
         [self populateDataForUser:user url:url];
         return;
@@ -1604,12 +1604,12 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
     RLMRealmConfiguration *c = [user configurationWithURL:url fullSynchronization:true];
     XCTAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:c.pathOnDisk isDirectory:nil]);
     [RLMRealm asyncOpenWithConfiguration:c
-                           callbackQueue:dispatch_get_main_queue()
-                                callback:^(RLMRealm * _Nullable realm, NSError * _Nullable error) {
-                                    XCTAssertNil(error);
-                                    CHECK_COUNT(NUMBER_OF_BIG_OBJECTS, HugeSyncObject, realm);
-                                    [ex fulfill];
-                                }];
+              callbackQueue:dispatch_get_main_queue()
+             callback:^(RLMRealm * _Nullable realm, NSError * _Nullable error) {
+                 XCTAssertNil(error);
+                 CHECK_COUNT(NUMBER_OF_BIG_OBJECTS, HugeSyncObject, realm);
+        [ex fulfill];
+    }];
     NSUInteger (^fileSize)(NSString *) = ^NSUInteger(NSString *path) {
         NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
         if (attributes)
@@ -1628,7 +1628,7 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
     NSURL *url = REALM_URL();
     // Log in the user.
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd) register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              server:[RLMObjectServerTests authServerURL]];
     if (!self.isParent) {
         [self populateDataForUser:user url:url];
         return;
@@ -1653,10 +1653,10 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
     XCTAssertNotNil(RLMGetAnyCachedRealmForPath(c.pathOnDisk.UTF8String));
 
     [RLMRealm asyncOpenWithConfiguration:c
-                           callbackQueue:dispatch_get_main_queue()
-                                callback:^(RLMRealm * _Nullable realm, NSError * _Nullable error) {
-        XCTAssertNil(error);
-        CHECK_COUNT(NUMBER_OF_BIG_OBJECTS, HugeSyncObject, realm);
+              callbackQueue:dispatch_get_main_queue()
+             callback:^(RLMRealm * _Nullable realm, NSError * _Nullable error) {
+                 XCTAssertNil(error);
+                 CHECK_COUNT(NUMBER_OF_BIG_OBJECTS, HugeSyncObject, realm);
         [ex fulfill];
     }];
     [realm.syncSession resume];
@@ -1671,14 +1671,14 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
 
 - (void)testDownloadCancelsOnAuthError {
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd) register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              server:[RLMObjectServerTests authServerURL]];
     auto c = [user configurationWithURL:[NSURL URLWithString:@"realm://127.0.0.1:9080/invalid"] fullSynchronization:true];
     auto ex = [self expectationWithDescription:@"async open"];
     [RLMRealm asyncOpenWithConfiguration:c callbackQueue:dispatch_get_main_queue()
-                                callback:^(RLMRealm *realm, NSError *error) {
-                                    XCTAssertNil(realm);
-                                    XCTAssertNotNil(error);
-                                    [ex fulfill];
+             callback:^(RLMRealm *realm, NSError *error) {
+                 XCTAssertNil(realm);
+                 XCTAssertNotNil(error);
+        [ex fulfill];
     }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
@@ -1686,7 +1686,7 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
 - (void)testCancelDownload {
     NSURL *url = REALM_URL();
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd) register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              server:[RLMObjectServerTests authServerURL]];
     if (!self.isParent) {
         [self populateDataForUser:user url:url];
         return;
@@ -1703,24 +1703,24 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
     RLMRealmConfiguration *c = [user configurationWithURL:url fullSynchronization:true];
 
     [RLMRealm asyncOpenWithConfiguration:c
-                           callbackQueue:dispatch_get_main_queue()
-                                callback:^(RLMRealm *realm, NSError *error) {
-                                    XCTAssertNil(realm);
-                                    XCTAssertNotNil(error);
-                                    [ex fulfill];
-                                }];
+              callbackQueue:dispatch_get_main_queue()
+             callback:^(RLMRealm *realm, NSError *error) {
+                 XCTAssertNil(realm);
+                 XCTAssertNotNil(error);
+        [ex fulfill];
+    }];
     [[RLMRealm asyncOpenWithConfiguration:c
-                            callbackQueue:dispatch_get_main_queue()
-                                 callback:^(RLMRealm *, NSError *) {
-                                     XCTFail(@"Cancelled callback got called");
-                                 }] cancel];
+      callbackQueue:dispatch_get_main_queue()
+    callback:^(RLMRealm *, NSError *) {
+        XCTFail(@"Cancelled callback got called");
+    }] cancel];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
 - (void)testAsyncOpenProgressNotifications {
     NSURL *url = REALM_URL();
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd) register:self.isParent]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              server:[RLMObjectServerTests authServerURL]];
     if (!self.isParent) {
         [self populateDataForUser:user url:url];
         return;
@@ -1733,17 +1733,17 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
     RLMRealmConfiguration *c = [user configurationWithURL:url fullSynchronization:true];
 
     auto task = [RLMRealm asyncOpenWithConfiguration:c
-                                       callbackQueue:dispatch_get_main_queue()
-                                            callback:^(RLMRealm *realm, NSError *error) {
-                                                XCTAssertNil(error);
-                                                XCTAssertNotNil(realm);
-                                                [ex1 fulfill];
-                                            }];
-    [task addProgressNotificationBlock:^(NSUInteger transferredBytes, NSUInteger transferrableBytes) {
-        if (transferrableBytes > 0 && transferredBytes == transferrableBytes) {
-            [ex2 fulfill];
-        }
+                          callbackQueue:dispatch_get_main_queue()
+             callback:^(RLMRealm *realm, NSError *error) {
+                 XCTAssertNil(error);
+                 XCTAssertNotNil(realm);
+        [ex1 fulfill];
     }];
+    [task addProgressNotificationBlock:^(NSUInteger transferredBytes, NSUInteger transferrableBytes) {
+             if (transferrableBytes > 0 && transferredBytes == transferrableBytes) {
+                 [ex2 fulfill];
+             }
+         }];
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
@@ -1752,7 +1752,7 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
     // 9083 is a proxy which delays responding to requests
     NSURL *authURL = [NSURL URLWithString:@"http://127.0.0.1:9083"];
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:userName register:YES]
-                                               server:authURL];
+                              server:authURL];
     RLMRealmConfiguration *c = [user configuration];
     RLMSyncConfiguration *syncConfig = c.syncConfiguration;
     syncConfig.cancelAsyncOpenOnNonFatalErrors = true;
@@ -1764,10 +1764,10 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
 
     XCTestExpectation *ex = [self expectationWithDescription:@"async open"];
     [RLMRealm asyncOpenWithConfiguration:c
-                           callbackQueue:dispatch_get_main_queue()
-                                callback:^(RLMRealm *realm, NSError *error) {
-        XCTAssertNotNil(error);
-        XCTAssertEqual(error.code, ETIMEDOUT);
+              callbackQueue:dispatch_get_main_queue()
+             callback:^(RLMRealm *realm, NSError *error) {
+                 XCTAssertNotNil(error);
+                 XCTAssertEqual(error.code, ETIMEDOUT);
         XCTAssertEqual(error.domain, NSPOSIXErrorDomain);
         XCTAssertNil(realm);
         [ex fulfill];
@@ -1780,8 +1780,8 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
 - (void)testCompactOnLaunch {
     NSURL *url = REALM_URL();
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:YES]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:YES]
+                              server:[RLMObjectServerTests authServerURL]];
 
     NSString *path;
     // Create a large object and then delete it in the next transaction so that
@@ -1831,8 +1831,8 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
 - (void)testOfflineClientReset {
     NSError *error;
     RLMSyncUser *user = [self logInUserForCredentials:[RLMObjectServerTests basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                            register:YES]
-                                               server:[RLMObjectServerTests authServerURL]];
+                              register:YES]
+                              server:[RLMObjectServerTests authServerURL]];
     NSURL *sourceFileURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"sync-1.x" withExtension:@"realm"];
     NSString *fileName = [NSString stringWithFormat:@"%@.realm", [NSUUID new]];
     NSURL *fileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:fileName]];
@@ -1988,10 +1988,10 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
 - (void)testAllSubscriptionsDoesNotReportLocalError {
     RLMRealm *realm = [self partialRealmWithName:_cmd];
     RLMSyncSubscription *subscription1 = [[PartialSyncObjectA objectsInRealm:realm where:@"number > 5"]
-                                         subscribeWithName:@"query"];
+                                          subscribeWithName:@"query"];
     [self waitForKeyPath:@"state" object:subscription1 value:@(RLMSyncSubscriptionStateComplete)];
     RLMSyncSubscription *subscription2 = [[PartialSyncObjectA objectsInRealm:realm where:@"number > 6"]
-                                         subscribeWithName:@"query"];
+                                          subscribeWithName:@"query"];
     [self waitForKeyPath:@"state" object:subscription2 value:@(RLMSyncSubscriptionStateError)];
     XCTAssertEqual(1U, realm.subscriptions.count);
 }
@@ -1999,7 +1999,7 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
 - (void)testAllSubscriptionsReportsServerError {
     RLMRealm *realm = [self partialRealmWithName:_cmd];
     RLMSyncSubscription *subscription = [[PersonObject objectsInRealm:realm where:@"SUBQUERY(parents, $p1, $p1.age < 31 AND SUBQUERY($p1.parents, $p2, $p2.age > 35 AND $p2.name == 'Michael').@count > 0).@count > 0"]
-                                          subscribeWithName:@"query"];
+                                         subscribeWithName:@"query"];
     XCTAssertEqual(0U, realm.subscriptions.count);
     [self waitForKeyPath:@"state" object:subscription value:@(RLMSyncSubscriptionStateError)];
     XCTAssertEqual(1U, realm.subscriptions.count);
@@ -2088,14 +2088,14 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
 
     NSDate *now = NSDate.date;
     [self waitForKeyPath:@"state" object:[[PartialSyncObjectA allObjectsInRealm:realm] subscribeWithName:@"query 1"]
-                   value:@(RLMSyncSubscriptionStateComplete)];
+          value:@(RLMSyncSubscriptionStateComplete)];
     [self waitForKeyPath:@"state" object:[[PartialSyncObjectA allObjectsInRealm:realm] subscribeWithName:@"query 2"]
-                   value:@(RLMSyncSubscriptionStateComplete)];
+          value:@(RLMSyncSubscriptionStateComplete)];
     [self waitForKeyPath:@"state" object:[[PartialSyncObjectB allObjectsInRealm:realm] subscribeWithName:@"query 3"]
-                   value:@(RLMSyncSubscriptionStateComplete)];
+          value:@(RLMSyncSubscriptionStateComplete)];
     RLMResults *unsupportedQuery = [PersonObject objectsInRealm:realm where:@"SUBQUERY(parents, $p1, $p1.age < 31 AND SUBQUERY($p1.parents, $p2, $p2.age > 35 AND $p2.name == 'Michael').@count > 0).@count > 0"];
     [self waitForKeyPath:@"state" object:[unsupportedQuery subscribeWithName:@"query 4"]
-                   value:@(RLMSyncSubscriptionStateError)];
+          value:@(RLMSyncSubscriptionStateError)];
 
     auto subscriptions = realm.subscriptions;
     XCTAssertEqual(4U, subscriptions.count);
@@ -2153,17 +2153,17 @@ static const NSInteger NUMBER_OF_BIG_OBJECTS = 2;
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"HTTP login"];
     [RLMSyncUser logInWithCredentials:creds authServerURL:url
-                         onCompletion:^(RLMSyncUser *user, NSError *error) {
-                             callback(user, error);
-                             [expectation fulfill];
-                         }];
+                onCompletion:^(RLMSyncUser *user, NSError *error) {
+                    callback(user, error);
+        [expectation fulfill];
+    }];
     [self waitForExpectationsWithTimeout:4.0 handler:nil];
 }
 
 - (void)testHTTPSLoginFailsWithoutCertificate {
     [self attemptLoginWithUsername:NSStringFromSelector(_cmd) callback:^(RLMSyncUser *user, NSError *error) {
-        XCTAssertNil(user);
-        XCTAssertNotNil(error);
+             XCTAssertNil(user);
+             XCTAssertNotNil(error);
         XCTAssertEqualObjects(error.domain, NSURLErrorDomain);
         XCTAssertEqual(error.code, NSURLErrorServerCertificateUntrusted);
     }];
@@ -2176,71 +2176,71 @@ static NSURL *certificateURL(NSString *filename) {
 }
 
 - (void)testHTTPSLoginFailsWithIncorrectCertificate {
-    RLMSyncManager.sharedManager.pinnedCertificatePaths = @{@"localhost": certificateURL(@"not-localhost.cer")};
+    RLMSyncManager.sharedManager.pinnedCertificatePaths = @ {@"localhost": certificateURL(@"not-localhost.cer")};
     [self attemptLoginWithUsername:NSStringFromSelector(_cmd) callback:^(RLMSyncUser *user, NSError *error) {
-        XCTAssertNil(user);
-        XCTAssertNotNil(error);
+             XCTAssertNil(user);
+             XCTAssertNotNil(error);
         XCTAssertEqualObjects(error.domain, NSURLErrorDomain);
         XCTAssertEqual(error.code, NSURLErrorServerCertificateUntrusted);
     }];
 }
 
 - (void)testHTTPSLoginFailsWithInvalidPathToCertificate {
-    RLMSyncManager.sharedManager.pinnedCertificatePaths = @{@"localhost": certificateURL(@"nonexistent.pem")};
+    RLMSyncManager.sharedManager.pinnedCertificatePaths = @ {@"localhost": certificateURL(@"nonexistent.pem")};
     [self attemptLoginWithUsername:NSStringFromSelector(_cmd) callback:^(RLMSyncUser *user, NSError *error) {
-        XCTAssertNil(user);
-        XCTAssertNotNil(error);
+             XCTAssertNil(user);
+             XCTAssertNotNil(error);
         XCTAssertEqualObjects(error.domain, NSCocoaErrorDomain);
         XCTAssertEqual(error.code, NSFileReadNoSuchFileError);
     }];
 }
 
 - (void)testHTTPSLoginFailsWithDifferentValidCert {
-    RLMSyncManager.sharedManager.pinnedCertificatePaths = @{@"localhost": certificateURL(@"localhost-other.cer")};
+    RLMSyncManager.sharedManager.pinnedCertificatePaths = @ {@"localhost": certificateURL(@"localhost-other.cer")};
     [self attemptLoginWithUsername:NSStringFromSelector(_cmd) callback:^(RLMSyncUser *user, NSError *error) {
-        XCTAssertNil(user);
-        XCTAssertNotNil(error);
+             XCTAssertNil(user);
+             XCTAssertNotNil(error);
         XCTAssertEqualObjects(error.domain, NSURLErrorDomain);
         XCTAssertEqual(error.code, NSURLErrorServerCertificateUntrusted);
     }];
 }
 
 - (void)testHTTPSLoginFailsWithFileThatIsNotACert {
-    RLMSyncManager.sharedManager.pinnedCertificatePaths = @{@"localhost": certificateURL(@"../test-ros-server.js")};
+    RLMSyncManager.sharedManager.pinnedCertificatePaths = @ {@"localhost": certificateURL(@"../test-ros-server.js")};
     [self attemptLoginWithUsername:NSStringFromSelector(_cmd) callback:^(RLMSyncUser *user, NSError *error) {
-        XCTAssertNil(user);
-        XCTAssertNotNil(error);
+             XCTAssertNil(user);
+             XCTAssertNotNil(error);
         XCTAssertEqualObjects(error.domain, NSOSStatusErrorDomain);
         XCTAssertEqual(error.code, errSecUnknownFormat);
     }];
 }
 
 - (void)testHTTPSLoginDoesNotUseCertificateForDifferentDomain {
-    RLMSyncManager.sharedManager.pinnedCertificatePaths = @{@"example.com": certificateURL(@"localhost.cer")};
+    RLMSyncManager.sharedManager.pinnedCertificatePaths = @ {@"example.com": certificateURL(@"localhost.cer")};
     [self attemptLoginWithUsername:NSStringFromSelector(_cmd) callback:^(RLMSyncUser *user, NSError *error) {
-        XCTAssertNil(user);
-        XCTAssertNotNil(error);
+             XCTAssertNil(user);
+             XCTAssertNotNil(error);
         XCTAssertEqualObjects(error.domain, NSURLErrorDomain);
         XCTAssertEqual(error.code, NSURLErrorServerCertificateUntrusted);
     }];
 }
 
 - (void)testHTTPSLoginSucceedsWithValidSelfSignedCertificate {
-    RLMSyncManager.sharedManager.pinnedCertificatePaths = @{@"localhost": certificateURL(@"localhost.cer")};
+    RLMSyncManager.sharedManager.pinnedCertificatePaths = @ {@"localhost": certificateURL(@"localhost.cer")};
 
     [self attemptLoginWithUsername:NSStringFromSelector(_cmd) callback:^(RLMSyncUser *user, NSError *error) {
-        XCTAssertNotNil(user);
-        XCTAssertNil(error);
+             XCTAssertNotNil(user);
+             XCTAssertNil(error);
     }];
 }
 
 - (void)testConfigurationFromUserAutomaticallyUsesCert {
-    RLMSyncManager.sharedManager.pinnedCertificatePaths = @{@"localhost": certificateURL(@"localhost.cer")};
+    RLMSyncManager.sharedManager.pinnedCertificatePaths = @ {@"localhost": certificateURL(@"localhost.cer")};
 
     __block RLMSyncUser *user;
     [self attemptLoginWithUsername:NSStringFromSelector(_cmd) callback:^(RLMSyncUser *u, NSError *error) {
-        XCTAssertNotNil(u);
-        XCTAssertNil(error);
+             XCTAssertNotNil(u);
+             XCTAssertNil(error);
         user = u;
     }];
 
@@ -2275,11 +2275,11 @@ static NSURL *certificateURL(NSString *filename) {
 }
 
 - (void)testConfigurationFromInsecureUserAutomaticallyUsesCert {
-    RLMSyncManager.sharedManager.pinnedCertificatePaths = @{@"localhost": certificateURL(@"localhost.cer")};
+    RLMSyncManager.sharedManager.pinnedCertificatePaths = @ {@"localhost": certificateURL(@"localhost.cer")};
 
     RLMSyncUser *user = [self logInUserForCredentials:[RLMSyncTestCase basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                       register:YES]
-                                               server:[RLMSyncTestCase authServerURL]];
+                              register:YES]
+                              server:[RLMSyncTestCase authServerURL]];
 
     RLMRealmConfiguration *config = [user configurationWithURL:[NSURL URLWithString:@"realms://localhost:9443/~/default"]];
     XCTAssertEqualObjects(config.syncConfiguration.realmURL.scheme, @"realms");
@@ -2290,27 +2290,27 @@ static NSURL *certificateURL(NSString *filename) {
 
 - (void)testOpenSecureRealmWithNoCert {
     RLMSyncUser *user = [self logInUserForCredentials:[RLMSyncTestCase basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                       register:YES]
-                                               server:[RLMSyncTestCase authServerURL]];
+                              register:YES]
+                              server:[RLMSyncTestCase authServerURL]];
     [self verifyOpenFails:[user configurationWithURL:[NSURL URLWithString:@"realms://localhost:9443/~/default"]]];
 }
 
 - (void)testOpenSecureRealmWithIncorrectCert {
-    RLMSyncManager.sharedManager.pinnedCertificatePaths = @{@"localhost": certificateURL(@"not-localhost.cer")};
+    RLMSyncManager.sharedManager.pinnedCertificatePaths = @ {@"localhost": certificateURL(@"not-localhost.cer")};
 
     RLMSyncUser *user = [self logInUserForCredentials:[RLMSyncTestCase basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                       register:YES]
-                                               server:[RLMSyncTestCase authServerURL]];
+                              register:YES]
+                              server:[RLMSyncTestCase authServerURL]];
     [self verifyOpenFails:[user configurationWithURL:[NSURL URLWithString:@"realms://localhost:9443/~/default"]]];
 }
 
 - (void)DISABLE_testOpenSecureRealmWithMissingCertFile {
     // FIXME: this currently crashes inside the sync library
-    RLMSyncManager.sharedManager.pinnedCertificatePaths = @{@"localhost": certificateURL(@"nonexistent.pem")};
+    RLMSyncManager.sharedManager.pinnedCertificatePaths = @ {@"localhost": certificateURL(@"nonexistent.pem")};
 
     RLMSyncUser *user = [self logInUserForCredentials:[RLMSyncTestCase basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                       register:YES]
-                                               server:[RLMSyncTestCase authServerURL]];
+                              register:YES]
+                              server:[RLMSyncTestCase authServerURL]];
     [self verifyOpenFails:[user configurationWithURL:[NSURL URLWithString:@"realms://localhost:9443/~/default"]]];
 }
 
@@ -2319,30 +2319,30 @@ static NSURL *certificateURL(NSString *filename) {
 - (void)testLoginFailsWithoutCustomHeader {
     XCTestExpectation *expectation = [self expectationWithDescription:@"register user"];
     [RLMSyncUser logInWithCredentials:[RLMSyncTestCase basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                       register:YES]
-                        authServerURL:[NSURL URLWithString:@"http://127.0.0.1:9081"]
-                         onCompletion:^(RLMSyncUser *user, NSError *error) {
-                             XCTAssertNil(user);
-                             XCTAssertNotNil(error);
-                             XCTAssertEqualObjects(@400, error.userInfo[@"statusCode"]);
-                             [expectation fulfill];
-                         }];
+                                       register:YES]
+                 authServerURL:[NSURL URLWithString:@"http://127.0.0.1:9081"]
+                onCompletion:^(RLMSyncUser *user, NSError *error) {
+                    XCTAssertNil(user);
+                    XCTAssertNotNil(error);
+        XCTAssertEqualObjects(@400, error.userInfo[@"statusCode"]);
+        [expectation fulfill];
+    }];
     [self waitForExpectationsWithTimeout:4.0 handler:nil];
 }
 
 - (void)testLoginUsesCustomHeader {
-    RLMSyncManager.sharedManager.customRequestHeaders = @{@"X-Allow-Connection": @"true"};
+    RLMSyncManager.sharedManager.customRequestHeaders = @ {@"X-Allow-Connection": @"true"};
     RLMSyncUser *user = [self logInUserForCredentials:[RLMSyncTestCase basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                       register:YES]
-                                               server:[NSURL URLWithString:@"http://127.0.0.1:9081"]];
+                              register:YES]
+                              server:[NSURL URLWithString:@"http://127.0.0.1:9081"]];
     XCTAssertNotNil(user);
 }
 
 - (void)testModifyCustomHeadersAfterOpeningRealm {
-    RLMSyncManager.sharedManager.customRequestHeaders = @{@"X-Allow-Connection": @"true"};
+    RLMSyncManager.sharedManager.customRequestHeaders = @ {@"X-Allow-Connection": @"true"};
     RLMSyncUser *user = [self logInUserForCredentials:[RLMSyncTestCase basicCredentialsWithName:NSStringFromSelector(_cmd)
-                                                                                       register:YES]
-                                               server:[NSURL URLWithString:@"http://127.0.0.1:9081"]];
+                              register:YES]
+                              server:[NSURL URLWithString:@"http://127.0.0.1:9081"]];
     XCTAssertNotNil(user);
 
     RLMSyncManager.sharedManager.customRequestHeaders = nil;
@@ -2365,9 +2365,9 @@ static NSURL *certificateURL(NSString *filename) {
     // Should successfully connect once the header is set
     RLMSyncManager.sharedManager.errorHandler = nil;
     auto ex2 = [[XCTKVOExpectation alloc] initWithKeyPath:@"connectionState"
-                                                   object:syncSession
-                                            expectedValue:@(RLMSyncConnectionStateConnected)];
-    RLMSyncManager.sharedManager.customRequestHeaders = @{@"X-Allow-Connection": @"true"};
+                                          object:syncSession
+                                          expectedValue:@(RLMSyncConnectionStateConnected)];
+    RLMSyncManager.sharedManager.customRequestHeaders = @ {@"X-Allow-Connection": @"true"};
     [self waitForExpectations:@[ex2] timeout:4.0];
 
     // Should disconnect and fail to reconnect when the wrong header is set
@@ -2378,9 +2378,9 @@ static NSURL *certificateURL(NSString *filename) {
         [ex3 fulfill];
     };
     auto ex4 = [[XCTKVOExpectation alloc] initWithKeyPath:@"connectionState"
-                                                   object:syncSession
-                                            expectedValue:@(RLMSyncConnectionStateDisconnected)];
-    RLMSyncManager.sharedManager.customRequestHeaders = @{@"X-Other-Header": @"true"};
+                                          object:syncSession
+                                          expectedValue:@(RLMSyncConnectionStateDisconnected)];
+    RLMSyncManager.sharedManager.customRequestHeaders = @ {@"X-Other-Header": @"true"};
     [self waitForExpectations:@[ex3, ex4] timeout:4.0];
 }
 

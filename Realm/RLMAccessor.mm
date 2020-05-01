@@ -204,8 +204,8 @@ RLMLinkingObjects *getLinkingObjects(__unsafe_unretained RLMObjectBase *const ob
     auto& linkOrigin = obj->_info->objectSchema->computed_properties[property.index].link_origin_property_name;
     auto linkingProperty = objectInfo.objectSchema->property_for_name(linkOrigin);
     auto backlinkView = obj->_row.get_table()->get_backlink_view(obj->_row.get_index(),
-                                                                 objectInfo.table(),
-                                                                 linkingProperty->table_column);
+                        objectInfo.table(),
+                        linkingProperty->table_column);
     realm::Results results(obj->_realm->_realm, std::move(backlinkView));
     return [RLMLinkingObjects resultsWithObjectInfo:objectInfo results:std::move(results)];
 }
@@ -252,39 +252,44 @@ id managedGetter(RLMProperty *prop, const char *type) {
 
     bool boxed = *type == '@';
     switch (prop.type) {
-        case RLMPropertyTypeInt:
-            if (prop.optional || boxed) {
-                return makeNumberGetter<long long>(index, boxed, prop.optional);
-            }
-            switch (*type) {
-                case 'c': return makeGetter<char, int64_t>(index);
-                case 's': return makeGetter<short, int64_t>(index);
-                case 'i': return makeGetter<int, int64_t>(index);
-                case 'l': return makeGetter<long, int64_t>(index);
-                case 'q': return makeGetter<long long, int64_t>(index);
-                default:
-                    @throw RLMException(@"Unexpected property type for Objective-C type code");
-            }
-        case RLMPropertyTypeFloat:
-            return makeNumberGetter<float>(index, boxed, prop.optional);
-        case RLMPropertyTypeDouble:
-            return makeNumberGetter<double>(index, boxed, prop.optional);
-        case RLMPropertyTypeBool:
-            return makeNumberGetter<bool>(index, boxed, prop.optional);
-        case RLMPropertyTypeString:
-            return makeBoxedGetter<realm::StringData>(index);
-        case RLMPropertyTypeDate:
-            return makeBoxedGetter<realm::Timestamp>(index);
-        case RLMPropertyTypeData:
-            return makeBoxedGetter<realm::BinaryData>(index);
-        case RLMPropertyTypeObject:
-            return makeBoxedGetter<realm::RowExpr>(index);
-        case RLMPropertyTypeAny:
-            @throw RLMException(@"Cannot create accessor class for schema with Mixed properties");
-        case RLMPropertyTypeLinkingObjects:
-            return ^(__unsafe_unretained RLMObjectBase *const obj) {
-                return getLinkingObjects(obj, prop);
-            };
+    case RLMPropertyTypeInt:
+        if (prop.optional || boxed) {
+            return makeNumberGetter<long long>(index, boxed, prop.optional);
+        }
+        switch (*type) {
+        case 'c':
+            return makeGetter<char, int64_t>(index);
+        case 's':
+            return makeGetter<short, int64_t>(index);
+        case 'i':
+            return makeGetter<int, int64_t>(index);
+        case 'l':
+            return makeGetter<long, int64_t>(index);
+        case 'q':
+            return makeGetter<long long, int64_t>(index);
+        default:
+            @throw RLMException(@"Unexpected property type for Objective-C type code");
+        }
+    case RLMPropertyTypeFloat:
+        return makeNumberGetter<float>(index, boxed, prop.optional);
+    case RLMPropertyTypeDouble:
+        return makeNumberGetter<double>(index, boxed, prop.optional);
+    case RLMPropertyTypeBool:
+        return makeNumberGetter<bool>(index, boxed, prop.optional);
+    case RLMPropertyTypeString:
+        return makeBoxedGetter<realm::StringData>(index);
+    case RLMPropertyTypeDate:
+        return makeBoxedGetter<realm::Timestamp>(index);
+    case RLMPropertyTypeData:
+        return makeBoxedGetter<realm::BinaryData>(index);
+    case RLMPropertyTypeObject:
+        return makeBoxedGetter<realm::RowExpr>(index);
+    case RLMPropertyTypeAny:
+        @throw RLMException(@"Cannot create accessor class for schema with Mixed properties");
+    case RLMPropertyTypeLinkingObjects:
+        return ^(__unsafe_unretained RLMObjectBase *const obj) {
+            return getLinkingObjects(obj, prop);
+        };
     }
 }
 
@@ -304,7 +309,7 @@ id makeSetter(__unsafe_unretained RLMProperty *const prop) {
                      static_cast<StorageType>(val));
         };
         if (RLMObservationInfo *info = RLMGetObservationInfo(obj->_observationInfo,
-                                                             obj->_row.get_index(), *obj->_info)) {
+                                       obj->_row.get_index(), *obj->_info)) {
             info->willChange(name);
             set();
             info->didChange(name);
@@ -323,31 +328,42 @@ id managedSetter(RLMProperty *prop, const char *type) {
 
     bool boxed = prop.optional || *type == '@';
     switch (prop.type) {
-        case RLMPropertyTypeInt:
-            if (boxed) {
-                return makeSetter<NSNumber<RLMInt> *>(prop);
-            }
-            switch (*type) {
-                case 'c': return makeSetter<char, long long>(prop);
-                case 's': return makeSetter<short, long long>(prop);
-                case 'i': return makeSetter<int, long long>(prop);
-                case 'l': return makeSetter<long, long long>(prop);
-                case 'q': return makeSetter<long long>(prop);
-                default:
-                    @throw RLMException(@"Unexpected property type for Objective-C type code");
-            }
-        case RLMPropertyTypeFloat:
-            return boxed ? makeSetter<NSNumber<RLMFloat> *>(prop) : makeSetter<float>(prop);
-        case RLMPropertyTypeDouble:
-            return boxed ? makeSetter<NSNumber<RLMDouble> *>(prop) : makeSetter<double>(prop);
-        case RLMPropertyTypeBool:
-            return boxed ? makeSetter<NSNumber<RLMBool> *>(prop) : makeSetter<BOOL, bool>(prop);
-        case RLMPropertyTypeString:         return makeSetter<NSString *>(prop);
-        case RLMPropertyTypeDate:           return makeSetter<NSDate *>(prop);
-        case RLMPropertyTypeData:           return makeSetter<NSData *>(prop);
-        case RLMPropertyTypeAny:            return nil;
-        case RLMPropertyTypeLinkingObjects: return nil;
-        case RLMPropertyTypeObject:         return makeSetter<RLMObjectBase *>(prop);
+    case RLMPropertyTypeInt:
+        if (boxed) {
+            return makeSetter<NSNumber<RLMInt> *>(prop);
+        }
+        switch (*type) {
+        case 'c':
+            return makeSetter<char, long long>(prop);
+        case 's':
+            return makeSetter<short, long long>(prop);
+        case 'i':
+            return makeSetter<int, long long>(prop);
+        case 'l':
+            return makeSetter<long, long long>(prop);
+        case 'q':
+            return makeSetter<long long>(prop);
+        default:
+            @throw RLMException(@"Unexpected property type for Objective-C type code");
+        }
+    case RLMPropertyTypeFloat:
+        return boxed ? makeSetter<NSNumber<RLMFloat> *>(prop) : makeSetter<float>(prop);
+    case RLMPropertyTypeDouble:
+        return boxed ? makeSetter<NSNumber<RLMDouble> *>(prop) : makeSetter<double>(prop);
+    case RLMPropertyTypeBool:
+        return boxed ? makeSetter<NSNumber<RLMBool> *>(prop) : makeSetter<BOOL, bool>(prop);
+    case RLMPropertyTypeString:
+        return makeSetter<NSString *>(prop);
+    case RLMPropertyTypeDate:
+        return makeSetter<NSDate *>(prop);
+    case RLMPropertyTypeData:
+        return makeSetter<NSData *>(prop);
+    case RLMPropertyTypeAny:
+        return nil;
+    case RLMPropertyTypeLinkingObjects:
+        return nil;
+    case RLMPropertyTypeObject:
+        return makeSetter<RLMObjectBase *>(prop);
     }
 }
 
@@ -373,7 +389,9 @@ void superSet(RLMObjectBase *obj, NSString *propName, id val) {
 id unmanagedGetter(RLMProperty *prop, const char *) {
     // only override getters for RLMArray and linking objects properties
     if (prop.type == RLMPropertyTypeLinkingObjects) {
-        return ^(RLMObjectBase *) { return [RLMResults emptyDetachedResults]; };
+        return ^(RLMObjectBase *) {
+            return [RLMResults emptyDetachedResults];
+        };
     }
     if (prop.array) {
         NSString *propName = prop.name;
@@ -495,7 +513,9 @@ Class RLMUnmanagedAccessorClassForObjectClass(Class objectClass, RLMObjectSchema
 // base object
 void RLMReplaceClassNameMethod(Class accessorClass, NSString *className) {
     Class metaClass = object_getClass(accessorClass);
-    IMP imp = imp_implementationWithBlock(^(Class){ return className; });
+    IMP imp = imp_implementationWithBlock(^(Class) {
+        return className;
+    });
     class_addMethod(metaClass, @selector(className), imp, "@@:");
 }
 
@@ -576,23 +596,23 @@ id RLMDynamicGetByName(__unsafe_unretained RLMObjectBase *const obj,
 }
 
 RLMAccessorContext::RLMAccessorContext(RLMAccessorContext& parent, realm::Property const& property)
-: _realm(parent._realm)
-, _info(property.type == realm::PropertyType::Object ? parent._info.linkTargetType(property) : parent._info)
-, _promote_existing(parent._promote_existing)
+    : _realm(parent._realm)
+    , _info(property.type == realm::PropertyType::Object ? parent._info.linkTargetType(property) : parent._info)
+    , _promote_existing(parent._promote_existing)
 {
 }
 
 RLMAccessorContext::RLMAccessorContext(RLMClassInfo& info, bool promote)
-: _realm(info.realm), _info(info), _promote_existing(promote)
+    : _realm(info.realm), _info(info), _promote_existing(promote)
 {
 }
 
 RLMAccessorContext::RLMAccessorContext(__unsafe_unretained RLMObjectBase *const parent,
                                        const realm::Property *prop)
-: _realm(parent->_realm)
-, _info(prop && prop->type == realm::PropertyType::Object ? parent->_info->linkTargetType(*prop)
-                                                          : *parent->_info)
-, _parentObject(parent)
+    : _realm(parent->_realm)
+    , _info(prop && prop->type == realm::PropertyType::Object ? parent->_info->linkTargetType(*prop)
+            : *parent->_info)
+    , _parentObject(parent)
 {
 }
 
@@ -626,7 +646,7 @@ id RLMAccessorContext::propertyValue(__unsafe_unretained id const obj, size_t pr
         }
     }
     else {
-    // Property value from some object that's KVC-compatible
+        // Property value from some object that's KVC-compatible
         value = RLMValidatedValueForProperty(obj, [obj respondsToSelector:prop.getterSel] ? prop.getterName : prop.name,
                                              _info.rlmObjectSchema.className);
     }
@@ -637,8 +657,8 @@ id RLMAccessorContext::box(realm::List&& l) {
     REALM_ASSERT(_parentObject);
     REALM_ASSERT(currentProperty);
     return [[RLMManagedArray alloc] initWithList:std::move(l)
-                                      parentInfo:_parentObject->_info
-                                        property:currentProperty];
+                                    parentInfo:_parentObject->_info
+                                    property:currentProperty];
 }
 
 id RLMAccessorContext::box(realm::Object&& o) {
@@ -653,7 +673,7 @@ id RLMAccessorContext::box(realm::RowExpr r) {
 id RLMAccessorContext::box(realm::Results&& r) {
     REALM_ASSERT(currentProperty);
     return [RLMResults resultsWithObjectInfo:_realm->_info[currentProperty.objectClassName]
-                                     results:std::move(r)];
+                       results:std::move(r)];
 }
 
 template<>
@@ -697,19 +717,27 @@ static auto to_optional(__unsafe_unretained id const value, Fn&& fn) {
 
 template<>
 realm::util::Optional<bool> RLMAccessorContext::unbox(__unsafe_unretained id const v, realm::CreatePolicy, size_t) {
-    return to_optional(v, [&](__unsafe_unretained id v) { return (bool)[v boolValue]; });
+    return to_optional(v, [&](__unsafe_unretained id v) {
+        return (bool)[v boolValue];
+    });
 }
 template<>
 realm::util::Optional<double> RLMAccessorContext::unbox(__unsafe_unretained id const v, realm::CreatePolicy, size_t) {
-    return to_optional(v, [&](__unsafe_unretained id v) { return [v doubleValue]; });
+    return to_optional(v, [&](__unsafe_unretained id v) {
+        return [v doubleValue];
+    });
 }
 template<>
 realm::util::Optional<float> RLMAccessorContext::unbox(__unsafe_unretained id const v, realm::CreatePolicy, size_t) {
-    return to_optional(v, [&](__unsafe_unretained id v) { return [v floatValue]; });
+    return to_optional(v, [&](__unsafe_unretained id v) {
+        return [v floatValue];
+    });
 }
 template<>
 realm::util::Optional<int64_t> RLMAccessorContext::unbox(__unsafe_unretained id const v, realm::CreatePolicy, size_t) {
-    return to_optional(v, [&](__unsafe_unretained id v) { return [v longLongValue]; });
+    return to_optional(v, [&](__unsafe_unretained id v) {
+        return [v longLongValue];
+    });
 }
 
 template<>
@@ -770,7 +798,7 @@ void RLMAccessorContext::did_change() {
 }
 
 RLMOptionalId RLMAccessorContext::value_for_property(__unsafe_unretained id const obj,
-                                                     realm::Property const&, size_t propIndex) {
+        realm::Property const&, size_t propIndex) {
     auto prop = _info.rlmObjectSchema.properties[propIndex];
     id value = propertyValue(obj, propIndex, prop);
     if (value) {
@@ -792,7 +820,7 @@ RLMOptionalId RLMAccessorContext::value_for_property(__unsafe_unretained id cons
 }
 
 RLMOptionalId RLMAccessorContext::default_value_for_property(realm::ObjectSchema const&,
-                                                             realm::Property const& prop)
+        realm::Property const& prop)
 {
     return RLMOptionalId{defaultValue(@(prop.name.c_str()))};
 }

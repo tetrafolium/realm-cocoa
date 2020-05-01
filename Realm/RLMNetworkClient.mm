@@ -46,7 +46,7 @@ static NSRange rangeForErrorType(RLMServerHTTPErrorCodeType type) {
 
 @interface RLMSessionDelegate <NSURLSessionDelegate> : NSObject
 + (instancetype)delegateWithCertificatePaths:(NSDictionary *)paths
-                                  completion:(void (^)(NSError *, NSDictionary *))completion;
+    completion:(void (^)(NSError *, NSDictionary *))completion;
 @end
 
 @interface RLMSyncServerEndpoint ()
@@ -61,23 +61,23 @@ static NSRange rangeForErrorType(RLMServerHTTPErrorCodeType type) {
 
 /// The HTTP headers to be added to the request, if any.
 + (NSDictionary<NSString *, NSString *> *)httpHeadersForPayload:(NSDictionary *)json
-                                                        options:(nullable RLMNetworkRequestOptions *)options;
+    options:(nullable RLMNetworkRequestOptions *)options;
 @end
 
 @implementation RLMSyncServerEndpoint
 
 + (void)sendRequestToServer:(NSURL *)serverURL
-                       JSON:(NSDictionary *)jsonDictionary
-                 completion:(void (^)(NSError *))completionBlock {
+    JSON:(NSDictionary *)jsonDictionary
+    completion:(void (^)(NSError *))completionBlock {
     [self sendRequestToServer:serverURL JSON:jsonDictionary timeout:0
-                   completion:^(NSError *error, NSDictionary *) {
-        completionBlock(error);
-    }];
+         completion:^(NSError *error, NSDictionary *) {
+             completionBlock(error);
+         }];
 }
 + (void)sendRequestToServer:(NSURL *)serverURL
-                       JSON:(NSDictionary *)jsonDictionary
-                    timeout:(NSTimeInterval)timeout
-                 completion:(void (^)(NSError *, NSDictionary *))completionBlock {
+    JSON:(NSDictionary *)jsonDictionary
+    timeout:(NSTimeInterval)timeout
+    completion:(void (^)(NSError *, NSDictionary *))completionBlock {
     // If the timeout isn't set then use the timeout set on the sync manager,
     // or 60 seconds if it isn't set there either.
     RLMSyncManager *syncManager = RLMSyncManager.sharedManager;
@@ -105,9 +105,9 @@ static NSRange rangeForErrorType(RLMServerHTTPErrorCodeType type) {
         [request addValue:headers[key] forHTTPHeaderField:key];
     }
     id delegate = [RLMSessionDelegate delegateWithCertificatePaths:options.pinnedCertificatePaths
-                                                        completion:completionBlock];
+                                      completion:completionBlock];
     auto session = [NSURLSession sessionWithConfiguration:NSURLSessionConfiguration.defaultSessionConfiguration
-                                                 delegate:delegate delegateQueue:nil];
+                                 delegate:delegate delegateQueue:nil];
 
     // Add the request to a task and start it
     [[session dataTaskWithRequest:request] resume];
@@ -127,8 +127,8 @@ static NSRange rangeForErrorType(RLMServerHTTPErrorCodeType type) {
 + (NSData *)httpBodyForPayload:(NSDictionary *)json error:(NSError **)error {
     NSError *localError = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:json
-                                                       options:(NSJSONWritingOptions)0
-                                                         error:&localError];
+                                            options:(NSJSONWritingOptions)0
+                                            error:&localError];
     if (jsonData && !localError) {
         return jsonData;
     }
@@ -140,7 +140,7 @@ static NSRange rangeForErrorType(RLMServerHTTPErrorCodeType type) {
 }
 
 + (NSDictionary<NSString *, NSString *> *)httpHeadersForPayload:(NSDictionary *)json
-                                                        options:(nullable RLMNetworkRequestOptions *)options {
+    options:(nullable RLMNetworkRequestOptions *)options {
     NSMutableDictionary<NSString *, NSString *> *headers = [[NSMutableDictionary alloc] init];
     headers[@"Content-Type"] = @"application/json;charset=utf-8";
     headers[@"Accept"] = @"application/json";
@@ -163,7 +163,7 @@ static NSRange rangeForErrorType(RLMServerHTTPErrorCodeType type) {
 }
 
 + (instancetype)delegateWithCertificatePaths:(NSDictionary *)paths
-                                  completion:(void (^)(NSError *, NSDictionary *))completion {
+    completion:(void (^)(NSError *, NSDictionary *))completion {
     RLMSessionDelegate *delegate = [RLMSessionDelegate new];
     delegate->_certificatePaths = paths;
     delegate->_completionBlock = completion;
@@ -171,7 +171,7 @@ static NSRange rangeForErrorType(RLMServerHTTPErrorCodeType type) {
 }
 
 - (void)URLSession:(__unused NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
- completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler {
+    completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler {
     auto protectionSpace = challenge.protectionSpace;
 
     // Just fall back to the default logic for HTTP basic auth
@@ -221,7 +221,7 @@ static NSRange rangeForErrorType(RLMServerHTTPErrorCodeType type) {
     }
     items = (CFArrayRef)CFBridgingRetain(@[certificate]);
 #else
-    SecItemImportExportKeyParameters params{
+    SecItemImportExportKeyParameters params {
         .version = SEC_KEY_IMPORT_EXPORT_PARAMS_VERSION
     };
     if (OSStatus status = SecItemImport((__bridge CFDataRef)data, (__bridge CFStringRef)certPath.absoluteString,
@@ -258,7 +258,7 @@ static NSRange rangeForErrorType(RLMServerHTTPErrorCodeType type) {
 }
 
 - (void)URLSession:(__unused NSURLSession *)session
-          dataTask:(__unused NSURLSessionDataTask *)dataTask
+    dataTask:(__unused NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
     if (!_data) {
         _data = data;
@@ -271,8 +271,8 @@ static NSRange rangeForErrorType(RLMServerHTTPErrorCodeType type) {
 }
 
 - (void)URLSession:(__unused NSURLSession *)session
-              task:(NSURLSessionTask *)task
-didCompleteWithError:(NSError *)error
+    task:(NSURLSessionTask *)task
+    didCompleteWithError:(NSError *)error
 {
     if (error) {
         _completionBlock(error, nil);
@@ -285,8 +285,8 @@ didCompleteWithError:(NSError *)error
     }
 
     id json = [NSJSONSerialization JSONObjectWithData:_data
-                                              options:(NSJSONReadingOptions)0
-                                                error:&error];
+                                   options:(NSJSONReadingOptions)0
+                                   error:&error];
     if (!json) {
         _completionBlock(error, nil);
         return;
@@ -311,21 +311,21 @@ didCompleteWithError:(NSError *)error
     if (badResponse) {
         if (RLMSyncErrorResponseModel *responseModel = [self responseModelFromData:data]) {
             switch (responseModel.code) {
-                case RLMSyncAuthErrorInvalidParameters:
-                case RLMSyncAuthErrorMissingPath:
-                case RLMSyncAuthErrorInvalidCredential:
-                case RLMSyncAuthErrorUserDoesNotExist:
-                case RLMSyncAuthErrorUserAlreadyExists:
-                case RLMSyncAuthErrorAccessDeniedOrInvalidPath:
-                case RLMSyncAuthErrorInvalidAccessToken:
-                case RLMSyncAuthErrorExpiredPermissionOffer:
-                case RLMSyncAuthErrorAmbiguousPermissionOffer:
-                case RLMSyncAuthErrorFileCannotBeShared:
-                    return make_auth_error(responseModel);
-                default:
-                    // Right now we assume that any codes not described
-                    // above are generic HTTP error codes.
-                    return make_auth_error_http_status(responseModel.status);
+            case RLMSyncAuthErrorInvalidParameters:
+            case RLMSyncAuthErrorMissingPath:
+            case RLMSyncAuthErrorInvalidCredential:
+            case RLMSyncAuthErrorUserDoesNotExist:
+            case RLMSyncAuthErrorUserAlreadyExists:
+            case RLMSyncAuthErrorAccessDeniedOrInvalidPath:
+            case RLMSyncAuthErrorInvalidAccessToken:
+            case RLMSyncAuthErrorExpiredPermissionOffer:
+            case RLMSyncAuthErrorAmbiguousPermissionOffer:
+            case RLMSyncAuthErrorFileCannotBeShared:
+                return make_auth_error(responseModel);
+            default:
+                // Right now we assume that any codes not described
+                // above are generic HTTP error codes.
+                return make_auth_error_http_status(responseModel.status);
             }
         }
         return make_auth_error_http_status(httpResponse.statusCode);
@@ -344,8 +344,8 @@ didCompleteWithError:(NSError *)error
         return nil;
     }
     id json = [NSJSONSerialization JSONObjectWithData:data
-                                              options:(NSJSONReadingOptions)0
-                                                error:nil];
+                                   options:(NSJSONReadingOptions)0
+                                   error:nil];
     if (!json || ![json isKindOfClass:[NSDictionary class]]) {
         return nil;
     }
@@ -393,8 +393,8 @@ didCompleteWithError:(NSError *)error
              @"malformed request; this indicates a logic error in the binding.");
     NSCharacterSet *allowed = [NSCharacterSet URLQueryAllowedCharacterSet];
     NSString *pathComponent = [NSString stringWithFormat:@"auth/users/%@/%@",
-                               [provider stringByAddingPercentEncodingWithAllowedCharacters:allowed],
-                               [providerID stringByAddingPercentEncodingWithAllowedCharacters:allowed]];
+                                        [provider stringByAddingPercentEncodingWithAllowedCharacters:allowed],
+                                        [providerID stringByAddingPercentEncodingWithAllowedCharacters:allowed]];
     return [authServerURL URLByAppendingPathComponent:pathComponent];
 }
 

@@ -22,8 +22,8 @@
 #import "object_schema.hpp"
 
 namespace realm {
-    class Group;
-    class Realm;
+class Group;
+class Realm;
 }
 struct RLMResultsSetInfo {
     realm::ObjectSchema osObjectSchema;
@@ -35,7 +35,7 @@ struct RLMResultsSetInfo {
 };
 
 @interface RLMRealm () {
-    @public
+@public
     std::shared_ptr<realm::Realm> _realm;
     RLMSchemaInfo _info;
     std::unique_ptr<RLMResultsSetInfo> _resultsSetInfo;

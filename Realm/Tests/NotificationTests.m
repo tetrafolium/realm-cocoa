@@ -30,14 +30,14 @@
     @autoreleasepool {
         RLMRealm *realm = [RLMRealm defaultRealm];
         [realm transactionWithBlock:^{
-            for (int i = 0; i < 10; ++i)
-                [IntObject createInDefaultRealmWithValue:@[@(i)]];
-        }];
+                  for (int i = 0; i < 10; ++i)
+                  [IntObject createInDefaultRealmWithValue:@[@(i)]];
+              }];
     }
 
     _token = [self.query addNotificationBlock:^(RLMResults *results, __unused RLMCollectionChange *change, NSError *error) {
-        XCTAssertNotNil(results);
-        XCTAssertNil(error);
+                   XCTAssertNotNil(results);
+                   XCTAssertNil(error);
         self.called = true;
         CFRunLoopStop(CFRunLoopGetCurrent());
     }];
@@ -55,11 +55,11 @@
 
 - (void)runAndWaitForNotification:(void (^)(RLMRealm *))block {
     _called = false;
-    [self waitForNotification:RLMRealmDidChangeNotification realm:RLMRealm.defaultRealm block:^{
-        RLMRealm *realm = [RLMRealm defaultRealm];
+    [self waitForNotification:RLMRealmDidChangeNotification realm:RLMRealm.defaultRealm block:^ {
+             RLMRealm *realm = [RLMRealm defaultRealm];
         [realm transactionWithBlock:^{
-            block(realm);
-        }];
+                  block(realm);
+              }];
     }];
 }
 
@@ -75,60 +75,60 @@
 
 - (void)testInsertObjectMatchingQuery {
     [self expectNotification:^(RLMRealm *realm) {
-        [IntObject createInRealm:realm withValue:@[@3]];
-    }];
+             [IntObject createInRealm:realm withValue:@[@3]];
+         }];
 }
 
 - (void)testInsertObjectNotMatchingQuery {
     [self expectNoNotification:^(RLMRealm *realm) {
-        [IntObject createInRealm:realm withValue:@[@10]];
-    }];
+             [IntObject createInRealm:realm withValue:@[@10]];
+         }];
 }
 
 - (void)testModifyObjectMatchingQuery {
     [self expectNotification:^(RLMRealm *realm) {
-        [[IntObject objectsInRealm:realm where:@"intCol = 3"] setValue:@4 forKey:@"intCol"];
-    }];
+             [[IntObject objectsInRealm:realm where:@"intCol = 3"] setValue:@4 forKey:@"intCol"];
+         }];
 }
 
 - (void)testModifyObjectToNoLongerMatchQuery {
     [self expectNotification:^(RLMRealm *realm) {
-        [[IntObject objectsInRealm:realm where:@"intCol = 3"] setValue:@5 forKey:@"intCol"];
-    }];
+             [[IntObject objectsInRealm:realm where:@"intCol = 3"] setValue:@5 forKey:@"intCol"];
+         }];
 }
 
 - (void)testModifyObjectNotMatchingQuery {
     [self expectNoNotification:^(RLMRealm *realm) {
-        [[IntObject objectsInRealm:realm where:@"intCol = 5"] setValue:@6 forKey:@"intCol"];
-    }];
+             [[IntObject objectsInRealm:realm where:@"intCol = 5"] setValue:@6 forKey:@"intCol"];
+         }];
 }
 
 - (void)testModifyObjectToMatchQuery {
     [self expectNotification:^(RLMRealm *realm) {
-        [[IntObject objectsInRealm:realm where:@"intCol = 5"] setValue:@4 forKey:@"intCol"];
-    }];
+             [[IntObject objectsInRealm:realm where:@"intCol = 5"] setValue:@4 forKey:@"intCol"];
+         }];
 }
 
 - (void)testDeleteObjectMatchingQuery {
     [self expectNotification:^(RLMRealm *realm) {
-        [realm deleteObjects:[IntObject objectsInRealm:realm where:@"intCol = 4"]];
-    }];
+             [realm deleteObjects:[IntObject objectsInRealm:realm where:@"intCol = 4"]];
+         }];
 }
 
 - (void)testDeleteObjectNotMatchingQuery {
     [self expectNoNotification:^(RLMRealm *realm) {
-        [realm deleteObjects:[IntObject objectsInRealm:realm where:@"intCol = 5"]];
-    }];
+             [realm deleteObjects:[IntObject objectsInRealm:realm where:@"intCol = 5"]];
+         }];
     [self expectNoNotification:^(RLMRealm *realm) {
-        [realm deleteObjects:[IntObject objectsInRealm:realm where:@"intCol = 0"]];
-    }];
+             [realm deleteObjects:[IntObject objectsInRealm:realm where:@"intCol = 0"]];
+         }];
 }
 
 - (void)testNonMatchingObjectMovedToIndexOfMatchingRowAndMadeMatching {
     [self expectNotification:^(RLMRealm *realm) {
-        // Make the last object match the query
-        [[[IntObject allObjectsInRealm:realm] lastObject] setIntCol:3];
-        // Move the now-matching object over a previously matching object
+             // Make the last object match the query
+             [[[IntObject allObjectsInRealm:realm] lastObject] setIntCol:3];
+             // Move the now-matching object over a previously matching object
         [realm deleteObjects:[IntObject objectsInRealm:realm where:@"intCol = 2"]];
     }];
 }
@@ -144,10 +144,10 @@
     // Add a new callback that we can wait for, as we can't wait for a
     // notification to not be delivered
     RLMNotificationToken *token = [self.query addNotificationBlock:^(__unused RLMResults *results,
-                                                                     __unused RLMCollectionChange *change,
-                                                                     __unused NSError *error) {
-        CFRunLoopStop(CFRunLoopGetCurrent());
-    }];
+                                              __unused RLMCollectionChange *change,
+               __unused NSError *error) {
+                   CFRunLoopStop(CFRunLoopGetCurrent());
+               }];
     CFRunLoopRun();
     [token invalidate];
 
@@ -157,8 +157,8 @@
 - (void)testSuppressRealmNotification {
     RLMRealm *realm = [RLMRealm defaultRealm];
     RLMNotificationToken *token = [realm addNotificationBlock:^(__unused RLMNotification notification, __unused RLMRealm *realm) {
-        XCTFail(@"should not have been called");
-    }];
+              XCTFail(@"should not have been called");
+          }];
 
     [realm beginWriteTransaction];
     [realm deleteAllObjects];
@@ -171,12 +171,12 @@
 - (void)testSuppressRealmNotificationInTransactionWithBlock {
     RLMRealm *realm = [RLMRealm defaultRealm];
     RLMNotificationToken *token = [realm addNotificationBlock:^(__unused RLMNotification notification, __unused RLMRealm *realm) {
-        XCTFail(@"should not have been called");
-    }];
+              XCTFail(@"should not have been called");
+          }];
 
-    [realm transactionWithoutNotifying:@[token] block:^{
-        [realm deleteAllObjects];
-    }];
+    [realm transactionWithoutNotifying:@[token] block:^ {
+              [realm deleteAllObjects];
+          }];
 
     // local realm notifications are called synchronously so no need to wait for anything
     [token invalidate];
@@ -185,8 +185,8 @@
 - (void)testSuppressRealmNotificationForWrongRealm {
     RLMRealm *otherRealm = [self realmWithTestPath];
     RLMNotificationToken *token = [otherRealm addNotificationBlock:^(__unused RLMNotification notification, __unused RLMRealm *realm) {
-        XCTFail(@"should not have been called");
-    }];
+                   XCTFail(@"should not have been called");
+               }];
 
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm beginWriteTransaction];
@@ -220,23 +220,23 @@
 
 - (void)testMoveMatchingObjectDueToDeletionOfNonMatchingObject {
     [self expectNoNotification:^(RLMRealm *realm) {
-        // Make a matching object be the last row
-        [realm deleteObjects:[IntObject objectsInRealm:realm where:@"intCol >= 5"]];
-        // Delete a non-last, non-match row so that a matched row is moved
+             // Make a matching object be the last row
+             [realm deleteObjects:[IntObject objectsInRealm:realm where:@"intCol >= 5"]];
+             // Delete a non-last, non-match row so that a matched row is moved
         [realm deleteObjects:[IntObject objectsInRealm:realm where:@"intCol = 0"]];
     }];
 }
 
 - (void)testMultipleMovesOfSingleRow {
     [self expectNotification:^(RLMRealm *realm) {
-        [realm deleteObjects:[IntObject allObjectsInRealm:realm]];
+             [realm deleteObjects:[IntObject allObjectsInRealm:realm]];
         [IntObject createInRealm:realm withValue:@[@10]];
         [IntObject createInRealm:realm withValue:@[@10]];
         [IntObject createInRealm:realm withValue:@[@3]];
     }];
 
     [self expectNoNotification:^(RLMRealm *realm) {
-        RLMResults *objects = [IntObject allObjectsInRealm:realm];
+             RLMResults *objects = [IntObject allObjectsInRealm:realm];
         [realm deleteObject:objects[1]];
         [realm deleteObject:objects[0]];
     }];
@@ -269,8 +269,8 @@ static RLMCollectionChange *getChange(RLMTestCase<ChangesetTestCase> *self, void
     RLMResults *query = [self query];
     __block RLMCollectionChange *changes;
     id token = [query addNotificationBlock:^(RLMResults *results, RLMCollectionChange *c, NSError *error) {
-        XCTAssertNotNil(results);
-        XCTAssertNil(error);
+              XCTAssertNotNil(results);
+              XCTAssertNil(error);
         changes = c;
         XCTAssertTrue(first == !changes);
         first = false;
@@ -278,11 +278,11 @@ static RLMCollectionChange *getChange(RLMTestCase<ChangesetTestCase> *self, void
     }];
     CFRunLoopRun();
 
-    [self waitForNotification:RLMRealmDidChangeNotification realm:RLMRealm.defaultRealm block:^{
-        RLMRealm *realm = [RLMRealm defaultRealm];
+    [self waitForNotification:RLMRealmDidChangeNotification realm:RLMRealm.defaultRealm block:^ {
+             RLMRealm *realm = [RLMRealm defaultRealm];
         [realm transactionWithBlock:^{
-            block(realm);
-        }];
+                  block(realm);
+              }];
     }];
 
     [(RLMNotificationToken *)token invalidate];
@@ -320,18 +320,18 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions, NSArr
 @end
 
 @implementation ChangesetTests
- - (void)prepare {
+- (void)prepare {
     @autoreleasepool {
         RLMRealm *realm = [RLMRealm defaultRealm];
         [realm transactionWithBlock:^{
-            [realm deleteAllObjects];
-            for (int i = 0; i < 10; ++i) {
+                  [realm deleteAllObjects];
+                  for (int i = 0; i < 10; ++i) {
                 IntObject *io = [IntObject createInDefaultRealmWithValue:@[@(i)]];
                 [ArrayPropertyObject createInDefaultRealmWithValue:@[@"", @[], @[io]]];
             }
         }];
     }
- }
+}
 
 - (RLMResults *)query {
     return [IntObject objectsWhere:@"intCol > 0 AND intCol < 5"];
@@ -485,8 +485,8 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions, NSArr
     RLMResults *query = [self query];
     __block RLMCollectionChange *changes;
     RLMNotificationToken *token = [query addNotificationBlock:^(RLMResults *results, RLMCollectionChange *c, NSError *error) {
-        XCTAssertNotNil(results);
-        XCTAssertNil(error);
+              XCTAssertNotNil(results);
+              XCTAssertNil(error);
         changes = c;
         XCTAssertTrue(first || changes);
         first = false;
@@ -498,11 +498,11 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions, NSArr
     [IntObject createInRealm:query.realm withValue:@[@3]];
     [query.realm commitWriteTransactionWithoutNotifying:@[token] error:nil];
 
-    [self waitForNotification:RLMRealmDidChangeNotification realm:RLMRealm.defaultRealm block:^{
-        RLMRealm *realm = [RLMRealm defaultRealm];
+    [self waitForNotification:RLMRealmDidChangeNotification realm:RLMRealm.defaultRealm block:^ {
+             RLMRealm *realm = [RLMRealm defaultRealm];
         [realm transactionWithBlock:^{
-            [IntObject createInRealm:realm withValue:@[@3]];
-        }];
+                  [IntObject createInRealm:realm withValue:@[@3]];
+              }];
     }];
 
     [token invalidate];
@@ -523,8 +523,8 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions, NSArr
     @autoreleasepool {
         RLMRealm *realm = [RLMRealm defaultRealm];
         [realm transactionWithBlock:^{
-            [realm deleteAllObjects];
-            for (int i = 0; i < 10; ++i) {
+                  [realm deleteAllObjects];
+                  for (int i = 0; i < 10; ++i) {
                 [IntObject createInDefaultRealmWithValue:@[@(i)]];
             }
             [ArrayPropertyObject createInDefaultRealmWithValue:@[@"", @[], [IntObject allObjectsInRealm:realm]]];
@@ -534,7 +534,7 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions, NSArr
 
 - (RLMResults *)query {
     return [[[ArrayPropertyObject.allObjects firstObject] intArray]
-            objectsWhere:@"intCol > 0 AND intCol < 5"];
+                                                          objectsWhere:@"intCol > 0 AND intCol < 5"];
 }
 
 - (void)testDeleteMultiple {
@@ -730,7 +730,7 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions, NSArr
 
 - (void)testDeleteArray {
     ExpectChange(self, @[@0, @1, @2, @3], @[], @[], ^(RLMRealm *realm) {
-                      [realm deleteObjects:[ArrayPropertyObject allObjectsInRealm:realm]];
+        [realm deleteObjects:[ArrayPropertyObject allObjectsInRealm:realm]];
     });
 }
 
@@ -755,11 +755,11 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions, NSArr
     @autoreleasepool {
         RLMRealm *realm = [RLMRealm defaultRealm];
         [realm transactionWithBlock:^{
-            [realm deleteAllObjects];
-            for (int i = 0; i < 5; ++i) {
+                  [realm deleteAllObjects];
+                  for (int i = 0; i < 5; ++i) {
                 [LinkStringObject createInRealm:realm
-                                      withValue:@[[StringObject createInRealm:realm
-                                                                    withValue:@[@""]]]];
+                                  withValue:@[[StringObject createInRealm:realm
+                                               withValue:@[@""]]]];
             }
         }];
     }
@@ -804,7 +804,7 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions, NSArr
     @autoreleasepool {
         RLMRealm *realm = [RLMRealm defaultRealm];
         [realm transactionWithBlock:^{
-            [realm deleteAllObjects];
+                  [realm deleteAllObjects];
             PersonObject *child = [PersonObject createInDefaultRealmWithValue:@[ @"Child", @0 ]];
             for (int i = 0; i < 10; ++i) {
                 // It takes a village to raise a child…
@@ -896,7 +896,9 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions, NSArr
 @property (nonatomic) int pk;
 @end
 @implementation AllTypesWithPrimaryKey
-+ (NSString *)primaryKey { return @"pk"; }
++ (NSString *)primaryKey {
+    return @"pk";
+}
 @end
 
 // clang thinks the tests below have retain cycles because `_obj` could retain
@@ -918,9 +920,9 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions, NSArr
     StringObject *so = [[StringObject alloc] init];
     so.stringCol = @"string";
     _initialValues = @[@YES, @1, @1.1f, @1.11, @"string",
-                       [NSData dataWithBytes:"a" length:1], now, @YES, @11, NSNull.null];
+                             [NSData dataWithBytes:"a" length:1], now, @YES, @11, NSNull.null];
     _values = @[@NO, @2, @2.2f, @2.22, @"string2", [NSData dataWithBytes:"b" length:1],
-                [now dateByAddingTimeInterval:1], @NO, @22, so];
+                     [now dateByAddingTimeInterval:1], @NO, @22, so];
 
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm beginWriteTransaction];
@@ -940,8 +942,8 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions, NSArr
 - (void)testDeleteObservedObject {
     XCTestExpectation *expectation = [self expectationWithDescription:@""];
     RLMNotificationToken *token = [_obj addNotificationBlock:^(BOOL deleted, NSArray *changes, NSError *error) {
-        XCTAssertTrue(deleted);
-        XCTAssertNil(error);
+             XCTAssertTrue(deleted);
+             XCTAssertNil(error);
         XCTAssertNil(changes);
         [expectation fulfill];
     }];
@@ -959,8 +961,8 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions, NSArr
     __block NSUInteger i = 0;
     __block XCTestExpectation *expectation = nil;
     RLMNotificationToken *token = [_obj addNotificationBlock:^(BOOL deleted, NSArray *changes, NSError *error) {
-        XCTAssertFalse(deleted);
-        XCTAssertNil(error);
+             XCTAssertFalse(deleted);
+             XCTAssertNil(error);
         XCTAssertEqual(changes.count, 1U);
         RLMPropertyChange *prop = changes[0];
         XCTAssertEqualObjects(prop.name, _propertyNames[i]);
@@ -991,8 +993,8 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions, NSArr
 - (void)testChangeAllPropertyTypesFromBackground {
     __block NSUInteger i = 0;
     RLMNotificationToken *token = [_obj addNotificationBlock:^(BOOL deleted, NSArray *changes, NSError *error) {
-        XCTAssertFalse(deleted);
-        XCTAssertNil(error);
+             XCTAssertFalse(deleted);
+             XCTAssertNil(error);
         XCTAssertEqual(changes.count, 1U);
         RLMPropertyChange *prop = changes[0];
         XCTAssertEqualObjects(prop.name, _propertyNames[i]);
@@ -1007,8 +1009,8 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions, NSArr
     }];
 
     for (i = 0; i < _values.count; ++i) {
-        [self dispatchAsyncAndWait:^{
-            RLMRealm *realm = [RLMRealm defaultRealm];
+        [self dispatchAsyncAndWait:^ {
+                 RLMRealm *realm = [RLMRealm defaultRealm];
             AllTypesObject *obj = [[AllTypesObject allObjectsInRealm:realm] firstObject];
             [realm beginWriteTransaction];
             obj[_propertyNames[i]] = _values[i];
@@ -1022,8 +1024,8 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions, NSArr
 - (void)testChangeAllPropertyTypesInSingleTransaction {
     XCTestExpectation *expectation = [self expectationWithDescription:@""];
     RLMNotificationToken *token = [_obj addNotificationBlock:^(BOOL deleted, NSArray *changes, NSError *error) {
-        XCTAssertFalse(deleted);
-        XCTAssertNil(error);
+             XCTAssertFalse(deleted);
+             XCTAssertNil(error);
         XCTAssertEqual(changes.count, _values.count);
 
         NSUInteger i = 0;
@@ -1071,13 +1073,13 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions, NSArr
     RLMNotificationToken *token1 = [_obj addNotificationBlock:block];
     RLMNotificationToken *token2 = [_obj addNotificationBlock:block];
     RLMNotificationToken *token3 = [obj2 addNotificationBlock:^(__unused BOOL deletd,
-                                                                __unused NSArray<RLMPropertyChange *> *changes,
-                                                                __unused NSError *error) {
-        XCTFail(@"notification block for wrong object called");
-    }];
+                                         __unused NSArray<RLMPropertyChange *> *changes,
+         __unused NSError *error) {
+             XCTFail(@"notification block for wrong object called");
+         }];
 
-    [self dispatchAsync:^{
-        RLMRealm *realm = [RLMRealm defaultRealm];
+    [self dispatchAsync:^ {
+             RLMRealm *realm = [RLMRealm defaultRealm];
         AllTypesObject *obj = [[AllTypesObject allObjectsInRealm:realm] firstObject];
         [realm beginWriteTransaction];
         obj.intCol = 2;
@@ -1097,8 +1099,8 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions, NSArr
 
     XCTestExpectation *expectation = [self expectationWithDescription:@""];
     RLMNotificationToken *token = [array addNotificationBlock:^(BOOL deleted, NSArray<RLMPropertyChange *> *changes, NSError *error) {
-        XCTAssertFalse(deleted);
-        XCTAssertNil(error);
+              XCTAssertFalse(deleted);
+              XCTAssertNil(error);
         XCTAssertEqual(changes.count, 1U);
 
         XCTAssertEqualObjects(changes[0].name, @"array");
@@ -1107,8 +1109,8 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions, NSArr
         [expectation fulfill];
     }];
 
-    [self dispatchAsync:^{
-        RLMRealm *realm = [RLMRealm defaultRealm];
+    [self dispatchAsync:^ {
+             RLMRealm *realm = [RLMRealm defaultRealm];
         ArrayOfAllTypesObject *obj = [[ArrayOfAllTypesObject allObjectsInRealm:realm] firstObject];
         [realm beginWriteTransaction];
         [obj.array addObject:[[AllTypesObject allObjectsInRealm:realm] firstObject]];
@@ -1132,8 +1134,8 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions, NSArr
     __block NSUInteger i = 0;
     __block XCTestExpectation *expectation = nil;
     RLMNotificationToken *token = [obj addNotificationBlock:^(BOOL deleted, NSArray *changes, NSError *error) {
-        XCTAssertFalse(deleted);
-        XCTAssertNil(error);
+            XCTAssertFalse(deleted);
+            XCTAssertNil(error);
         XCTAssertEqual(changes.count, 1U);
         RLMPropertyChange *prop = changes[0];
         XCTAssertEqualObjects(prop.name, _propertyNames[i]);

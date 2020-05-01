@@ -65,8 +65,8 @@
 }
 
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len {
+    objects:(id __unsafe_unretained [])buffer
+    count:(NSUInteger)len {
     return [self._rlmArray countByEnumeratingWithState:state objects:buffer count:len];
 }
 
@@ -75,9 +75,9 @@
 }
 
 - (void)addObserver:(id)observer
-         forKeyPath:(NSString *)keyPath
-            options:(NSKeyValueObservingOptions)options
-            context:(void *)context {
+    forKeyPath:(NSString *)keyPath
+    options:(NSKeyValueObservingOptions)options
+    context:(void *)context {
     RLMEnsureArrayObservationInfo(_observationInfo, keyPath, self._rlmArray, self);
     [super addObserver:observer forKeyPath:keyPath options:options context:context];
 }
@@ -119,8 +119,8 @@
     auto& linkOrigin = _info->objectSchema->computed_properties[_property.index].link_origin_property_name;
     auto linkingProperty = objectInfo.objectSchema->property_for_name(linkOrigin);
     auto backlinkView = _row.get_table()->get_backlink_view(_row.get_index(),
-                                                            objectInfo.table(),
-                                                            linkingProperty->table_column);
+                        objectInfo.table(),
+                        linkingProperty->table_column);
     realm::Results results(_realm->_realm, std::move(backlinkView));
     _results = [RLMLinkingObjects resultsWithObjectInfo:objectInfo results:std::move(results)];
     _realm = nil;

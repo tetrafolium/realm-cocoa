@@ -51,9 +51,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Properties
 
-/**
- The number of objects in the results collection.
- */
+    /**
+     The number of objects in the results collection.
+     */
 @property (nonatomic, readonly, assign) NSUInteger count;
 
 /**
@@ -189,9 +189,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Returns a distinct `RLMResults` from an existing results collection.
- 
+
  @param keyPaths  The key paths used produce distinct results
- 
+
  @return    An `RLMResults` made distinct based on the specified key paths
  */
 - (RLMResults<RLMObjectType> *)distinctResultsUsingKeyPaths:(NSArray<NSString *> *)keyPaths;
@@ -257,8 +257,8 @@ NS_ASSUME_NONNULL_BEGIN
  @return A token which must be held for as long as you want updates to be delivered.
  */
 - (RLMNotificationToken *)addNotificationBlock:(void (^)(RLMResults<RLMObjectType> *__nullable results,
-                                                         RLMCollectionChange *__nullable change,
-                                                         NSError *__nullable error))block __attribute__((warn_unused_result));
+    RLMCollectionChange *__nullable change,
+    NSError *__nullable error))block __attribute__((warn_unused_result));
 
 #pragma mark - Aggregating Property Values
 
@@ -345,7 +345,7 @@ NS_ASSUME_NONNULL_BEGIN
  For more information, please see the "Inverse Relationships" section in the
  [documentation](https://realm.io/docs/objc/latest/#relationships).
  */
-@interface RLMLinkingObjects<RLMObjectType: RLMObject *> : RLMResults
+@interface RLMLinkingObjects<RLMObjectType : RLMObject *> : RLMResults
 @end
 
 NS_ASSUME_NONNULL_END

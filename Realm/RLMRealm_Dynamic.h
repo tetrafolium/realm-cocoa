@@ -29,19 +29,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Getting Objects from a Realm
 
-/**
- Returns all objects of a given type from the Realm.
+    /**
+     Returns all objects of a given type from the Realm.
 
- @warning This method is useful only in specialized circumstances, for example, when building components
-          that integrate with Realm. The preferred way to get objects of a single class is to use the class
-          methods on `RLMObject`.
+     @warning This method is useful only in specialized circumstances, for example, when building components
+              that integrate with Realm. The preferred way to get objects of a single class is to use the class
+              methods on `RLMObject`.
 
- @param className   The name of the `RLMObject` subclass to retrieve on (e.g. `MyClass.className`).
+     @param className   The name of the `RLMObject` subclass to retrieve on (e.g. `MyClass.className`).
 
- @return    An `RLMResults` containing all objects in the Realm of the given type.
+     @return    An `RLMResults` containing all objects in the Realm of the given type.
 
- @see       `+[RLMObject allObjects]`
- */
+     @see       `+[RLMObject allObjects]`
+     */
 - (RLMResults<RLMObject *> *)allObjects:(NSString *)className;
 
 /**

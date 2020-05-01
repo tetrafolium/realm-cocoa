@@ -31,35 +31,35 @@
 using namespace realm;
 
 namespace {
-    template<typename Iterator>
-    struct IteratorPair {
-        Iterator first;
-        Iterator second;
-    };
-    template<typename Iterator>
-    Iterator begin(IteratorPair<Iterator> const& p) {
-        return p.first;
-    }
-    template<typename Iterator>
-    Iterator end(IteratorPair<Iterator> const& p) {
-        return p.second;
-    }
+template<typename Iterator>
+struct IteratorPair {
+    Iterator first;
+    Iterator second;
+};
+template<typename Iterator>
+Iterator begin(IteratorPair<Iterator> const& p) {
+    return p.first;
+}
+template<typename Iterator>
+Iterator end(IteratorPair<Iterator> const& p) {
+    return p.second;
+}
 
-    template<typename Container>
-    auto reverse(Container const& c) {
-        return IteratorPair<typename Container::const_reverse_iterator>{c.rbegin(), c.rend()};
-    }
+template<typename Container>
+auto reverse(Container const& c) {
+    return IteratorPair<typename Container::const_reverse_iterator> {c.rbegin(), c.rend()};
+}
 }
 
 RLMObservationInfo::RLMObservationInfo(RLMClassInfo &objectSchema, std::size_t row, id object)
-: object(object)
-, objectSchema(&objectSchema)
+    : object(object)
+    , objectSchema(&objectSchema)
 {
     setRow(*objectSchema.table(), row);
 }
 
 RLMObservationInfo::RLMObservationInfo(id object)
-: object(object)
+    : object(object)
 {
 }
 
@@ -259,7 +259,7 @@ id RLMObservationInfo::valueForKey(NSString *key) {
 }
 
 RLMObservationInfo *RLMGetObservationInfo(RLMObservationInfo *info, size_t row,
-                                          RLMClassInfo& objectSchema) {
+        RLMClassInfo& objectSchema) {
     if (info) {
         return info;
     }
@@ -278,7 +278,7 @@ void RLMClearTable(RLMClassInfo &objectSchema) {
         info->willChange(RLMInvalidatedKey);
     }
 
-    RLMTrackDeletions(objectSchema.realm, ^{
+    RLMTrackDeletions(objectSchema.realm, ^ {
         Results(objectSchema.realm->_realm, *objectSchema.table()).clear();
 
         for (auto info : objectSchema.observedObjects) {
@@ -439,15 +439,15 @@ std::vector<realm::BindingContext::ObserverState> RLMGetObservedRows(RLMSchemaIn
 
 static NSKeyValueChange convert(realm::BindingContext::ColumnInfo::Kind kind) {
     switch (kind) {
-        case realm::BindingContext::ColumnInfo::Kind::None:
-        case realm::BindingContext::ColumnInfo::Kind::SetAll:
-            return NSKeyValueChangeSetting;
-        case realm::BindingContext::ColumnInfo::Kind::Set:
-            return NSKeyValueChangeReplacement;
-        case realm::BindingContext::ColumnInfo::Kind::Insert:
-            return NSKeyValueChangeInsertion;
-        case realm::BindingContext::ColumnInfo::Kind::Remove:
-            return NSKeyValueChangeRemoval;
+    case realm::BindingContext::ColumnInfo::Kind::None:
+    case realm::BindingContext::ColumnInfo::Kind::SetAll:
+        return NSKeyValueChangeSetting;
+    case realm::BindingContext::ColumnInfo::Kind::Set:
+        return NSKeyValueChangeReplacement;
+    case realm::BindingContext::ColumnInfo::Kind::Insert:
+        return NSKeyValueChangeInsertion;
+    case realm::BindingContext::ColumnInfo::Kind::Remove:
+        return NSKeyValueChangeRemoval;
     }
 }
 
@@ -458,7 +458,9 @@ static NSIndexSet *convert(realm::IndexSet const& in, NSMutableIndexSet *out) {
 
     [out removeAllIndexes];
     for (auto range : in) {
-        [out addIndexesInRange:{range.first, range.second - range.first}];
+        [out addIndexesInRange: {
+             range.first, range.second - range.first
+             }];
     }
     return out;
 }

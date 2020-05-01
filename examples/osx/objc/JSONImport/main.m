@@ -28,8 +28,8 @@ int main(int argc, const char * argv[])
         NSData *jsonData = [NSData dataWithContentsOfFile:jsonFilePath];
         NSError *error = nil;
         NSArray *personDicts = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                               options:0
-                                                                 error:&error];
+                                                    options:0
+                                                    error:&error];
         if (error) {
             NSLog(@"There was an error reading the JSON file: %@", error.localizedDescription);
             return 1;
@@ -41,7 +41,7 @@ int main(int argc, const char * argv[])
         dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
 
         [[NSFileManager defaultManager] removeItemAtURL:[RLMRealmConfiguration defaultConfiguration].fileURL
-                                                   error:nil];
+                                        error:nil];
 
         RLMRealm *realm = [RLMRealm defaultRealm];
         [realm beginWriteTransaction];

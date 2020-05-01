@@ -57,16 +57,18 @@
     testPredicateString(@"ANYKEY == 1", 2);
     testPredicateString(@"SELF == 1", 2);
 
-    testPredicate([NSPredicate predicateWithBlock:^(id, NSDictionary*) { return NO; }], 0);
+    testPredicate([NSPredicate predicateWithBlock:^(id, NSDictionary*) {
+                    return NO;
+                }], 0);
 
     auto block = ^(id, NSArray *, NSMutableDictionary *) {
         return @"Hello";
     };
     testPredicate([NSComparisonPredicate predicateWithLeftExpression:[NSExpression expressionForBlock:block arguments:nil]
-                                                     rightExpression:[NSExpression expressionForConstantValue:@"hello"]
-                                                            modifier:NSDirectPredicateModifier
-                                                                type:NSEqualToPredicateOperatorType
-                                                             options:0], 2);
+                                         rightExpression:[NSExpression expressionForConstantValue:@"hello"]
+                                         modifier:NSDirectPredicateModifier
+                                         type:NSEqualToPredicateOperatorType
+                                         options:0], 2);
 }
 
 @end

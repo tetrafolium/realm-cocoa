@@ -52,14 +52,14 @@ static NSString * const kTableName = @"table";
     // Set realm notification block
     __weak typeof(self) weakSelf = self;
     self.notification = [self.array addNotificationBlock:^(RLMResults *data, RLMCollectionChange *changes, NSError *error) {
-        if (error) {
-            NSLog(@"Failed to open Realm on background worker: %@", error);
-            return;
-        }
+                   if (error) {
+                       NSLog(@"Failed to open Realm on background worker: %@", error);
+                       return;
+                   }
 
-        UITableView *tv = weakSelf.tableView;
-        // Initial run of the query will pass nil for the change information
-        if (!changes) {
+                   UITableView *tv = weakSelf.tableView;
+                   // Initial run of the query will pass nil for the change information
+                   if (!changes) {
             [tv reloadData];
             return;
         }
@@ -80,13 +80,13 @@ static NSString * const kTableName = @"table";
     self.title = @"TableViewExample";
     self.navigationItem.leftBarButtonItem =
         [[UIBarButtonItem alloc] initWithTitle:@"BG Add"
-                                         style:UIBarButtonItemStylePlain
-                                        target:self
-                                        action:@selector(backgroundAdd)];
+                                 style:UIBarButtonItemStylePlain
+                                 target:self
+                                 action:@selector(backgroundAdd)];
     self.navigationItem.rightBarButtonItem =
         [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-                                                      target:self
-                                                      action:@selector(add)];
+                                 target:self
+                                 action:@selector(add)];
 }
 
 #pragma mark - UITableViewDataSource
@@ -102,7 +102,7 @@ static NSString * const kTableName = @"table";
 
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                      reuseIdentifier:kCellID];
+                                        reuseIdentifier:kCellID];
     }
 
     DemoObject *object = self.array[indexPath.row];
@@ -113,7 +113,7 @@ static NSString * const kTableName = @"table";
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
-                                            forRowAtIndexPath:(NSIndexPath *)indexPath
+    forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         RLMRealm *realm = RLMRealm.defaultRealm;
@@ -129,15 +129,17 @@ static NSString * const kTableName = @"table";
 {
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     // Import many items in a background thread
-    dispatch_async(queue, ^{
+    dispatch_async(queue, ^ {
         // Get new realm and table since we are in a new thread
         @autoreleasepool {
             RLMRealm *realm = [RLMRealm defaultRealm];
             [realm beginWriteTransaction];
             for (NSInteger index = 0; index < 5; index++) {
                 // Add row via dictionary. Order is ignored.
-                [DemoObject createInRealm:realm withValue:@{@"title": [self randomString],
-                                                             @"date": [self randomDate]}];
+                [DemoObject createInRealm:realm withValue:@ {
+           @"title": [self randomString],
+           @"date": [self randomDate]
+                           }];
             }
             [realm commitWriteTransaction];
         }

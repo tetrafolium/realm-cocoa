@@ -32,11 +32,11 @@ void RLMCheckForUpdates() {
     }
 
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"alpha|beta|rc"
-                                                                           options:(NSRegularExpressionOptions)0
-                                                                             error:nil];
+                                                      options:(NSRegularExpressionOptions)0
+                                                      error:nil];
     NSUInteger numberOfMatches = [regex numberOfMatchesInString:REALM_COCOA_VERSION
-                                                        options:(NSMatchingOptions)0
-                                                          range:NSMakeRange(0, REALM_COCOA_VERSION.length)];
+                                        options:(NSMatchingOptions)0
+                                        range:NSMakeRange(0, REALM_COCOA_VERSION.length)];
 
     if (numberOfMatches > 0) {
         // pre-release version, skip update checking

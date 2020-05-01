@@ -21,11 +21,11 @@
 #import <vector>
 
 namespace realm {
-    class List;
-    class Results;
-    class TableView;
-    struct CollectionChangeSet;
-    struct NotificationToken;
+class List;
+class Results;
+class TableView;
+struct CollectionChangeSet;
+struct NotificationToken;
 }
 class RLMClassInfo;
 @class RLMFastEnumerator;
@@ -44,18 +44,18 @@ class RLMClassInfo;
 // set of enumerated items
 @interface RLMFastEnumerator : NSObject
 - (instancetype)initWithList:(realm::List&)list
-                  collection:(id)collection
-                   classInfo:(RLMClassInfo&)info;
+    collection:(id)collection
+    classInfo:(RLMClassInfo&)info;
 - (instancetype)initWithResults:(realm::Results&)results
-                     collection:(id)collection
-                      classInfo:(RLMClassInfo&)info;
+    collection:(id)collection
+    classInfo:(RLMClassInfo&)info;
 
 // Detach this enumerator from the source collection. Must be called before the
 // source collection is changed.
 - (void)detach;
 
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                    count:(NSUInteger)len;
+    count:(NSUInteger)len;
 @end
 NSUInteger RLMFastEnumerate(NSFastEnumerationState *state, NSUInteger len, id<RLMFastEnumerable> collection);
 
@@ -74,9 +74,9 @@ NSUInteger RLMFastEnumerate(NSFastEnumerationState *state, NSUInteger len, id<RL
 
 template<typename Collection>
 RLMNotificationToken *RLMAddNotificationBlock(id objcCollection,
-                                              Collection& collection,
-                                              void (^block)(id, RLMCollectionChange *, NSError *),
-                                              bool suppressInitialChange=false);
+        Collection& collection,
+        void (^block)(id, RLMCollectionChange *, NSError *),
+        bool suppressInitialChange=false);
 
 template<typename Collection>
 NSArray *RLMCollectionValueForKey(Collection& collection, NSString *key, RLMClassInfo& info);

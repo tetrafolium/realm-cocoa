@@ -46,13 +46,13 @@
 
 @implementation LinkChain2
 + (NSDictionary *)linkingObjectsProperties {
-    return @{@"prev": [RLMPropertyDescriptor descriptorWithClass:LinkChain1.class propertyName:@"next"]};
+    return @ {@"prev": [RLMPropertyDescriptor descriptorWithClass:LinkChain1.class propertyName:@"next"]};
 }
 @end
 
 @implementation LinkChain3
 + (NSDictionary *)linkingObjectsProperties {
-    return @{@"prev": [RLMPropertyDescriptor descriptorWithClass:LinkChain2.class propertyName:@"next"]};
+    return @ {@"prev": [RLMPropertyDescriptor descriptorWithClass:LinkChain2.class propertyName:@"next"]};
 }
 @end
 
@@ -220,8 +220,8 @@
 
     // block-based predicate
     NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL (__unused id obj, __unused NSDictionary *bindings) {
-        return true;
-    }];
+                    return true;
+                }];
     XCTAssertThrows([IntObject objectsWithPredicate:pred]);
 }
 
@@ -293,7 +293,7 @@
     pred = [NSPredicate predicateWithFormat:@"age BETWEEN %@", @[@1, @[@2, @3]]];
     RLMAssertThrowsWithReasonMatching([realm objects:className withPredicate:pred], @"type int for BETWEEN");
 
-    pred = [NSPredicate predicateWithFormat:@"age BETWEEN %@", @{@25 : @35}];
+    pred = [NSPredicate predicateWithFormat:@"age BETWEEN %@", @ {@25 : @35}];
     RLMAssertThrowsWithReasonMatching([realm objects:className withPredicate:pred], @"type NSArray for BETWEEN");
 
     pred = [NSPredicate predicateWithFormat:@"height BETWEEN %@", @[@25, @35]];
@@ -541,7 +541,7 @@
 - (void)verifySortWithAccuracy:(RLMRealm *)realm column:(NSString *)column ascending:(BOOL)ascending getter:(double(^)(id))getter expected:(double)val accuracy:(double)accuracy {
     // test TableView query
     RLMResults<AllTypesObject *> *results = [[AllTypesObject allObjectsInRealm:realm]
-                                             sortedResultsUsingKeyPath:column ascending:ascending];
+                                            sortedResultsUsingKeyPath:column ascending:ascending];
     XCTAssertEqualWithAccuracy(getter(results[0][column]), val, accuracy, @"Array not sorted as expected");
 
     // test LinkView query
@@ -560,7 +560,7 @@
     NSDate *date33 = [date3 dateByAddingTimeInterval:1];
 
     [realm beginWriteTransaction];
-    ArrayOfAllTypesObject *arrayOfAll = [ArrayOfAllTypesObject createInRealm:realm withValue:@{}];
+    ArrayOfAllTypesObject *arrayOfAll = [ArrayOfAllTypesObject createInRealm:realm withValue:@ {}];
 
     StringObject *stringObj = [StringObject new];
     stringObj.stringCol = @"string";
@@ -582,12 +582,16 @@
     [self verifySort:realm column:@"intCol" ascending:NO expected:@33];
 
     //////////// sort by dateCol
-    double (^dateGetter)(id) = ^(NSDate *d) { return d.timeIntervalSince1970; };
+    double (^dateGetter)(id) = ^(NSDate *d) {
+        return d.timeIntervalSince1970;
+    };
     [self verifySortWithAccuracy:realm column:@"dateCol" ascending:YES getter:dateGetter expected:date1.timeIntervalSince1970 accuracy:1];
     [self verifySortWithAccuracy:realm column:@"dateCol" ascending:NO getter:dateGetter expected:date33.timeIntervalSince1970 accuracy:1];
 
     //////////// sort by doubleCol
-    double (^doubleGetter)(id) = ^(NSNumber *n) { return n.doubleValue; };
+    double (^doubleGetter)(id) = ^(NSNumber *n) {
+        return n.doubleValue;
+    };
     [self verifySortWithAccuracy:realm column:@"doubleCol" ascending:YES getter:doubleGetter expected:1.0 accuracy:0.0000001];
     [self verifySortWithAccuracy:realm column:@"doubleCol" ascending:NO getter:doubleGetter expected:3.3 accuracy:0.0000001];
 
@@ -633,12 +637,12 @@
 
     bool (^checkOrder)(NSArray *, NSArray *, NSArray *) = ^bool(NSArray *properties, NSArray *ascending, NSArray *dogs) {
         NSArray *sort = @[[RLMSortDescriptor sortDescriptorWithKeyPath:properties[0] ascending:[ascending[0] boolValue]],
-                          [RLMSortDescriptor sortDescriptorWithKeyPath:properties[1] ascending:[ascending[1] boolValue]]];
+                                                                                     [RLMSortDescriptor sortDescriptorWithKeyPath:properties[1] ascending:[ascending[1] boolValue]]];
         RLMResults *actual = [DogObject.allObjects sortedResultsUsingDescriptors:sort];
         return [actual[0] isEqualToObject:dogs[0]]
-            && [actual[1] isEqualToObject:dogs[1]]
-            && [actual[2] isEqualToObject:dogs[2]]
-            && [actual[3] isEqualToObject:dogs[3]];
+               && [actual[1] isEqualToObject:dogs[1]]
+               && [actual[2] isEqualToObject:dogs[2]]
+               && [actual[3] isEqualToObject:dogs[3]];
     };
 
     // Check each valid sort
@@ -679,15 +683,15 @@
     XCTAssertEqualObjects(asArray(r2), (@[ hannah, don, diane_sr, diane, mark ]));
 
     RLMResults *r3 = [OwnerObject.allObjects sortedResultsUsingDescriptors:@[
-                         [RLMSortDescriptor sortDescriptorWithKeyPath:@"dog.age" ascending:YES],
-                         [RLMSortDescriptor sortDescriptorWithKeyPath:@"name" ascending:YES]
-    ]];
+                                                 [RLMSortDescriptor sortDescriptorWithKeyPath:@"dog.age" ascending:YES],
+                                                 [RLMSortDescriptor sortDescriptorWithKeyPath:@"name" ascending:YES]
+                                             ]];
     XCTAssertEqualObjects(asArray(r3), (@[ mark, diane, diane_sr, don, hannah ]));
 
     RLMResults *r4 = [OwnerObject.allObjects sortedResultsUsingDescriptors:@[
-                         [RLMSortDescriptor sortDescriptorWithKeyPath:@"dog.age" ascending:NO],
-                         [RLMSortDescriptor sortDescriptorWithKeyPath:@"name" ascending:YES]
-    ]];
+                                                 [RLMSortDescriptor sortDescriptorWithKeyPath:@"dog.age" ascending:NO],
+                                                 [RLMSortDescriptor sortDescriptorWithKeyPath:@"name" ascending:YES]
+                                             ]];
     XCTAssertEqualObjects(asArray(r4), (@[ hannah, diane_sr, don, diane, mark ]));
 }
 
@@ -714,7 +718,7 @@
     NSDate *date33 = [date3 dateByAddingTimeInterval:1];
 
     [realm beginWriteTransaction];
-    ArrayOfAllTypesObject *arrayOfAll = [ArrayOfAllTypesObject createInRealm:realm withValue:@{}];
+    ArrayOfAllTypesObject *arrayOfAll = [ArrayOfAllTypesObject createInRealm:realm withValue:@ {}];
 
     StringObject *stringObj = [StringObject new];
     stringObj.stringCol = @"string";
@@ -730,19 +734,19 @@
     XCTAssertEqualObjects([results[0] stringCol], @"cc");
 
     // delete cc, add d results should update
-    [realm transactionWithBlock:^{
-        [arrayOfAll.array removeObjectAtIndex:3];
+    [realm transactionWithBlock:^ {
+              [arrayOfAll.array removeObjectAtIndex:3];
 
-        // create extra alltypesobject
+              // create extra alltypesobject
         [arrayOfAll.array addObject:[AllTypesObject createInRealm:realm withValue:@[@YES, @1, @1.0f, @1.0, @"d", [@"d" dataUsingEncoding:NSUTF8StringEncoding], date1, @YES, @((long)1), stringObj]]];
     }];
     XCTAssertEqualObjects([results[0] stringCol], @"d");
     XCTAssertEqualObjects([results[1] stringCol], @"c");
 
     // delete from realm should be removed from results
-    [realm transactionWithBlock:^{
-        [realm deleteObject:arrayOfAll.array.lastObject];
-    }];
+    [realm transactionWithBlock:^ {
+              [realm deleteObject:arrayOfAll.array.lastObject];
+          }];
     XCTAssertEqualObjects([results[0] stringCol], @"c");
 }
 
@@ -1487,8 +1491,9 @@
     [realm beginWriteTransaction];
     CircleObject *circle = nil;
     for (int i = 0; i < 5; ++i) {
-        circle = [CircleObject createInRealm:realm withValue:@{@"data": [NSString stringWithFormat:@"%d", i],
-                                                                @"next": circle ?: NSNull.null}];
+        circle = [CircleObject createInRealm:realm withValue:@ {@"data": [NSString stringWithFormat:@"%d", i],
+                               @"next": circle ?: NSNull.null
+                                                               }];
     }
     [realm commitWriteTransaction];
 
@@ -1514,8 +1519,9 @@
     [realm beginWriteTransaction];
     CircleObject *circle = nil;
     for (int i = 0; i < 5; ++i) {
-        circle = [CircleObject createInRealm:realm withValue:@{@"data": [NSString stringWithFormat:@"%d", i],
-                                                                @"next": circle ?: NSNull.null}];
+        circle = [CircleObject createInRealm:realm withValue:@ {@"data": [NSString stringWithFormat:@"%d", i],
+                               @"next": circle ?: NSNull.null
+                                                               }];
     }
     [CircleArrayObject createInRealm:realm withValue:@[[CircleObject allObjectsInRealm:realm]]];
     [realm commitWriteTransaction];
@@ -1544,8 +1550,8 @@
     RLMRealm *realm = [self realm];
 
     [realm beginWriteTransaction];
-    LinkChain1 *root1 = [LinkChain1 createInRealm:realm withValue:@{@"value": @1, @"next": @[@[]]}];
-    LinkChain1 *root2 = [LinkChain1 createInRealm:realm withValue:@{@"value": @2, @"next": @[@[]]}];
+    LinkChain1 *root1 = [LinkChain1 createInRealm:realm withValue:@ {@"value": @1, @"next": @[@[]]}];
+    LinkChain1 *root2 = [LinkChain1 createInRealm:realm withValue:@ {@"value": @2, @"next": @[@[]]}];
     [realm commitWriteTransaction];
 
     RLMResults *results = [LinkChain3 objectsInRealm:realm where:@"ANY prev.prev.value = 1"];
@@ -1632,9 +1638,9 @@
 }
 
 - (void)testClass:(Class)class
-  withNormalCount:(NSUInteger)normalCount
-         notCount:(NSUInteger)notCount
-            where:(NSString *)predicateFormat, ...
+        withNormalCount:(NSUInteger)normalCount
+        notCount:(NSUInteger)notCount
+        where:(NSString *)predicateFormat, ...
 {
     va_list args;
     va_start(args, predicateFormat);
@@ -1815,9 +1821,9 @@
 
     [realm beginWriteTransaction];
     [CompanyObject createInRealm:realm
-                      withValue:@[@"company name", @[@{@"name": @"John", @"age": @30, @"hired": @NO},
-                                                      @{@"name": @"Joe",  @"age": @40, @"hired": @YES},
-                                                      @{@"name": @"Jill",  @"age": @50, @"hired": @YES}]]];
+                   withValue:@[@"company name", @[@ {@"name": @"John", @"age": @30, @"hired": @NO},
+                                    @ {@"name": @"Joe",  @"age": @40, @"hired": @YES},
+                                    @ {@"name": @"Jill",  @"age": @50, @"hired": @YES}]]];
     [realm commitWriteTransaction];
 
     CompanyObject *co = [CompanyObject allObjects][0];
@@ -1834,9 +1840,9 @@
 
     [realm beginWriteTransaction];
     [CompanyObject createInRealm:realm
-                      withValue:@[@"company name", @[@{@"name": @"John", @"age": @30, @"hired": @NO},
-                                                      @{@"name": @"Jill",  @"age": @50, @"hired": @YES}]]];
-    [EmployeeObject createInRealm:realm withValue:@{@"name": @"Joe",  @"age": @40, @"hired": @YES}];
+                   withValue:@[@"company name", @[@ {@"name": @"John", @"age": @30, @"hired": @NO},
+                                    @ {@"name": @"Jill",  @"age": @50, @"hired": @YES}]]];
+    [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Joe",  @"age": @40, @"hired": @YES}];
     [realm commitWriteTransaction];
 
     RLMResults<EmployeeObject *> *subarray = nil;
@@ -1849,7 +1855,7 @@
     [realm beginWriteTransaction];
     @autoreleasepool {
         __attribute((objc_precise_lifetime)) CompanyObject *co = [CompanyObject allObjects][0];
-        [co.employees addObject:[EmployeeObject createInRealm:realm withValue:@{@"name": @"Joe",  @"age": @40, @"hired": @YES}]];
+[co.employees addObject:[EmployeeObject createInRealm:realm withValue:@{@"name": @"Joe",  @"age": @40, @"hired": @YES}]];
     }
     [realm commitWriteTransaction];
 
@@ -1862,9 +1868,9 @@
 
     [realm beginWriteTransaction];
     [CompanyObject createInRealm:realm
-                      withValue:@[@"company name", @[@{@"name": @"John", @"age": @30, @"hired": @NO},
-                                                      @{@"name": @"Jill",  @"age": @40, @"hired": @YES}]]];
-    EmployeeObject *eo = [EmployeeObject createInRealm:realm withValue:@{@"name": @"Joe",  @"age": @40, @"hired": @YES}];
+                   withValue:@[@"company name", @[@ {@"name": @"John", @"age": @30, @"hired": @NO},
+                                    @ {@"name": @"Jill",  @"age": @40, @"hired": @YES}]]];
+    EmployeeObject *eo = [EmployeeObject createInRealm:realm withValue:@ {@"name": @"Joe",  @"age": @40, @"hired": @YES}];
     [realm commitWriteTransaction];
 
     CompanyObject *co = CompanyObject.allObjects.firstObject;
@@ -2042,13 +2048,13 @@
 
     [realm beginWriteTransaction];
     CompanyObject *first = [CompanyObject createInRealm:realm
-                                              withValue:@[@"first company", @[@{@"name": @"John", @"age": @30, @"hired": @NO},
-                                                                              @{@"name": @"Jill",  @"age": @40, @"hired": @YES},
-                                                                              @{@"name": @"Joe",  @"age": @40, @"hired": @YES}]]];
+                                          withValue:@[@"first company", @[@ {@"name": @"John", @"age": @30, @"hired": @NO},
+                                                      @ {@"name": @"Jill",  @"age": @40, @"hired": @YES},
+                                                      @ {@"name": @"Joe",  @"age": @40, @"hired": @YES}]]];
     CompanyObject *second = [CompanyObject createInRealm:realm
-                                               withValue:@[@"second company", @[@{@"name": @"Bill", @"age": @35, @"hired": @YES},
-                                                                                @{@"name": @"Don",  @"age": @45, @"hired": @NO},
-                                                                                @{@"name": @"Tim",  @"age": @60, @"hired": @NO}]]];
+                                           withValue:@[@"second company", @[@ {@"name": @"Bill", @"age": @35, @"hired": @YES},
+                                                       @ {@"name": @"Don",  @"age": @45, @"hired": @NO},
+                                                       @ {@"name": @"Tim",  @"age": @60, @"hired": @NO}]]];
 
     [LinkToCompanyObject createInRealm:realm withValue:@[ first ]];
     [LinkToCompanyObject createInRealm:realm withValue:@[ second ]];
@@ -2149,8 +2155,8 @@
 
     // Add a new link and verify that the existing results update as expected.
     __block PersonObject *mackenzie;
-    [realm transactionWithBlock:^{
-        mackenzie = [PersonObject createInRealm:realm withValue:@[ @"Mackenzie", @0 ]];
+    [realm transactionWithBlock:^ {
+              mackenzie = [PersonObject createInRealm:realm withValue:@[ @"Mackenzie", @0 ]];
         [jason.children addObject:mackenzie];
     }];
 
@@ -2311,8 +2317,8 @@
 - (void)testQueryOnNullableStringColumn {
     void (^testWithStringClass)(Class) = ^(Class stringObjectClass) {
         RLMRealm *realm = [self realm];
-        [realm transactionWithBlock:^{
-            [stringObjectClass createInRealm:realm withValue:@[@"a"]];
+        [realm transactionWithBlock:^ {
+                  [stringObjectClass createInRealm:realm withValue:@[@"a"]];
             [stringObjectClass createInRealm:realm withValue:@[NSNull.null]];
             [stringObjectClass createInRealm:realm withValue:@[@"b"]];
             [stringObjectClass createInRealm:realm withValue:@[NSNull.null]];
@@ -2354,9 +2360,9 @@
         XCTAssertEqualObjects((@[NSNull.null, NSNull.null, @"", @"a", @"b"]), [sorted valueForKey:@"stringCol"]);
         XCTAssertEqualObjects((@[@"b", @"a", @"", NSNull.null, NSNull.null]), [[sorted sortedResultsUsingKeyPath:@"stringCol" ascending:NO] valueForKey:@"stringCol"]);
 
-        [realm transactionWithBlock:^{
-            [realm deleteObject:[stringObjectClass allObjectsInRealm:realm].firstObject];
-        }];
+        [realm transactionWithBlock:^ {
+                  [realm deleteObject:[stringObjectClass allObjectsInRealm:realm].firstObject];
+              }];
 
         XCTAssertEqual(2U, nilStrings.count);
         XCTAssertEqual(2U, nonNilStrings.count);
@@ -2392,8 +2398,8 @@
 - (void)testQueryingOnLinkToNullableStringColumn {
     void (^testWithStringClass)(Class, Class) = ^(Class stringLinkClass, Class stringObjectClass) {
         RLMRealm *realm = [self realm];
-        [realm transactionWithBlock:^{
-            [stringLinkClass createInRealm:realm withValue:@[[stringObjectClass createInRealm:realm withValue:@[@"a"]]]];
+        [realm transactionWithBlock:^ {
+                  [stringLinkClass createInRealm:realm withValue:@[[stringObjectClass createInRealm:realm withValue:@[@"a"]]]];
             [stringLinkClass createInRealm:realm withValue:@[[stringObjectClass createInRealm:realm withValue:@[NSNull.null]]]];
             [stringLinkClass createInRealm:realm withValue:@[[stringObjectClass createInRealm:realm withValue:@[@"b"]]]];
             [stringLinkClass createInRealm:realm withValue:@[[stringObjectClass createInRealm:realm withValue:@[NSNull.null]]]];
@@ -2575,9 +2581,9 @@ struct NullTestData {
     [realm beginWriteTransaction];
     [realm deleteAllObjects];
     [AllOptionalTypes createInRealm:realm withValue:@[NSNull.null, NSNull.null,
-                                                      NSNull.null, NSNull.null,
-                                                      NSNull.null, NSNull.null,
-                                                      NSNull.null]];
+                             NSNull.null, NSNull.null,
+                             NSNull.null, NSNull.null,
+                             NSNull.null]];
     [realm commitWriteTransaction];
 
     for (size_t i = 0; i < sizeof(data) / sizeof(data[0]); ++i) {
@@ -2605,8 +2611,8 @@ struct NullTestData {
 
     [realm beginWriteTransaction];
     [AllOptionalTypes createInRealm:realm withValue:@[@YES, @1, @1, @1, @"abc",
-                                                      [@"a" dataUsingEncoding:NSUTF8StringEncoding],
-                                                      [NSDate dateWithTimeIntervalSince1970:1]]];
+                             [@"a" dataUsingEncoding:NSUTF8StringEncoding],
+                             [NSDate dateWithTimeIntervalSince1970:1]]];
     [realm commitWriteTransaction];
 
     ////////////////////////
@@ -2678,9 +2684,9 @@ struct NullTestData {
 
     [realm beginWriteTransaction];
     [AllOptionalTypes createInRealm:realm withValue:@[NSNull.null, NSNull.null,
-                                                      NSNull.null, NSNull.null,
-                                                      NSNull.null, NSNull.null,
-                                                      NSNull.null]];
+                             NSNull.null, NSNull.null,
+                             NSNull.null, NSNull.null,
+                             NSNull.null]];
     [realm commitWriteTransaction];
 
     ////////////////////////
@@ -2816,8 +2822,8 @@ struct NullTestData {
 @implementation AsyncQueryTests
 - (RLMResults *)evaluate:(RLMResults *)results {
     id token = [results addNotificationBlock:^(RLMResults *r, __unused RLMCollectionChange *changed, NSError *e) {
-        XCTAssertNil(e);
-        XCTAssertNotNil(r);
+                XCTAssertNil(e);
+                XCTAssertNotNil(r);
         CFRunLoopStop(CFRunLoopGetCurrent());
     }];
     CFRunLoopRun();
@@ -2833,7 +2839,7 @@ struct NullTestData {
 - (RLMRealm *)realm {
     @autoreleasepool {
         NSSet *classNames = [NSSet setWithArray:@[@"AllTypesObject", @"QueryObject", @"PersonObject", @"DogObject",
-                                                  @"EmployeeObject", @"CompanyObject", @"OwnerObject"]];
+                                   @"EmployeeObject", @"CompanyObject", @"OwnerObject"]];
         RLMSchema *schema = [RLMSchema.sharedSchema copy];
         NSMutableArray *objectSchemas = [schema.objectSchema mutableCopy];
         for (NSUInteger i = 0; i < objectSchemas.count; i++) {

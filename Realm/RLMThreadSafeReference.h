@@ -69,15 +69,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface RLMThreadSafeReference<__covariant Confined : id<RLMThreadConfined>> : NSObject
 
-/**
- Create a thread-safe reference to the thread-confined object.
+            /**
+             Create a thread-safe reference to the thread-confined object.
 
- @param threadConfined The thread-confined object to create a thread-safe reference to.
+             @param threadConfined The thread-confined object to create a thread-safe reference to.
 
- @note You may continue to use and access the thread-confined object after passing it to this
-       constructor.
- */
-+ (instancetype)referenceWithThreadConfined:(Confined)threadConfined;
+             @note You may continue to use and access the thread-confined object after passing it to this
+                   constructor.
+             */
+        + (instancetype)referenceWithThreadConfined:(Confined)threadConfined;
 
 /**
  Indicates if the reference can no longer be resolved because an attempt to resolve it has already

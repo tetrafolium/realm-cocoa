@@ -80,7 +80,7 @@
 @implementation AllTypesObject
 + (NSDictionary *)linkingObjectsProperties
 {
-    return @{ @"linkingObjectsCol": [RLMPropertyDescriptor descriptorWithClass:LinkToAllTypesObject.class propertyName:@"allTypesCol"] };
+    return @ { @"linkingObjectsCol": [RLMPropertyDescriptor descriptorWithClass:LinkToAllTypesObject.class propertyName:@"allTypesCol"] };
 }
 + (NSArray *)requiredProperties
 {
@@ -109,7 +109,7 @@
     return @"pk";
 }
 + (NSDictionary *)defaultPropertyValues {
-    return @{@"pk": NSUUID.UUID.UUIDString};
+    return @ {@"pk": NSUUID.UUID.UUIDString};
 }
 @end
 
@@ -156,7 +156,7 @@
 @implementation DogObject
 + (NSDictionary *)linkingObjectsProperties
 {
-    return @{ @"owners": [RLMPropertyDescriptor descriptorWithClass:OwnerObject.class propertyName:@"dog"] };
+    return @ { @"owners": [RLMPropertyDescriptor descriptorWithClass:OwnerObject.class propertyName:@"dog"] };
 }
 @end
 
@@ -269,10 +269,15 @@
 
 @implementation NumberDefaultsObject
 + (NSDictionary *)defaultPropertyValues {
-    return @{@"intObj" : @1,
-             @"floatObj" : @2.2f,
-             @"doubleObj" : @3.3,
-             @"boolObj" : @NO};
+    return @ {@"intObj" :
+              @1,
+              @"floatObj" :
+              @2.2f,
+              @"doubleObj" :
+              @3.3,
+              @"boolObj" :
+              @NO
+             };
 }
 @end
 
@@ -307,7 +312,7 @@
 
 + (NSDictionary *)linkingObjectsProperties
 {
-    return @{ @"parents": [RLMPropertyDescriptor descriptorWithClass:PersonObject.class propertyName:@"children"] };
+    return @ { @"parents": [RLMPropertyDescriptor descriptorWithClass:PersonObject.class propertyName:@"children"] };
 }
 
 - (BOOL)isEqual:(id)other
@@ -327,12 +332,18 @@
     return @"Renamed Properties";
 }
 + (NSDictionary *)_realmColumnNames {
-    return @{@"propA": @"prop 1",
-             @"propB": @"prop 2"};
+    return @ {@"propA":
+              @"prop 1",
+              @"propB":
+              @"prop 2"
+             };
 }
 + (NSDictionary *)linkingObjectsProperties {
-    return @{@"linking1": [RLMPropertyDescriptor descriptorWithClass:LinkToRenamedProperties1.class propertyName:@"linkA"],
-             @"linking2": [RLMPropertyDescriptor descriptorWithClass:LinkToRenamedProperties2.class propertyName:@"linkD"]};
+    return @ {@"linking1":
+              [RLMPropertyDescriptor descriptorWithClass:LinkToRenamedProperties1.class propertyName:@"linkA"],
+              @"linking2":
+              [RLMPropertyDescriptor descriptorWithClass:LinkToRenamedProperties2.class propertyName:@"linkD"]
+             };
 }
 @end
 
@@ -341,12 +352,18 @@
     return @"Renamed Properties";
 }
 + (NSDictionary *)_realmColumnNames {
-    return @{@"propC": @"prop 1",
-             @"propD": @"prop 2"};
+    return @ {@"propC":
+              @"prop 1",
+              @"propD":
+              @"prop 2"
+             };
 }
 + (NSDictionary *)linkingObjectsProperties {
-    return @{@"linking1": [RLMPropertyDescriptor descriptorWithClass:LinkToRenamedProperties1.class propertyName:@"linkA"],
-             @"linking2": [RLMPropertyDescriptor descriptorWithClass:LinkToRenamedProperties2.class propertyName:@"linkD"]};
+    return @ {@"linking1":
+              [RLMPropertyDescriptor descriptorWithClass:LinkToRenamedProperties1.class propertyName:@"linkA"],
+              @"linking2":
+              [RLMPropertyDescriptor descriptorWithClass:LinkToRenamedProperties2.class propertyName:@"linkD"]
+             };
 }
 @end
 
@@ -355,8 +372,11 @@
     return @"Link To Renamed Properties";
 }
 + (NSDictionary *)_realmColumnNames {
-    return @{@"linkA": @"Link A",
-             @"linkB": @"Link B"};
+    return @ {@"linkA":
+              @"Link A",
+              @"linkB":
+              @"Link B"
+             };
 }
 @end
 
@@ -365,8 +385,11 @@
     return @"Link To Renamed Properties";
 }
 + (NSDictionary *)_realmColumnNames {
-    return @{@"linkC": @"Link A",
-             @"linkD": @"Link B"};
+    return @ {@"linkC":
+              @"Link A",
+              @"linkD":
+              @"Link B"
+             };
 }
 @end
 
@@ -375,15 +398,20 @@
     return @"pk";
 }
 + (NSDictionary *)_realmColumnNames {
-    return @{@"pk": @"Primary Key",
-             @"value": @"Value"};
+    return @ {@"pk":
+              @"Primary Key",
+              @"value":
+              @"Value"
+             };
 }
 @end
 
 #pragma mark FakeObject
 
 @implementation FakeObject
-+ (bool)_realmIgnoreClass { return true; }
++ (bool)_realmIgnoreClass {
+    return true;
+}
 @end
 
 #pragma mark ComputedPropertyNotExplicitlyIgnoredObject

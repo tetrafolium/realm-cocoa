@@ -19,7 +19,7 @@
 #import <Realm/RLMProperty_Private.h>
 
 namespace realm {
-    struct Property;
+struct Property;
 }
 
 @class RLMSchema;

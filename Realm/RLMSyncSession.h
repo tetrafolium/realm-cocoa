@@ -194,13 +194,13 @@ NS_ASSUME_NONNULL_BEGIN
  @see `RLMSyncProgressDirection`, `RLMSyncProgress`, `RLMProgressNotificationBlock`, `RLMProgressNotificationToken`
  */
 - (nullable RLMProgressNotificationToken *)addProgressNotificationForDirection:(RLMSyncProgressDirection)direction
-                                                                          mode:(RLMSyncProgressMode)mode
-                                                                         block:(RLMProgressNotificationBlock)block
-NS_REFINED_FOR_SWIFT;
+    mode:(RLMSyncProgressMode)mode
+    block:(RLMProgressNotificationBlock)block
+    NS_REFINED_FOR_SWIFT;
 
 /**
  Given an error action token, immediately handle the corresponding action.
- 
+
  @see `RLMSyncErrorClientResetError`, `RLMSyncErrorPermissionDeniedError`
  */
 + (void)immediatelyHandleError:(RLMSyncErrorActionToken *)token;
@@ -244,14 +244,14 @@ NS_REFINED_FOR_SWIFT;
  yet when -[RLMRealm asyncOpenWithConfiguration:completion:] returns.
  */
 @interface RLMAsyncOpenTask : NSObject
-/**
- Register a progress notification block.
+    /**
+     Register a progress notification block.
 
- Each registered progress notification block is called whenever the sync
- subsystem has new progress data to report until the task is either cancelled
- or the completion callback is called. Progress notifications are delivered on
- the main queue.
- */
+     Each registered progress notification block is called whenever the sync
+     subsystem has new progress data to report until the task is either cancelled
+     or the completion callback is called. Progress notifications are delivered on
+     the main queue.
+     */
 - (void)addProgressNotificationBlock:(RLMProgressNotificationBlock)block;
 
 /**
@@ -263,7 +263,7 @@ NS_REFINED_FOR_SWIFT;
  the supplied queue.
  */
 - (void)addProgressNotificationOnQueue:(dispatch_queue_t)queue
-                                 block:(RLMProgressNotificationBlock)block;
+    block:(RLMProgressNotificationBlock)block;
 
 /**
  Cancel the asynchronous open.

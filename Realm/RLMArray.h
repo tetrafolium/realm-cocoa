@@ -59,9 +59,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Properties
 
-/**
- The number of objects in the array.
- */
+    /**
+     The number of objects in the array.
+     */
 @property (nonatomic, readonly, assign) NSUInteger count;
 
 /**
@@ -353,8 +353,8 @@ NS_ASSUME_NONNULL_BEGIN
  @return A token which must be held for as long as you want updates to be delivered.
  */
 - (RLMNotificationToken *)addNotificationBlock:(void (^)(RLMArray<RLMObjectType> *__nullable array,
-                                                         RLMCollectionChange *__nullable changes,
-                                                         NSError *__nullable error))block __attribute__((warn_unused_result));
+    RLMCollectionChange *__nullable changes,
+    NSError *__nullable error))block __attribute__((warn_unused_result));
 
 #pragma mark - Aggregating Property Values
 

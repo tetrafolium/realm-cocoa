@@ -21,9 +21,9 @@
 #import <vector>
 
 namespace realm {
-    class Group;
-    class Query;
-    class SortDescriptor;
+class Group;
+class Query;
+class SortDescriptor;
 }
 
 @class RLMObjectSchema, RLMProperty, RLMSchema, RLMSortDescriptor;

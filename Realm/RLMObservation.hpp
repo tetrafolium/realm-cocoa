@@ -30,8 +30,8 @@ class RLMClassInfo;
 class RLMSchemaInfo;
 
 namespace realm {
-    class History;
-    class SharedGroup;
+class History;
+class SharedGroup;
 }
 
 // RLMObservationInfo stores all of the KVO-related data for RLMObjectBase and
@@ -70,7 +70,9 @@ public:
 
     void recordObserver(realm::Row& row, RLMClassInfo *objectInfo, RLMObjectSchema *objectSchema, NSString *keyPath);
     void removeObserver();
-    bool hasObservers() const { return observerCount > 0; }
+    bool hasObservers() const {
+        return observerCount > 0;
+    }
 
     // valueForKey: on observed object and array properties needs to return the
     // same object each time for KVO to work at all. Doing this all the time

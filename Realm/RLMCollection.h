@@ -246,8 +246,8 @@ typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
  @return A token which must be held for as long as you want collection notifications to be delivered.
  */
 - (RLMNotificationToken *)addNotificationBlock:(void (^)(id<RLMCollection> __nullable collection,
-                                                         RLMCollectionChange *__nullable change,
-                                                         NSError *__nullable error))block __attribute__((warn_unused_result));
+    RLMCollectionChange *__nullable change,
+    NSError *__nullable error))block __attribute__((warn_unused_result));
 
 #pragma mark - Aggregating Property Values
 
@@ -323,9 +323,9 @@ typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
 
 #pragma mark - Properties
 
-/**
- The key path which the sort descriptor orders results by.
- */
+    /**
+     The key path which the sort descriptor orders results by.
+     */
 @property (nonatomic, readonly) NSString *keyPath;
 
 /**

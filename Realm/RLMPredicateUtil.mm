@@ -55,49 +55,49 @@ NSExpression *PredicateExpressionTransformer::visit(NSExpression *expression) co
     expression = m_visitor(expression);
 
     switch (expression.expressionType) {
-        case NSFunctionExpressionType: {
-            NSMutableArray *arguments = [NSMutableArray array];
-            for (NSExpression *argument in expression.arguments) {
-                [arguments addObject:visit(argument)];
-            }
-            if (expression.operand) {
-                return [NSExpression expressionForFunction:visit(expression.operand) selectorName:expression.function arguments:arguments];
-            } else {
-                return [NSExpression expressionForFunction:expression.function arguments:arguments];
-            }
+    case NSFunctionExpressionType: {
+        NSMutableArray *arguments = [NSMutableArray array];
+        for (NSExpression *argument in expression.arguments) {
+            [arguments addObject:visit(argument)];
         }
-
-        case NSUnionSetExpressionType:
-            return [NSExpression expressionForUnionSet:visit(expression.leftExpression) with:visit(expression.rightExpression)];
-        case NSIntersectSetExpressionType:
-            return [NSExpression expressionForIntersectSet:visit(expression.leftExpression) with:visit(expression.rightExpression)];
-        case NSMinusSetExpressionType:
-            return [NSExpression expressionForMinusSet:visit(expression.leftExpression) with:visit(expression.rightExpression)];
-
-        case NSSubqueryExpressionType: {
-            NSExpression *collection = expression.collection;
-            // NSExpression.collection is declared as id, but appears to always hold an NSExpression for subqueries.
-            REALM_ASSERT([collection isKindOfClass:[NSExpression class]]);
-            return [NSExpression expressionForSubquery:visit(collection) usingIteratorVariable:expression.variable predicate:visit(expression.predicate)];
+        if (expression.operand) {
+            return [NSExpression expressionForFunction:visit(expression.operand) selectorName:expression.function arguments:arguments];
+        } else {
+            return [NSExpression expressionForFunction:expression.function arguments:arguments];
         }
+    }
 
-        case NSAggregateExpressionType: {
-            NSMutableArray *subexpressions = [NSMutableArray array];
-            for (NSExpression *subexpression in expression.collection) {
-                [subexpressions addObject:visit(subexpression)];
-            }
-            return [NSExpression expressionForAggregate:subexpressions];
+    case NSUnionSetExpressionType:
+        return [NSExpression expressionForUnionSet:visit(expression.leftExpression) with:visit(expression.rightExpression)];
+    case NSIntersectSetExpressionType:
+        return [NSExpression expressionForIntersectSet:visit(expression.leftExpression) with:visit(expression.rightExpression)];
+    case NSMinusSetExpressionType:
+        return [NSExpression expressionForMinusSet:visit(expression.leftExpression) with:visit(expression.rightExpression)];
+
+    case NSSubqueryExpressionType: {
+        NSExpression *collection = expression.collection;
+        // NSExpression.collection is declared as id, but appears to always hold an NSExpression for subqueries.
+        REALM_ASSERT([collection isKindOfClass:[NSExpression class]]);
+        return [NSExpression expressionForSubquery:visit(collection) usingIteratorVariable:expression.variable predicate:visit(expression.predicate)];
+    }
+
+    case NSAggregateExpressionType: {
+        NSMutableArray *subexpressions = [NSMutableArray array];
+        for (NSExpression *subexpression in expression.collection) {
+            [subexpressions addObject:visit(subexpression)];
         }
+        return [NSExpression expressionForAggregate:subexpressions];
+    }
 
-        case NSConditionalExpressionType:
+    case NSConditionalExpressionType:
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
-            return [NSExpression expressionForConditional:visit(expression.predicate) trueExpression:visit(expression.trueExpression) falseExpression:visit(expression.falseExpression)];
+        return [NSExpression expressionForConditional:visit(expression.predicate) trueExpression:visit(expression.trueExpression) falseExpression:visit(expression.falseExpression)];
 #pragma clang diagnostic pop
 
-        default:
-            // The remaining expression types do not contain nested expressions or predicates.
-            return expression;
+    default:
+        // The remaining expression types do not contain nested expressions or predicates.
+        return expression;
     }
 }
 

@@ -28,7 +28,7 @@ class RLMObservationInfo;
 
 // RLMObject accessor and read/write realm
 @interface RLMObjectBase () {
-    @public
+@public
     realm::Row _row;
     RLMObservationInfo *_observationInfo;
     RLMClassInfo *_info;

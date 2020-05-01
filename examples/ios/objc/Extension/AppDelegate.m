@@ -47,15 +47,15 @@
     [super viewDidLoad];
     self.tick = [Tick allObjects].firstObject;
     if (!self.tick) {
-        [[RLMRealm defaultRealm] transactionWithBlock:^{
-            self.tick = [Tick createInDefaultRealmWithValue:@[@"", @0]];
-        }];
+        [[RLMRealm defaultRealm] transactionWithBlock:^ {
+                                    self.tick = [Tick createInDefaultRealmWithValue:@[@"", @0]];
+                                }];
     }
     self.notificationToken = [self.tick.realm addNotificationBlock:^(NSString *notification, RLMRealm *realm) {
-        // Occasionally, respond immediately to the notification by triggering a new notification.
-        if (self.tick.count % 13 == 0) {
-            [self tock];
-        }
+                        // Occasionally, respond immediately to the notification by triggering a new notification.
+                        if (self.tick.count % 13 == 0) {
+                            [self tock];
+                        }
         [self updateLabel];
     }];
     self.button = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -85,9 +85,9 @@
 }
 
 - (void)tock {
-    [[RLMRealm defaultRealm] transactionWithBlock:^{
-        self.tick.count++;
-    }];
+    [[RLMRealm defaultRealm] transactionWithBlock:^ {
+                                self.tick.count++;
+                            }];
 }
 
 @end

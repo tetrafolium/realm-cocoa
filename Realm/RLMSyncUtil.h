@@ -85,7 +85,7 @@ typedef RLM_ERROR_ENUM(NSInteger, RLMSyncError, RLMSyncErrorDomain) {
      was backed up on the server.
 
      The client reset process can be initiated in one of two ways.
-     
+
      The `userInfo` dictionary contains an opaque token object under the key
      `kRLMSyncErrorActionTokenKey`. This token can be passed into
      `+[RLMSyncSession immediatelyHandleError:]` in order to immediately perform the client
@@ -119,13 +119,13 @@ typedef RLM_ERROR_ENUM(NSInteger, RLMSyncError, RLMSyncErrorDomain) {
      upon a synced Realm. For example, a user may receive this error if they attempt to
      open a Realm they do not have at least read access to, or write to a Realm they only
      have read access to.
-     
+
      This error may also occur if a user incorrectly opens a Realm they have read-only
      permissions to without using the `asyncOpen()` APIs.
 
      A Realm that suffers a permission denied error is, by default, flagged so that its
      local copy will be deleted the next time the application starts.
-     
+
      The `userInfo` dictionary contains an opaque token object under the key
      `kRLMSyncErrorActionTokenKey`. This token can be passed into
      `+[RLMSyncSession immediatelyHandleError:]` in order to immediately delete the local
@@ -135,7 +135,7 @@ typedef RLM_ERROR_ENUM(NSInteger, RLMSyncError, RLMSyncErrorDomain) {
 
      @warning It is strongly recommended that, if a Realm has encountered a permission denied
               error, its files be deleted before attempting to re-open it.
-     
+
      @see `-[NSError rlmSync_errorActionToken]`
      */
     RLMSyncErrorPermissionDeniedError   = 9,

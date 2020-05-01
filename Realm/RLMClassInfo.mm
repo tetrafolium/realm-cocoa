@@ -35,8 +35,8 @@
 using namespace realm;
 
 RLMClassInfo::RLMClassInfo(RLMRealm *realm, RLMObjectSchema *rlmObjectSchema,
-                             const realm::ObjectSchema *objectSchema)
-: realm(realm), rlmObjectSchema(rlmObjectSchema), objectSchema(objectSchema) { }
+                           const realm::ObjectSchema *objectSchema)
+    : realm(realm), rlmObjectSchema(rlmObjectSchema), objectSchema(objectSchema) { }
 
 realm::Table *RLMClassInfo::table() const {
     if (!m_table) {
@@ -83,10 +83,18 @@ RLMClassInfo &RLMClassInfo::linkTargetType(realm::Property const& property) {
     return linkTargetType(&property - &objectSchema->persisted_properties[0]);
 }
 
-RLMSchemaInfo::impl::iterator RLMSchemaInfo::begin() noexcept { return m_objects.begin(); }
-RLMSchemaInfo::impl::iterator RLMSchemaInfo::end() noexcept { return m_objects.end(); }
-RLMSchemaInfo::impl::const_iterator RLMSchemaInfo::begin() const noexcept { return m_objects.begin(); }
-RLMSchemaInfo::impl::const_iterator RLMSchemaInfo::end() const noexcept { return m_objects.end(); }
+RLMSchemaInfo::impl::iterator RLMSchemaInfo::begin() noexcept {
+    return m_objects.begin();
+}
+RLMSchemaInfo::impl::iterator RLMSchemaInfo::end() noexcept {
+    return m_objects.end();
+}
+RLMSchemaInfo::impl::const_iterator RLMSchemaInfo::begin() const noexcept {
+    return m_objects.begin();
+}
+RLMSchemaInfo::impl::const_iterator RLMSchemaInfo::end() const noexcept {
+    return m_objects.end();
+}
 
 RLMClassInfo& RLMSchemaInfo::operator[](NSString *name) {
     auto it = m_objects.find(name);
@@ -125,7 +133,7 @@ RLMSchemaInfo RLMSchemaInfo::clone(realm::Schema const& source_schema,
         info.m_objects.emplace(std::piecewise_construct,
                                std::forward_as_tuple(pair.first),
                                std::forward_as_tuple(target_realm, pair.second.rlmObjectSchema,
-                                                     &*schema.begin() + idx));
+                                       &*schema.begin() + idx));
     }
     return info;
 }

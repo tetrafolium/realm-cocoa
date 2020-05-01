@@ -236,14 +236,14 @@ static void waitForPartialSyncSubscriptions(Realm::Config const& config) {
 }
 
 static dispatch_queue_t s_async_open_queue = dispatch_queue_create("io.realm.asyncOpenDispatchQueue",
-                                                                   DISPATCH_QUEUE_CONCURRENT);
+        DISPATCH_QUEUE_CONCURRENT);
 void RLMSetAsyncOpenQueue(dispatch_queue_t queue) {
     s_async_open_queue = queue;
 }
 
 + (RLMAsyncOpenTask *)asyncOpenWithConfiguration:(RLMRealmConfiguration *)configuration
-                                   callbackQueue:(dispatch_queue_t)callbackQueue
-                                        callback:(RLMAsyncOpenRealmCallback)callback {
+    callbackQueue:(dispatch_queue_t)callbackQueue
+    callback:(RLMAsyncOpenRealmCallback)callback {
     auto openCompletion = [=](ThreadSafeReference<Realm> ref, std::exception_ptr err) {
         @autoreleasepool {
             if (err) {
@@ -253,7 +253,7 @@ void RLMSetAsyncOpenQueue(dispatch_queue_t queue) {
                 catch (...) {
                     NSError *error;
                     RLMRealmTranslateException(&error);
-                    dispatch_async(callbackQueue, ^{
+                    dispatch_async(callbackQueue, ^ {
                         callback(nil, error);
                     });
                 }
@@ -276,7 +276,7 @@ void RLMSetAsyncOpenQueue(dispatch_queue_t queue) {
                 // We need to dispatch back to the work queue to wait for the
                 // subscriptions as we're currently running on the sync worker
                 // thread and blocking it to wait for subscriptions means no syncing
-                dispatch_async(s_async_open_queue, ^{
+                dispatch_async(s_async_open_queue, ^ {
                     @autoreleasepool {
                         waitForPartialSyncSubscriptions(realm->config());
                         complete();
@@ -290,7 +290,7 @@ void RLMSetAsyncOpenQueue(dispatch_queue_t queue) {
     };
 
     RLMAsyncOpenTask *ret = [RLMAsyncOpenTask new];
-    dispatch_async(s_async_open_queue, ^{
+    dispatch_async(s_async_open_queue, ^ {
         @autoreleasepool {
             Realm::Config& config = configuration.config;
             if (config.sync_config) {
@@ -338,45 +338,45 @@ REALM_NOINLINE void RLMRealmTranslateException(NSError **error) {
     }
     catch (RealmFileException const& ex) {
         switch (ex.kind()) {
-            case RealmFileException::Kind::PermissionDenied:
-                RLMSetErrorOrThrow(RLMMakeError(RLMErrorFilePermissionDenied, ex), error);
-                break;
-            case RealmFileException::Kind::IncompatibleLockFile: {
-                NSString *err = @"Realm file is currently open in another process "
-                                 "which cannot share access with this process. All "
-                                 "processes sharing a single file must be the same "
-                                 "architecture. For sharing files between the Realm "
-                                 "Browser and an iOS simulator, this means that you "
-                                 "must use a 64-bit simulator.";
-                RLMSetErrorOrThrow(RLMMakeError(RLMErrorIncompatibleLockFile,
-                                                File::PermissionDenied(err.UTF8String, ex.path())), error);
-                break;
-            }
-            case RealmFileException::Kind::NotFound:
-                RLMSetErrorOrThrow(RLMMakeError(RLMErrorFileNotFound, ex), error);
-                break;
-            case RealmFileException::Kind::Exists:
-                RLMSetErrorOrThrow(RLMMakeError(RLMErrorFileExists, ex), error);
-                break;
-            case RealmFileException::Kind::BadHistoryError: {
-                NSString *err = @"Realm file's history format is incompatible with the "
-                                 "settings in the configuration object being used to open "
-                                 "the Realm. Note that Realms configured for sync cannot be "
-                                 "opened as non-synced Realms, and vice versa. Otherwise, the "
-                                 "file may be corrupt.";
-                RLMSetErrorOrThrow(RLMMakeError(RLMErrorFileAccess,
-                                                File::AccessError(err.UTF8String, ex.path())), error);
-                break;
-            }
-            case RealmFileException::Kind::AccessError:
-                RLMSetErrorOrThrow(RLMMakeError(RLMErrorFileAccess, ex), error);
-                break;
-            case RealmFileException::Kind::FormatUpgradeRequired:
-                RLMSetErrorOrThrow(RLMMakeError(RLMErrorFileFormatUpgradeRequired, ex), error);
-                break;
-            default:
-                RLMSetErrorOrThrow(RLMMakeError(RLMErrorFail, ex), error);
-                break;
+        case RealmFileException::Kind::PermissionDenied:
+            RLMSetErrorOrThrow(RLMMakeError(RLMErrorFilePermissionDenied, ex), error);
+            break;
+        case RealmFileException::Kind::IncompatibleLockFile: {
+            NSString *err = @"Realm file is currently open in another process "
+                            "which cannot share access with this process. All "
+                            "processes sharing a single file must be the same "
+                            "architecture. For sharing files between the Realm "
+                            "Browser and an iOS simulator, this means that you "
+                            "must use a 64-bit simulator.";
+            RLMSetErrorOrThrow(RLMMakeError(RLMErrorIncompatibleLockFile,
+                                            File::PermissionDenied(err.UTF8String, ex.path())), error);
+            break;
+        }
+        case RealmFileException::Kind::NotFound:
+            RLMSetErrorOrThrow(RLMMakeError(RLMErrorFileNotFound, ex), error);
+            break;
+        case RealmFileException::Kind::Exists:
+            RLMSetErrorOrThrow(RLMMakeError(RLMErrorFileExists, ex), error);
+            break;
+        case RealmFileException::Kind::BadHistoryError: {
+            NSString *err = @"Realm file's history format is incompatible with the "
+                            "settings in the configuration object being used to open "
+                            "the Realm. Note that Realms configured for sync cannot be "
+                            "opened as non-synced Realms, and vice versa. Otherwise, the "
+                            "file may be corrupt.";
+            RLMSetErrorOrThrow(RLMMakeError(RLMErrorFileAccess,
+                                            File::AccessError(err.UTF8String, ex.path())), error);
+            break;
+        }
+        case RealmFileException::Kind::AccessError:
+            RLMSetErrorOrThrow(RLMMakeError(RLMErrorFileAccess, ex), error);
+            break;
+        case RealmFileException::Kind::FormatUpgradeRequired:
+            RLMSetErrorOrThrow(RLMMakeError(RLMErrorFileFormatUpgradeRequired, ex), error);
+            break;
+        default:
+            RLMSetErrorOrThrow(RLMMakeError(RLMErrorFail, ex), error);
+            break;
         }
     }
     catch (AddressSpaceExhausted const &ex) {
@@ -399,22 +399,22 @@ REALM_NOINLINE static void translateSharedGroupOpenException(RLMRealmConfigurati
     }
     catch (RealmFileException const& ex) {
         switch (ex.kind()) {
-            case RealmFileException::Kind::IncompatibleSyncedRealm: {
-                RLMRealmConfiguration *configuration = [originalConfiguration copy];
-                configuration.fileURL = [NSURL fileURLWithPath:@(ex.path().data())];
-                configuration.readOnly = YES;
+        case RealmFileException::Kind::IncompatibleSyncedRealm: {
+            RLMRealmConfiguration *configuration = [originalConfiguration copy];
+            configuration.fileURL = [NSURL fileURLWithPath:@(ex.path().data())];
+            configuration.readOnly = YES;
 
-                NSError *intermediateError = RLMMakeError(RLMErrorIncompatibleSyncedFile, ex);
-                NSMutableDictionary *userInfo = [intermediateError.userInfo mutableCopy];
-                userInfo[RLMBackupRealmConfigurationErrorKey] = configuration;
-                NSError *finalError = [NSError errorWithDomain:intermediateError.domain code:intermediateError.code
-                                                      userInfo:userInfo];
-                RLMSetErrorOrThrow(finalError, error);
-                break;
-            }
-            default:
-                RLMRealmTranslateException(error);
-                break;
+            NSError *intermediateError = RLMMakeError(RLMErrorIncompatibleSyncedFile, ex);
+            NSMutableDictionary *userInfo = [intermediateError.userInfo mutableCopy];
+            userInfo[RLMBackupRealmConfigurationErrorKey] = configuration;
+            NSError *finalError = [NSError errorWithDomain:intermediateError.domain code:intermediateError.code
+                                           userInfo:userInfo];
+            RLMSetErrorOrThrow(finalError, error);
+            break;
+        }
+        default:
+            RLMRealmTranslateException(error);
+            break;
         }
     }
     catch (...) {
@@ -436,7 +436,7 @@ REALM_NOINLINE static void translateSharedGroupOpenException(RLMRealmConfigurati
             if (RLMRealm *realm = RLMGetThreadLocalCachedRealmForPath(config.path)) {
                 auto const& old_config = realm->_realm->config();
                 if (old_config.immutable() != config.immutable()
-                    || old_config.read_only_alternative() != config.read_only_alternative()) {
+                        || old_config.read_only_alternative() != config.read_only_alternative()) {
                     @throw RLMException(@"Realm at path '%s' already opened with different read permissions", config.path.c_str());
                 }
                 if (old_config.in_memory != config.in_memory) {
@@ -820,7 +820,7 @@ REALM_NOINLINE static void translateSharedGroupOpenException(RLMRealmConfigurati
 - (void)deleteObjects:(id<NSFastEnumeration>)objects {
     id idObjects = objects;
     if ([idObjects respondsToSelector:@selector(realm)]
-        && [idObjects respondsToSelector:@selector(deleteObjectsFromRealm)]) {
+            && [idObjects respondsToSelector:@selector(deleteObjectsFromRealm)]) {
         if (self != (RLMRealm *)[idObjects realm]) {
             @throw RLMException(@"Can only delete objects from the Realm they belong to.");
         }
@@ -878,7 +878,7 @@ REALM_NOINLINE static void translateSharedGroupOpenException(RLMRealmConfigurati
 
         uint64_t version = Realm::get_schema_version(config.config);
         if (version == realm::ObjectStore::NotVersioned) {
-            RLMSetErrorOrThrow([NSError errorWithDomain:RLMErrorDomain code:RLMErrorFail userInfo:@{NSLocalizedDescriptionKey:@"Cannot open an uninitialized realm in read-only mode"}], error);
+            RLMSetErrorOrThrow([NSError errorWithDomain:RLMErrorDomain code:RLMErrorFail userInfo:@ {NSLocalizedDescriptionKey:@"Cannot open an uninitialized realm in read-only mode"}], error);
         }
         return version;
     }
@@ -959,8 +959,8 @@ REALM_NOINLINE static void translateSharedGroupOpenException(RLMRealmConfigurati
         if (error) {
             NSString *msg = [NSString stringWithFormat:@"Realm file at path %s cannot be deleted because it is currently opened.", path.c_str()];
             *error = [NSError errorWithDomain:RLMErrorDomain
-                                         code:RLMErrorAlreadyOpen
-                                     userInfo:@{NSLocalizedDescriptionKey: msg}];
+                              code:RLMErrorAlreadyOpen
+                              userInfo:@ {NSLocalizedDescriptionKey: msg}];
         }
     }
     return anyDeleted;

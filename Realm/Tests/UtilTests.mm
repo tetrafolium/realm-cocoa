@@ -33,18 +33,20 @@
 
 static BOOL RLMEqualExceptions(NSException *actual, NSException *expected) {
     return [actual.name isEqualToString:expected.name]
-        && [actual.reason isEqualToString:expected.reason]
-        && [actual.userInfo isEqual:expected.userInfo];
+           && [actual.reason isEqualToString:expected.reason]
+           && [actual.userInfo isEqual:expected.userInfo];
 }
 
 @implementation UtilTests
 
 - (void)testRLMExceptionWithReasonAndUserInfo {
     NSString *const reason = @"Reason";
-    NSDictionary *expectedUserInfo = @{
-                                       RLMRealmVersionKey : REALM_COCOA_VERSION,
-                                       RLMRealmCoreVersionKey : @REALM_VERSION,
-                                       };
+    NSDictionary *expectedUserInfo = @ {
+RLMRealmVersionKey :
+        REALM_COCOA_VERSION,
+RLMRealmCoreVersionKey :
+        @REALM_VERSION,
+    };
 
     XCTAssertTrue(RLMEqualExceptions(RLMException(reason),
                                      [NSException exceptionWithName:RLMExceptionName reason:reason userInfo:expectedUserInfo]));
@@ -52,10 +54,12 @@ static BOOL RLMEqualExceptions(NSException *actual, NSException *expected) {
 
 - (void)testRLMExceptionWithCPlusPlusException {
     std::runtime_error exception("Reason");
-    NSDictionary *expectedUserInfo = @{
-                                       RLMRealmVersionKey : REALM_COCOA_VERSION,
-                                       RLMRealmCoreVersionKey : @REALM_VERSION,
-                                       };
+    NSDictionary *expectedUserInfo = @ {
+RLMRealmVersionKey :
+        REALM_COCOA_VERSION,
+RLMRealmCoreVersionKey :
+        @REALM_VERSION,
+    };
 
     XCTAssertTrue(RLMEqualExceptions(RLMException(exception),
                                      [NSException exceptionWithName:RLMExceptionName reason:@"Reason" userInfo:expectedUserInfo]));
@@ -66,11 +70,14 @@ static BOOL RLMEqualExceptions(NSException *actual, NSException *expected) {
     NSString *description = @"No such file or directory";
 
     std::system_error exception(code, std::generic_category());
-    NSDictionary *expectedUserInfo = @{
-                                       NSLocalizedDescriptionKey : description,
-                                       @"Error Code" : @(code),
-                                       @"Category": [NSString stringWithUTF8String:std::generic_category().name()]
-                                       };
+    NSDictionary *expectedUserInfo = @ {
+NSLocalizedDescriptionKey :
+        description,
+@"Error Code" :
+        @(code),
+@"Category":
+        [NSString stringWithUTF8String:std::generic_category().name()]
+    };
     XCTAssertEqualObjects(RLMMakeError(exception),
                           [NSError errorWithDomain:NSPOSIXErrorDomain code:code userInfo:expectedUserInfo]);
 }
@@ -80,11 +87,14 @@ static BOOL RLMEqualExceptions(NSException *actual, NSException *expected) {
     NSString *description = @"unspecified system_category error";
 
     std::system_error exception(code, std::system_category());
-    NSDictionary *expectedUserInfo = @{
-                                       NSLocalizedDescriptionKey : description,
-                                       @"Error Code" : @(code),
-                                       @"Category": [NSString stringWithUTF8String:std::system_category().name()]
-                                       };
+    NSDictionary *expectedUserInfo = @ {
+NSLocalizedDescriptionKey :
+        description,
+@"Error Code" :
+        @(code),
+@"Category":
+        [NSString stringWithUTF8String:std::system_category().name()]
+    };
     XCTAssertEqualObjects(RLMMakeError(exception),
                           [NSError errorWithDomain:RLMUnknownSystemErrorDomain code:code userInfo:expectedUserInfo]);
 }
@@ -95,10 +105,15 @@ static BOOL RLMEqualExceptions(NSException *actual, NSException *expected) {
                                         "don't do that to your files",
                                         "lp0 on fire");
     RLMError dummyCode = RLMErrorFail;
-    NSDictionary *expectedUserInfo = @{NSLocalizedDescriptionKey: @"don't do that to your files",
-                                       NSFilePathErrorKey: @"/some/path",
-                                       @"Error Code": @(dummyCode),
-                                       @"Underlying": @"lp0 on fire"};
+    NSDictionary *expectedUserInfo = @ {NSLocalizedDescriptionKey:
+                                        @"don't do that to your files",
+                                        NSFilePathErrorKey:
+                                        @"/some/path",
+                                        @"Error Code":
+                                        @(dummyCode),
+                                        @"Underlying":
+                                        @"lp0 on fire"
+                                       };
 
     XCTAssertEqualObjects(RLMMakeError(dummyCode, exception),
                           [NSError errorWithDomain:RLMErrorDomain code:dummyCode userInfo:expectedUserInfo]);
@@ -107,10 +122,12 @@ static BOOL RLMEqualExceptions(NSException *actual, NSException *expected) {
 - (void)testRLMMakeError {
     std::runtime_error exception("Reason");
     RLMError code = RLMErrorFail;
-    NSDictionary *expectedUserInfo = @{
-                                       NSLocalizedDescriptionKey : @"Reason",
-                                       @"Error Code" : @(code),
-                                       };
+    NSDictionary *expectedUserInfo = @ {
+NSLocalizedDescriptionKey :
+        @"Reason",
+@"Error Code" :
+        @(code),
+    };
 
     XCTAssertEqualObjects(RLMMakeError(code, exception),
                           [NSError errorWithDomain:RLMErrorDomain code:code userInfo:expectedUserInfo]);

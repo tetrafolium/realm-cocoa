@@ -183,9 +183,9 @@ RLM_ARRAY_TYPE(KVOLinkObject1)
 @end
 @implementation ReleaseOnObservation
 - (void)observeValueForKeyPath:(NSString *)keyPath
-                      ofObject:(id)object
-                        change:(__unused NSDictionary *)change
-                       context:(void *)context
+    ofObject:(id)object
+    change:(__unused NSDictionary *)change
+    context:(void *)context
 {
     [object removeObserver:self forKeyPath:keyPath context:context];
     _object = nil;
@@ -215,12 +215,12 @@ public:
     // as the NSObject helper to actually add as an observer
     KVORecorder(id observer, id obj, NSString *keyPath,
                 int options = NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew)
-    : _observer(observer)
-    , _obj([observer observableForObject:obj])
-    , _keyPath(keyPath)
-    , _mutationRealm([obj respondsToSelector:@selector(realm)] ? (RLMRealm *)[obj realm] : nil)
-    , _observationRealm([_obj respondsToSelector:@selector(realm)] ? (RLMRealm *)[_obj realm] : nil)
-    , _notifications([NSMutableArray new])
+        : _observer(observer)
+        , _obj([observer observableForObject:obj])
+        , _keyPath(keyPath)
+        , _mutationRealm([obj respondsToSelector:@selector(realm)] ? (RLMRealm *)[obj realm] : nil)
+        , _observationRealm([_obj respondsToSelector:@selector(realm)] ? (RLMRealm *)[_obj realm] : nil)
+        , _notifications([NSMutableArray new])
     {
         [_obj addObserver:observer forKeyPath:keyPath options:options context:this];
     }
@@ -308,9 +308,9 @@ public:
 @implementation KVOTests
 // forward a KVO notification to the KVORecorder stored in the context
 - (void)observeValueForKeyPath:(NSString *)keyPath
-                      ofObject:(id)object
-                        change:(NSDictionary *)change
-                       context:(void *)context
+    ofObject:(id)object
+    change:(NSDictionary *)change
+    context:(void *)context
 {
     (*static_cast<KVORecorder *>(context))(keyPath, object, change);
 }
@@ -1270,8 +1270,8 @@ public:
 - (id)createObject {
     static std::atomic<int> pk{0};
     return [KVOObject createInRealm:_realm withValue:@[@(++pk),
-                                                       @NO, @1, @2, @3, @0, @0, @NO, @"",
-                                                       NSData.data, [NSDate dateWithTimeIntervalSinceReferenceDate:0]]];
+                      @NO, @1, @2, @3, @0, @0, @NO, @"",
+                      NSData.data, [NSDate dateWithTimeIntervalSinceReferenceDate:0]]];
 }
 
 - (id)createLinkObject {
@@ -1417,7 +1417,9 @@ public:
 
     KVORecorder r(self, obj, @"array");
     [self.realm deleteObjects:[KVOLinkObject1 allObjectsInRealm:self.realm]];
-    AssertIndexChange(NSKeyValueChangeRemoval, ([NSIndexSet indexSetWithIndexesInRange:{0, 3}]));
+    AssertIndexChange(NSKeyValueChangeRemoval, ([NSIndexSet indexSetWithIndexesInRange: {
+                                     0, 3
+                                 }]));
 }
 
 - (void)testDeleteObjectsInArrayViaTableViewClear {
@@ -1431,7 +1433,9 @@ public:
     RLMResults *results = [KVOLinkObject1 objectsInRealm:self.realm where:@"TRUEPREDICATE"];
     [results lastObject];
     [self.realm deleteObjects:results];
-    AssertIndexChange(NSKeyValueChangeRemoval, ([NSIndexSet indexSetWithIndexesInRange:{0, 3}]));
+    AssertIndexChange(NSKeyValueChangeRemoval, ([NSIndexSet indexSetWithIndexesInRange: {
+                                     0, 3
+                                 }]));
 }
 
 - (void)testDeleteObjectsInArrayViaQueryClear {
@@ -1443,7 +1447,9 @@ public:
 
     KVORecorder r(self, obj, @"array");
     [self.realm deleteObjects:[KVOLinkObject1 objectsInRealm:self.realm where:@"TRUEPREDICATE"]];
-    AssertIndexChange(NSKeyValueChangeRemoval, ([NSIndexSet indexSetWithIndexesInRange:{0, 3}]));
+    AssertIndexChange(NSKeyValueChangeRemoval, ([NSIndexSet indexSetWithIndexesInRange: {
+                                     0, 3
+                                 }]));
 }
 
 - (void)testObserveInvalidArrayProperty {
@@ -1620,7 +1626,9 @@ public:
         KVORecorder r(self, obj, @"objectArray");
         [self.realm cancelWriteTransaction];
         [self.realm beginWriteTransaction];
-        AssertIndexChange(NSKeyValueChangeInsertion, ([NSIndexSet indexSetWithIndexesInRange:{0, 2}]));
+        AssertIndexChange(NSKeyValueChangeInsertion, ([NSIndexSet indexSetWithIndexesInRange: {
+                                         0, 2
+                                     }]));
     }
     {
         [obj.objectArray removeLastObject];
@@ -1628,7 +1636,9 @@ public:
         KVORecorder r(self, obj, @"objectArray");
         [self.realm cancelWriteTransaction];
         [self.realm beginWriteTransaction];
-        AssertIndexChange(NSKeyValueChangeInsertion, ([NSIndexSet indexSetWithIndexesInRange:{0, 2}]));
+        AssertIndexChange(NSKeyValueChangeInsertion, ([NSIndexSet indexSetWithIndexesInRange: {
+                                         0, 2
+                                     }]));
     }
     {
         [obj.objectArray insertObject:obj atIndex:1];
@@ -1688,7 +1698,9 @@ public:
         KVORecorder r(self, obj, @"intArray");
         [self.realm cancelWriteTransaction];
         [self.realm beginWriteTransaction];
-        AssertIndexChange(NSKeyValueChangeInsertion, ([NSIndexSet indexSetWithIndexesInRange:{0, 2}]));
+        AssertIndexChange(NSKeyValueChangeInsertion, ([NSIndexSet indexSetWithIndexesInRange: {
+                                         0, 2
+                                     }]));
     }
     {
         [obj.intArray removeLastObject];
@@ -1696,7 +1708,9 @@ public:
         KVORecorder r(self, obj, @"intArray");
         [self.realm cancelWriteTransaction];
         [self.realm beginWriteTransaction];
-        AssertIndexChange(NSKeyValueChangeInsertion, ([NSIndexSet indexSetWithIndexesInRange:{0, 2}]));
+        AssertIndexChange(NSKeyValueChangeInsertion, ([NSIndexSet indexSetWithIndexesInRange: {
+                                         0, 2
+                                     }]));
     }
     {
         [obj.intArray insertObject:@5 atIndex:1];
@@ -1824,7 +1838,7 @@ public:
 
     if (RLMObject *obj = RLMDynamicCast<RLMObject>(value)) {
         RLMObject *copy = RLMCreateManagedAccessor(obj.objectSchema.accessorClass,
-                                                   &self.secondaryRealm->_info[obj.objectSchema.className]);
+                          &self.secondaryRealm->_info[obj.objectSchema.className]);
         copy->_row = (*copy->_info->table())[obj->_row.get_index()];
         return copy;
     }
@@ -1867,14 +1881,18 @@ public:
         KVORecorder r(self, obj, @"objectArray");
         [obj.objectArray removeObjectAtIndex:3];
         [obj.objectArray removeObjectAtIndex:3];
-        AssertIndexChange(NSKeyValueChangeRemoval, ([NSIndexSet indexSetWithIndexesInRange:{3, 2}]));
+        AssertIndexChange(NSKeyValueChangeRemoval, ([NSIndexSet indexSetWithIndexesInRange: {
+                                         3, 2
+                                     }]));
     }
 
     {
         KVORecorder r(self, obj, @"objectArray");
         [obj.objectArray removeObjectAtIndex:0];
         [obj.objectArray removeAllObjects];
-        AssertIndexChange(NSKeyValueChangeRemoval, ([NSIndexSet indexSetWithIndexesInRange:{0, 3}]));
+        AssertIndexChange(NSKeyValueChangeRemoval, ([NSIndexSet indexSetWithIndexesInRange: {
+                                         0, 3
+                                     }]));
     }
 
     [obj.objectArray addObject:obj];
@@ -1906,28 +1924,28 @@ public:
         [self.realm deleteObjects:[ObjectWithNoLinksToOrFrom objectsInRealm:self.realm where:@"value = %d", value]];
     };
 
-    { // delete object before observed, then observed
+    {   // delete object before observed, then observed
         KVORecorder r(self, objects[2], @"invalidated");
         deleteObject(1);
         deleteObject(2);
         AssertChanged(r, @NO, @YES);
     }
 
-    { // delete object after observed, then observed
+    {   // delete object after observed, then observed
         KVORecorder r(self, objects[3], @"invalidated");
         deleteObject(4);
         deleteObject(3);
         AssertChanged(r, @NO, @YES);
     }
 
-    { // delete observed, then object before observed
+    {   // delete observed, then object before observed
         KVORecorder r(self, objects[6], @"invalidated");
         deleteObject(6);
         deleteObject(5);
         AssertChanged(r, @NO, @YES);
     }
 
-    { // delete observed, then object after observed
+    {   // delete observed, then object after observed
         KVORecorder r(self, objects[7], @"invalidated");
         deleteObject(7);
         deleteObject(8);
@@ -2054,8 +2072,8 @@ public:
     // otherwise it'll recreate the file due to being in-memory)
     RLMSchema *schema = [RLMSchema new];
     schema.objectSchema = @[[self reverseProperties:KVOObject.sharedSchema],
-                            [self reverseProperties:KVOLinkObject1.sharedSchema],
-                            [self reverseProperties:KVOLinkObject2.sharedSchema]];
+                                                                           [self reverseProperties:KVOLinkObject1.sharedSchema],
+                                                                           [self reverseProperties:KVOLinkObject2.sharedSchema]];
 
     RLMRealmConfiguration *configuration = [[RLMRealmConfiguration alloc] init];
     configuration.cache = false;
