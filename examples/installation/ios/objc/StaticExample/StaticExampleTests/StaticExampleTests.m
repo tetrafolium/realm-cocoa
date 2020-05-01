@@ -16,9 +16,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
+#import "AppDelegate.h"
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "AppDelegate.h"
 
 @interface StaticExampleTests : XCTestCase
 @end
@@ -26,7 +26,7 @@
 @implementation StaticExampleTests
 
 - (void)testExample {
-    XCTAssertTrue([MyModel isSubclassOfClass:[RLMObject class]]);
+  XCTAssertTrue([MyModel isSubclassOfClass:[RLMObject class]]);
 }
 
 @end

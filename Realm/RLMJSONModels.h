@@ -26,11 +26,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - RLMTokenModel
 
-@interface RLMTokenModel : NSObject RLM_SYNC_UNINITIALIZABLE
+@interface RLMTokenModel : NSObject
+RLM_SYNC_UNINITIALIZABLE
 
-@property (nonatomic, readonly) NSString *token;
-@property (nonatomic, nullable, readonly) NSString *path;
-@property (nonatomic, readonly) RLMTokenDataModel *tokenData;
+@property(nonatomic, readonly) NSString *token;
+@property(nonatomic, nullable, readonly) NSString *path;
+@property(nonatomic, readonly) RLMTokenDataModel *tokenData;
 
 - (instancetype)initWithDictionary:(NSDictionary *)jsonDictionary;
 
@@ -38,13 +39,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - RLMTokenDataModel
 
-@interface RLMTokenDataModel : NSObject RLM_SYNC_UNINITIALIZABLE
+@interface RLMTokenDataModel : NSObject
+RLM_SYNC_UNINITIALIZABLE
 
-@property (nonatomic, readonly) NSString *identity;
-@property (nonatomic, nullable, readonly) NSString *appID;
-@property (nonatomic, nullable, readonly) NSString *path;
-@property (nonatomic, readonly) NSTimeInterval expires;
-@property (nonatomic, readonly) BOOL isAdmin;
+@property(nonatomic, readonly) NSString *identity;
+@property(nonatomic, nullable, readonly) NSString *appID;
+@property(nonatomic, nullable, readonly) NSString *path;
+@property(nonatomic, readonly) NSTimeInterval expires;
+@property(nonatomic, readonly) BOOL isAdmin;
 
 - (instancetype)initWithDictionary:(NSDictionary *)jsonDictionary;
 
@@ -62,26 +64,28 @@ NS_ASSUME_NONNULL_BEGIN
  }
  ```
  */
-@interface RLMAuthResponseModel : NSObject RLM_SYNC_UNINITIALIZABLE
+@interface RLMAuthResponseModel : NSObject
+RLM_SYNC_UNINITIALIZABLE
 
-@property (nonatomic, readonly, nullable) RLMTokenModel *accessToken;
-@property (nonatomic, readonly, nullable) RLMTokenModel *refreshToken;
-@property (nonatomic, readonly, nullable) NSString *urlPrefix;
+@property(nonatomic, readonly, nullable) RLMTokenModel *accessToken;
+@property(nonatomic, readonly, nullable) RLMTokenModel *refreshToken;
+@property(nonatomic, readonly, nullable) NSString *urlPrefix;
 
 - (instancetype)initWithDictionary:(NSDictionary *)jsonDictionary
-    requireAccessToken:(BOOL)requireAccessToken
-    requireRefreshToken:(BOOL)requireRefreshToken;
+                requireAccessToken:(BOOL)requireAccessToken
+               requireRefreshToken:(BOOL)requireRefreshToken;
 
 @end
 
 #pragma mark - RLMUserInfoResponseModel
 
-@interface RLMUserResponseModel : NSObject RLM_SYNC_UNINITIALIZABLE
+@interface RLMUserResponseModel : NSObject
+RLM_SYNC_UNINITIALIZABLE
 
-@property (nonatomic, readonly) NSString *identity;
-@property (nonatomic, readonly) NSArray<RLMSyncUserAccountInfo *> *accounts;
-@property (nonatomic, readonly) NSDictionary *metadata;
-@property (nonatomic, readonly) BOOL isAdmin;
+@property(nonatomic, readonly) NSString *identity;
+@property(nonatomic, readonly) NSArray<RLMSyncUserAccountInfo *> *accounts;
+@property(nonatomic, readonly) NSDictionary *metadata;
+@property(nonatomic, readonly) BOOL isAdmin;
 
 - (instancetype)initWithDictionary:(NSDictionary *)jsonDictionary;
 
@@ -89,12 +93,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - RLMSyncErrorResponseModel
 
-@interface RLMSyncErrorResponseModel : NSObject RLM_SYNC_UNINITIALIZABLE
+@interface RLMSyncErrorResponseModel : NSObject
+RLM_SYNC_UNINITIALIZABLE
 
-@property (nonatomic, readonly) NSInteger status;
-@property (nonatomic, readonly) NSInteger code;
-@property (nullable, nonatomic, readonly) NSString *title;
-@property (nullable, nonatomic, readonly) NSString *hint;
+@property(nonatomic, readonly) NSInteger status;
+@property(nonatomic, readonly) NSInteger code;
+@property(nullable, nonatomic, readonly) NSString *title;
+@property(nullable, nonatomic, readonly) NSString *hint;
 
 - (instancetype)initWithDictionary:(NSDictionary *)jsonDictionary;
 

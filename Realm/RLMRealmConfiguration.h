@@ -30,31 +30,32 @@ NS_ASSUME_NONNULL_BEGIN
  Return `YES` to indicate that an attempt to compact the file should be made.
  The compaction will be skipped if another process is accessing it.
  */
-typedef BOOL (^RLMShouldCompactOnLaunchBlock)(NSUInteger totalBytes, NSUInteger bytesUsed);
+typedef BOOL (^RLMShouldCompactOnLaunchBlock)(NSUInteger totalBytes,
+                                              NSUInteger bytesUsed);
 
 /**
  An `RLMRealmConfiguration` instance describes the different options used to
  create an instance of a Realm.
 
- `RLMRealmConfiguration` instances are just plain `NSObject`s. Unlike `RLMRealm`s
- and `RLMObject`s, they can be freely shared between threads as long as you do not
- mutate them.
+ `RLMRealmConfiguration` instances are just plain `NSObject`s. Unlike
+ `RLMRealm`s and `RLMObject`s, they can be freely shared between threads as long
+ as you do not mutate them.
 
  Creating configuration objects for class subsets (by setting the
- `objectClasses` property) can be expensive. Because of this, you will normally want to
- cache and reuse a single configuration object for each distinct configuration rather than
- creating a new object each time you open a Realm.
+ `objectClasses` property) can be expensive. Because of this, you will normally
+ want to cache and reuse a single configuration object for each distinct
+ configuration rather than creating a new object each time you open a Realm.
  */
-@interface RLMRealmConfiguration : NSObject<NSCopying>
+@interface RLMRealmConfiguration : NSObject <NSCopying>
 
 #pragma mark - Default Configuration
 
-    /**
-     Returns the default configuration used to create Realms when no other
-     configuration is explicitly specified (i.e. `+[RLMRealm defaultRealm]`).
+/**
+ Returns the default configuration used to create Realms when no other
+ configuration is explicitly specified (i.e. `+[RLMRealm defaultRealm]`).
 
-     @return The default Realm configuration.
-     */
+ @return The default Realm configuration.
+ */
 + (instancetype)defaultConfiguration;
 
 /**
@@ -66,16 +67,19 @@ typedef BOOL (^RLMShouldCompactOnLaunchBlock)(NSUInteger totalBytes, NSUInteger 
 
 #pragma mark - Properties
 
-/// The local URL of the Realm file. Mutually exclusive with `inMemoryIdentifier` and `syncConfiguration`;
-/// setting any one of the three properties will automatically nil out the other two.
-@property (nonatomic, copy, nullable) NSURL *fileURL;
+/// The local URL of the Realm file. Mutually exclusive with
+/// `inMemoryIdentifier` and `syncConfiguration`; setting any one of the three
+/// properties will automatically nil out the other two.
+@property(nonatomic, copy, nullable) NSURL *fileURL;
 
-/// A string used to identify a particular in-memory Realm. Mutually exclusive with `fileURL` and `syncConfiguration`;
-/// setting any one of the three properties will automatically nil out the other two.
-@property (nonatomic, copy, nullable) NSString *inMemoryIdentifier;
+/// A string used to identify a particular in-memory Realm. Mutually exclusive
+/// with `fileURL` and `syncConfiguration`; setting any one of the three
+/// properties will automatically nil out the other two.
+@property(nonatomic, copy, nullable) NSString *inMemoryIdentifier;
 
-/// A 64-byte key to use to encrypt the data, or `nil` if encryption is not enabled.
-@property (nonatomic, copy, nullable) NSData *encryptionKey;
+/// A 64-byte key to use to encrypt the data, or `nil` if encryption is not
+/// enabled.
+@property(nonatomic, copy, nullable) NSData *encryptionKey;
 
 /// Whether to open the Realm in read-only mode.
 ///
@@ -86,23 +90,24 @@ typedef BOOL (^RLMShouldCompactOnLaunchBlock)(NSUInteger totalBytes, NSUInteger 
 /// process. Opening in read-only mode requires disabling Realm's reader/writer
 /// coordination, so committing a write transaction from another process will
 /// result in crashes.
-@property (nonatomic) BOOL readOnly;
+@property(nonatomic) BOOL readOnly;
 
 /// The current schema version.
-@property (nonatomic) uint64_t schemaVersion;
+@property(nonatomic) uint64_t schemaVersion;
 
 /// The block which migrates the Realm to the current version.
-@property (nonatomic, copy, nullable) RLMMigrationBlock migrationBlock;
+@property(nonatomic, copy, nullable) RLMMigrationBlock migrationBlock;
 
 /**
- Whether to recreate the Realm file with the provided schema if a migration is required.
- This is the case when the stored schema differs from the provided schema or
- the stored schema version differs from the version on this configuration.
- Setting this property to `YES` deletes the file if a migration would otherwise be required or executed.
+ Whether to recreate the Realm file with the provided schema if a migration is
+ required. This is the case when the stored schema differs from the provided
+ schema or the stored schema version differs from the version on this
+ configuration. Setting this property to `YES` deletes the file if a migration
+ would otherwise be required or executed.
 
  @note Setting this property to `YES` doesn't disable file format migrations.
  */
-@property (nonatomic) BOOL deleteRealmIfMigrationNeeded;
+@property(nonatomic) BOOL deleteRealmIfMigrationNeeded;
 
 /**
  A block called when opening a Realm for the first time during the life
@@ -113,10 +118,11 @@ typedef BOOL (^RLMShouldCompactOnLaunchBlock)(NSUInteger totalBytes, NSUInteger 
  Return `YES` to indicate that an attempt to compact the file should be made.
  The compaction will be skipped if another process is accessing it.
  */
-@property (nonatomic, copy, nullable) RLMShouldCompactOnLaunchBlock shouldCompactOnLaunch;
+@property(nonatomic, copy, nullable)
+    RLMShouldCompactOnLaunchBlock shouldCompactOnLaunch;
 
 /// The classes managed by the Realm.
-@property (nonatomic, copy, nullable) NSArray *objectClasses;
+@property(nonatomic, copy, nullable) NSArray *objectClasses;
 
 @end
 

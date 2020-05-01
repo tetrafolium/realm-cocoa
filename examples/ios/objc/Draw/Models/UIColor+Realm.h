@@ -20,5 +20,5 @@
 #import <UIKit/UIKit.h>
 
 @interface UIColor (Realm)
-+ (NSDictionary<NSString *, UIColor*> *)realmColors;
++ (NSDictionary<NSString *, UIColor *> *)realmColors;
 @end

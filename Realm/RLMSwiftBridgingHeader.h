@@ -41,9 +41,13 @@
 
 @interface RLMObjectBase (Swift)
 
-- (instancetype)initWithRealm:(RLMRealm *)realm schema:(RLMObjectSchema *)schema defaultValues:(BOOL)useDefaults;
+- (instancetype)initWithRealm:(RLMRealm *)realm
+                       schema:(RLMObjectSchema *)schema
+                defaultValues:(BOOL)useDefaults;
 
 + (RLMResults *)objectsWhere:(NSString *)predicateFormat args:(va_list)args;
-+ (RLMResults *)objectsInRealm:(RLMRealm *)realm where:(NSString *)predicateFormat args:(va_list)args;
++ (RLMResults *)objectsInRealm:(RLMRealm *)realm
+                         where:(NSString *)predicateFormat
+                          args:(va_list)args;
 
 @end

@@ -30,7 +30,9 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXTERN id _Nullable RLMGetOptional(RLMOptionalBase *);
 FOUNDATION_EXTERN void RLMSetOptional(RLMOptionalBase *, id _Nullable);
 
-void RLMInitializeManagedOptional(RLMOptionalBase *, RLMObjectBase *parent, RLMProperty *prop);
-void RLMInitializeUnmanagedOptional(RLMOptionalBase *, RLMObjectBase *parent, RLMProperty *prop);
+void RLMInitializeManagedOptional(RLMOptionalBase *, RLMObjectBase *parent,
+                                  RLMProperty *prop);
+void RLMInitializeUnmanagedOptional(RLMOptionalBase *, RLMObjectBase *parent,
+                                    RLMProperty *prop);
 
 NS_ASSUME_NONNULL_END

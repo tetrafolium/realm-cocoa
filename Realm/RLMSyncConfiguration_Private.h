@@ -22,7 +22,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef RLM_CLOSED_ENUM(NSUInteger, RLMSyncStopPolicy) {
+typedef RLM_CLOSED_ENUM(NSUInteger, RLMSyncStopPolicy){
     RLMSyncStopPolicyImmediately,
     RLMSyncStopPolicyLiveIndefinitely,
     RLMSyncStopPolicyAfterChangesUploaded,
@@ -31,17 +31,17 @@ typedef RLM_CLOSED_ENUM(NSUInteger, RLMSyncStopPolicy) {
 @interface RLMSyncConfiguration ()
 
 - (instancetype)initWithUser:(RLMSyncUser *)user
-    realmURL:(NSURL *)url
-    isPartial:(BOOL)isPartial
-    urlPrefix:(nullable NSString *)urlPrefix
-    stopPolicy:(RLMSyncStopPolicy)stopPolicy
-    enableSSLValidation:(BOOL)enableSSLValidation
-    certificatePath:(nullable NSURL *)certificatePath;
+                    realmURL:(NSURL *)url
+                   isPartial:(BOOL)isPartial
+                   urlPrefix:(nullable NSString *)urlPrefix
+                  stopPolicy:(RLMSyncStopPolicy)stopPolicy
+         enableSSLValidation:(BOOL)enableSSLValidation
+             certificatePath:(nullable NSURL *)certificatePath;
 
-@property (nonatomic, readwrite) RLMSyncStopPolicy stopPolicy;
+@property(nonatomic, readwrite) RLMSyncStopPolicy stopPolicy;
 
 // Internal-only APIs
-@property (nullable, nonatomic) NSURL *customFileURL;
+@property(nullable, nonatomic) NSURL *customFileURL;
 
 @end
 

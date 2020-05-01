@@ -25,9 +25,9 @@ extern "C" {
 @class RLMRealm, RLMSchema, RLMObjectBase, RLMResults, RLMProperty;
 
 typedef NS_ENUM(NSUInteger, RLMUpdatePolicy) {
-    RLMUpdatePolicyError = 1,
-    RLMUpdatePolicyUpdateChanged = 3,
-    RLMUpdatePolicyUpdateAll = 2,
+  RLMUpdatePolicyError = 1,
+  RLMUpdatePolicyUpdateChanged = 3,
+  RLMUpdatePolicyUpdateAll = 2,
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -41,13 +41,13 @@ void RLMVerifyHasPrimaryKey(Class cls);
 // create or get cached accessors for the given schema
 void RLMRealmCreateAccessors(RLMSchema *schema);
 
-
 //
 // Adding, Removing, Getting Objects
 //
 
 // add an object to the given realm
-void RLMAddObjectToRealm(RLMObjectBase *object, RLMRealm *realm, RLMUpdatePolicy);
+void RLMAddObjectToRealm(RLMObjectBase *object, RLMRealm *realm,
+                         RLMUpdatePolicy);
 
 // delete an object from its realm
 void RLMDeleteObjectFromRealm(RLMObjectBase *object, RLMRealm *realm);
@@ -56,23 +56,24 @@ void RLMDeleteObjectFromRealm(RLMObjectBase *object, RLMRealm *realm);
 void RLMDeleteAllObjectsFromRealm(RLMRealm *realm);
 
 // get objects of a given class
-RLMResults *RLMGetObjects(RLMRealm *realm, NSString *objectClassName, NSPredicate * _Nullable predicate)
-NS_RETURNS_RETAINED;
+RLMResults *RLMGetObjects(RLMRealm *realm, NSString *objectClassName,
+                          NSPredicate *_Nullable predicate) NS_RETURNS_RETAINED;
 
 // get an object with the given primary key
-id _Nullable RLMGetObject(RLMRealm *realm, NSString *objectClassName, id _Nullable key) NS_RETURNS_RETAINED;
+id _Nullable RLMGetObject(RLMRealm *realm, NSString *objectClassName,
+                          id _Nullable key) NS_RETURNS_RETAINED;
 
 // create object from array or dictionary
-RLMObjectBase *RLMCreateObjectInRealmWithValue(RLMRealm *realm, NSString *className,
-        id _Nullable value, RLMUpdatePolicy updatePolicy)
-NS_RETURNS_RETAINED;
+RLMObjectBase *RLMCreateObjectInRealmWithValue(
+    RLMRealm *realm, NSString *className, id _Nullable value,
+    RLMUpdatePolicy updatePolicy) NS_RETURNS_RETAINED;
 
 //
 // Accessor Creation
 //
 
-
-// switch List<> properties from being backed by unmanaged RLMArrays to RLMManagedArray
+// switch List<> properties from being backed by unmanaged RLMArrays to
+// RLMManagedArray
 void RLMInitializeSwiftAccessorGenerics(RLMObjectBase *object);
 
 #ifdef __cplusplus
@@ -80,14 +81,16 @@ void RLMInitializeSwiftAccessorGenerics(RLMObjectBase *object);
 
 namespace realm {
 class Table;
-template<typename T> class BasicRowExpr;
+template <typename T> class BasicRowExpr;
 using RowExpr = BasicRowExpr<Table>;
 }
 class RLMClassInfo;
 
 // Create accessors
-RLMObjectBase *RLMCreateObjectAccessor(RLMClassInfo& info, NSUInteger index) NS_RETURNS_RETAINED;
-RLMObjectBase *RLMCreateObjectAccessor(RLMClassInfo& info, realm::RowExpr row) NS_RETURNS_RETAINED;
+RLMObjectBase *RLMCreateObjectAccessor(RLMClassInfo &info,
+                                       NSUInteger index) NS_RETURNS_RETAINED;
+RLMObjectBase *RLMCreateObjectAccessor(RLMClassInfo &info,
+                                       realm::RowExpr row) NS_RETURNS_RETAINED;
 #endif
 
 NS_ASSUME_NONNULL_END

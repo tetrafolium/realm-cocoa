@@ -22,7 +22,7 @@
 
 @interface RLMMultiProcessTestCase : RLMTestCase
 // if true, this is running the main test process
-@property (nonatomic, readonly) bool isParent;
+@property(nonatomic, readonly) bool isParent;
 
 // spawn a child process running the current test and wait for it complete
 // returns the return code of the process
@@ -31,5 +31,5 @@
 - (NSTask *)childTask;
 @end
 
-#define RLMRunChildAndWait() \
-    XCTAssertEqual(0, [self runChildAndWait], @"Tests in child process failed")
+#define RLMRunChildAndWait()                                                   \
+  XCTAssertEqual(0, [self runChildAndWait], @"Tests in child process failed")

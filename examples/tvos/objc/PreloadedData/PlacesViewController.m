@@ -21,55 +21,65 @@
 
 @interface PlacesViewController () <UITextFieldDelegate>
 
-@property (nonatomic, weak) IBOutlet UITextField *searchField;
-@property (nonatomic) RLMResults *results;
+@property(nonatomic, weak) IBOutlet UITextField *searchField;
+@property(nonatomic) RLMResults *results;
 
 @end
 
 @implementation PlacesViewController
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
+  [super viewDidLoad];
 
-    RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
-    config.readOnly = YES;
-    config.fileURL = [[NSBundle mainBundle] URLForResource:@"Places" withExtension:@"realm"];
-    [RLMRealmConfiguration setDefaultConfiguration:config];
+  RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
+  config.readOnly = YES;
+  config.fileURL = [[NSBundle mainBundle] URLForResource:@"Places"
+                                           withExtension:@"realm"];
+  [RLMRealmConfiguration setDefaultConfiguration:config];
 
-    [self reloadData];
+  [self reloadData];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.results.count;
+- (NSInteger)tableView:(UITableView *)tableView
+    numberOfRowsInSection:(NSInteger)section {
+  return self.results.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+  UITableViewCell *cell =
+      [tableView dequeueReusableCellWithIdentifier:@"Cell"
+                                      forIndexPath:indexPath];
 
-    Place *place = self.results[indexPath.row];
+  Place *place = self.results[indexPath.row];
 
-    cell.textLabel.text = place.postalCode;
-    if (place.county) {
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@, %@", place.placeName, place.state, place.county];
-    } else {
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@", place.placeName, place.state];
-    }
+  cell.textLabel.text = place.postalCode;
+  if (place.county) {
+    cell.detailTextLabel.text =
+        [NSString stringWithFormat:@"%@, %@, %@", place.placeName, place.state,
+                                   place.county];
+  } else {
+    cell.detailTextLabel.text =
+        [NSString stringWithFormat:@"%@, %@", place.placeName, place.state];
+  }
 
-    return cell;
+  return cell;
 }
 
 - (void)reloadData {
-    self.results = [Place allObjects];
-    if (self.searchField.text.length > 0) {
-        self.results = [self.results objectsWhere:@"postalCode beginswith %@", self.searchField.text];
-    }
-    self.results = [self.results sortedResultsUsingKeyPath:@"postalCode" ascending:YES];
+  self.results = [Place allObjects];
+  if (self.searchField.text.length > 0) {
+    self.results = [self.results
+        objectsWhere:@"postalCode beginswith %@", self.searchField.text];
+  }
+  self.results = [self.results sortedResultsUsingKeyPath:@"postalCode"
+                                               ascending:YES];
 
-    [self.tableView reloadData];
+  [self.tableView reloadData];
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
-    [self reloadData];
+  [self reloadData];
 }
 
 @end

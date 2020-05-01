@@ -23,7 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface RLMArray ()
 - (instancetype)initWithObjectClassName:(NSString *)objectClassName;
-- (instancetype)initWithObjectType:(RLMPropertyType)type optional:(BOOL)optional;
+- (instancetype)initWithObjectType:(RLMPropertyType)type
+                          optional:(BOOL)optional;
 - (NSString *)descriptionWithMaxDepth:(NSUInteger)depth;
 @end
 

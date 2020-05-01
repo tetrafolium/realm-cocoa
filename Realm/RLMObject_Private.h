@@ -28,8 +28,8 @@ FOUNDATION_EXTERN void RLMInitializeWithValue(RLMObjectBase *, id, RLMSchema *);
 // RLMObject accessor and read/write realm
 @interface RLMObjectBase () {
 @public
-    RLMRealm *_realm;
-    __unsafe_unretained RLMObjectSchema *_objectSchema;
+  RLMRealm *_realm;
+  __unsafe_unretained RLMObjectSchema *_objectSchema;
 }
 
 // shared schema for this class
@@ -45,16 +45,20 @@ FOUNDATION_EXTERN void RLMInitializeWithValue(RLMObjectBase *, id, RLMSchema *);
 @end
 
 // Calls valueForKey: and re-raises NSUndefinedKeyExceptions
-FOUNDATION_EXTERN id _Nullable RLMValidatedValueForProperty(id object, NSString *key, NSString *className);
+FOUNDATION_EXTERN
+    id _Nullable RLMValidatedValueForProperty(id object, NSString *key,
+                                              NSString *className);
 
 // Compare two RLObjectBases
-FOUNDATION_EXTERN BOOL RLMObjectBaseAreEqual(RLMObjectBase * _Nullable o1, RLMObjectBase * _Nullable o2);
+FOUNDATION_EXTERN BOOL RLMObjectBaseAreEqual(RLMObjectBase *_Nullable o1,
+                                             RLMObjectBase *_Nullable o2);
 
-typedef void (^RLMObjectNotificationCallback)(NSArray<NSString *> *_Nullable propertyNames,
-        NSArray *_Nullable oldValues,
-        NSArray *_Nullable newValues,
-        NSError *_Nullable error);
-FOUNDATION_EXTERN RLMNotificationToken *RLMObjectAddNotificationBlock(RLMObjectBase *obj, RLMObjectNotificationCallback block);
+typedef void (^RLMObjectNotificationCallback)(
+    NSArray<NSString *> *_Nullable propertyNames, NSArray *_Nullable oldValues,
+    NSArray *_Nullable newValues, NSError *_Nullable error);
+FOUNDATION_EXTERN RLMNotificationToken *
+RLMObjectAddNotificationBlock(RLMObjectBase *obj,
+                              RLMObjectNotificationCallback block);
 
 // Returns whether the class is a descendent of RLMObjectBase
 FOUNDATION_EXTERN BOOL RLMIsObjectOrSubclass(Class klass);
@@ -65,7 +69,9 @@ FOUNDATION_EXTERN BOOL RLMIsObjectSubclass(Class klass);
 FOUNDATION_EXTERN const NSUInteger RLMDescriptionMaxDepth;
 
 @interface RLMManagedPropertyAccessor : NSObject
-+ (void)initializeObject:(void *)object parent:(RLMObjectBase *)parent property:(RLMProperty *)property;
++ (void)initializeObject:(void *)object
+                  parent:(RLMObjectBase *)parent
+                property:(RLMProperty *)property;
 + (id)get:(void *)pointer;
 @end
 

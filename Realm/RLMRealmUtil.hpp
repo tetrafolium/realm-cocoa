@@ -26,11 +26,11 @@ class BindingContext;
 }
 
 // Add a Realm to the weak cache
-void RLMCacheRealm(std::string const& path, RLMRealm *realm);
+void RLMCacheRealm(std::string const &path, RLMRealm *realm);
 // Get a Realm for the given path which can be used on the current thread
-RLMRealm *RLMGetThreadLocalCachedRealmForPath(std::string const& path);
+RLMRealm *RLMGetThreadLocalCachedRealmForPath(std::string const &path);
 // Get a Realm for the given path
-RLMRealm *RLMGetAnyCachedRealmForPath(std::string const& path);
+RLMRealm *RLMGetAnyCachedRealmForPath(std::string const &path);
 // Clear the weak cache of Realms
 void RLMClearRealmCache();
 // Check if the current thread is currently within a running CFRunLoop

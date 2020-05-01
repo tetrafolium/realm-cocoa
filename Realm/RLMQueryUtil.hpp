@@ -24,16 +24,18 @@ namespace realm {
 class Group;
 class Query;
 class SortDescriptor;
-}
+} // namespace realm
 
 @class RLMObjectSchema, RLMProperty, RLMSchema, RLMSortDescriptor;
 class RLMClassInfo;
 
-extern NSString * const RLMPropertiesComparisonTypeMismatchException;
-extern NSString * const RLMUnsupportedTypesFoundInPropertyComparisonException;
+extern NSString *const RLMPropertiesComparisonTypeMismatchException;
+extern NSString *const RLMUnsupportedTypesFoundInPropertyComparisonException;
 
-realm::Query RLMPredicateToQuery(NSPredicate *predicate, RLMObjectSchema *objectSchema,
+realm::Query RLMPredicateToQuery(NSPredicate *predicate,
+                                 RLMObjectSchema *objectSchema,
                                  RLMSchema *schema, realm::Group &group);
 
 // return property - throw for invalid column name
-RLMProperty *RLMValidatedProperty(RLMObjectSchema *objectSchema, NSString *columnName);
+RLMProperty *RLMValidatedProperty(RLMObjectSchema *objectSchema,
+                                  NSString *columnName);

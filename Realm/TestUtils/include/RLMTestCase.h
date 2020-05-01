@@ -16,9 +16,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
-#import <XCTest/XCTest.h>
 #import "RLMAssertions.h"
 #import "RLMTestObjects.h"
+#import <XCTest/XCTest.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -48,7 +48,9 @@ NSData *RLMGenerateKey(void);
 - (void)deleteFiles;
 - (void)deleteRealmFileAtURL:(NSURL *)fileURL;
 
-- (void)waitForNotification:(RLMNotification)expectedNote realm:(RLMRealm *)realm block:(dispatch_block_t)block;
+- (void)waitForNotification:(RLMNotification)expectedNote
+                      realm:(RLMRealm *)realm
+                      block:(dispatch_block_t)block;
 
 - (nullable id)nonLiteralNil;
 

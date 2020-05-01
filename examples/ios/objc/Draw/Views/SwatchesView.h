@@ -16,12 +16,12 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
-#import <UIKit/UIKit.h>
 #import "UIColor+Realm.h"
+#import <UIKit/UIKit.h>
 
 @interface SwatchesView : UIScrollView
 
-@property (nonatomic, strong) NSString *selectedColor;
-@property (nonatomic, copy) void (^swatchColorChangedHandler)(void);
+@property(nonatomic, strong) NSString *selectedColor;
+@property(nonatomic, copy) void (^swatchColorChangedHandler)(void);
 
 @end

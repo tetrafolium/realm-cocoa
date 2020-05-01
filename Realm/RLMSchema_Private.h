@@ -27,16 +27,16 @@ NS_ASSUME_NONNULL_BEGIN
 //
 @interface RLMSchema ()
 
-    /**
-     Returns an `RLMSchema` containing only the given `RLMObject` subclasses.
+/**
+ Returns an `RLMSchema` containing only the given `RLMObject` subclasses.
 
-     @param classes The classes to be included in the schema.
+ @param classes The classes to be included in the schema.
 
-     @return An `RLMSchema` containing only the given classes.
-     */
+ @return An `RLMSchema` containing only the given classes.
+ */
 + (instancetype)schemaWithObjectClasses:(NSArray<Class> *)classes;
 
-@property (nonatomic, readwrite, copy) NSArray<RLMObjectSchema *> *objectSchema;
+@property(nonatomic, readwrite, copy) NSArray<RLMObjectSchema *> *objectSchema;
 
 // schema based on runtime objects
 + (instancetype)sharedSchema;

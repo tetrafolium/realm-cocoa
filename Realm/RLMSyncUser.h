@@ -22,51 +22,62 @@
 #import "RLMSyncCredentials.h"
 #import "RLMSyncPermission.h"
 
-@class RLMSyncUser, RLMSyncUserInfo, RLMSyncCredentials, RLMSyncPermission, RLMSyncSession, RLMRealm, RLMSyncPermissionOffer;
+@class RLMSyncUser, RLMSyncUserInfo, RLMSyncCredentials, RLMSyncPermission,
+    RLMSyncSession, RLMRealm, RLMSyncPermissionOffer;
 
 /**
  The state of the user object.
  */
 typedef NS_ENUM(NSUInteger, RLMSyncUserState) {
-    /// The user is logged out. Call `logInWithCredentials:...` with valid credentials to log the user back in.
-    RLMSyncUserStateLoggedOut,
-    /// The user is logged in, and any Realms associated with it are syncing with the Realm Object Server.
-    RLMSyncUserStateActive,
-    /// The user has encountered a fatal error state, and cannot be used.
-    RLMSyncUserStateError,
+  /// The user is logged out. Call `logInWithCredentials:...` with valid
+  /// credentials to log the user back in.
+  RLMSyncUserStateLoggedOut,
+  /// The user is logged in, and any Realms associated with it are syncing with
+  /// the Realm Object Server.
+  RLMSyncUserStateActive,
+  /// The user has encountered a fatal error state, and cannot be used.
+  RLMSyncUserStateError,
 };
 
 /// A block type used for APIs which asynchronously vend an `RLMSyncUser`.
-typedef void(^RLMUserCompletionBlock)(RLMSyncUser * _Nullable, NSError * _Nullable);
+typedef void (^RLMUserCompletionBlock)(RLMSyncUser *_Nullable,
+                                       NSError *_Nullable);
 
 /// A block type used to report the status of a password change operation.
 /// If the `NSError` argument is nil, the operation succeeded.
-typedef void(^RLMPasswordChangeStatusBlock)(NSError * _Nullable);
+typedef void (^RLMPasswordChangeStatusBlock)(NSError *_Nullable);
 
-/// A block type used to report the status of a permission apply or revoke operation.
-/// If the `NSError` argument is nil, the operation succeeded.
-typedef void(^RLMPermissionStatusBlock)(NSError * _Nullable);
+/// A block type used to report the status of a permission apply or revoke
+/// operation. If the `NSError` argument is nil, the operation succeeded.
+typedef void (^RLMPermissionStatusBlock)(NSError *_Nullable);
 
 /// A block type used to report the status of a permission offer operation.
-typedef void(^RLMPermissionOfferStatusBlock)(NSString * _Nullable, NSError * _Nullable);
+typedef void (^RLMPermissionOfferStatusBlock)(NSString *_Nullable,
+                                              NSError *_Nullable);
 
-/// A block type used to report the status of a permission offer response operation.
-typedef void(^RLMPermissionOfferResponseStatusBlock)(NSURL * _Nullable, NSError * _Nullable);
+/// A block type used to report the status of a permission offer response
+/// operation.
+typedef void (^RLMPermissionOfferResponseStatusBlock)(NSURL *_Nullable,
+                                                      NSError *_Nullable);
 
-/// A block type used to asynchronously report results of a permissions get operation.
-/// Exactly one of the two arguments will be populated.
-typedef void(^RLMPermissionResultsBlock)(NSArray<RLMSyncPermission *> * _Nullable, NSError * _Nullable);
+/// A block type used to asynchronously report results of a permissions get
+/// operation. Exactly one of the two arguments will be populated.
+typedef void (^RLMPermissionResultsBlock)(
+    NSArray<RLMSyncPermission *> *_Nullable, NSError *_Nullable);
 
-/// A block type used to asynchronously report results of a permission offerss get operation.
-/// Exactly one of the two arguments will be populated.
-typedef void(^RLMPermissionOfferResultsBlock)(NSArray<RLMSyncPermissionOffer *> * _Nullable, NSError * _Nullable);
+/// A block type used to asynchronously report results of a permission offerss
+/// get operation. Exactly one of the two arguments will be populated.
+typedef void (^RLMPermissionOfferResultsBlock)(
+    NSArray<RLMSyncPermissionOffer *> *_Nullable, NSError *_Nullable);
 
 /// A block type used to asynchronously report results of a user info retrieval.
 /// Exactly one of the two arguments will be populated.
-typedef void(^RLMRetrieveUserBlock)(RLMSyncUserInfo * _Nullable, NSError * _Nullable);
+typedef void (^RLMRetrieveUserBlock)(RLMSyncUserInfo *_Nullable,
+                                     NSError *_Nullable);
 
 /// A block type used to report an error related to a specific user.
-typedef void(^RLMUserErrorReportingBlock)(RLMSyncUser * _Nonnull, NSError * _Nonnull);
+typedef void (^RLMUserErrorReportingBlock)(RLMSyncUser *_Nonnull,
+                                           NSError *_Nonnull);
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -82,9 +93,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface RLMSyncUser : NSObject
 
-    /**
-     A dictionary of all valid, logged-in user identities corresponding to their user objects.
-     */
+/**
+ A dictionary of all valid, logged-in user identities corresponding to their
+ user objects.
+ */
 + (NSDictionary<NSString *, RLMSyncUser *> *)allUsers NS_REFINED_FOR_SWIFT;
 
 /**
@@ -97,7 +109,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The unique Realm Object Server user ID string identifying this user.
  */
-@property (nullable, nonatomic, readonly) NSString *identity;
+@property(nullable, nonatomic, readonly) NSString *identity;
 
 /**
  The user's refresh token used to access the Realm Object Server.
@@ -105,37 +117,38 @@ NS_ASSUME_NONNULL_BEGIN
  This is required to make HTTP requests to Realm Object Server's REST API
  for functionality not exposed natively. It should be treated as sensitive data.
  */
-@property (nullable, nonatomic, readonly) NSString *refreshToken;
+@property(nullable, nonatomic, readonly) NSString *refreshToken;
 
 /**
  The URL of the authentication server this user will communicate with.
  */
-@property (nullable, nonatomic, readonly) NSURL *authenticationServer;
+@property(nullable, nonatomic, readonly) NSURL *authenticationServer;
 
 /**
  Whether the user is a Realm Object Server administrator. Value reflects the
  state at the time of the last successful login of this user.
  */
-@property (nonatomic, readonly) BOOL isAdmin;
+@property(nonatomic, readonly) BOOL isAdmin;
 
 /**
  The current state of the user.
  */
-@property (nonatomic, readonly) RLMSyncUserState state;
+@property(nonatomic, readonly) RLMSyncUserState state;
 
 #pragma mark - Lifecycle
 
 /**
- Create, log in, and asynchronously return a new user object, specifying a custom
- timeout for the network request and a custom queue to run the callback upon.
- Credentials identifying the user must be passed in. The user becomes available in
- the completion block, at which point it is ready for use.
+ Create, log in, and asynchronously return a new user object, specifying a
+ custom timeout for the network request and a custom queue to run the callback
+ upon. Credentials identifying the user must be passed in. The user becomes
+ available in the completion block, at which point it is ready for use.
  */
 + (void)logInWithCredentials:(RLMSyncCredentials *)credentials
-    authServerURL:(NSURL *)authServerURL
-    timeout:(NSTimeInterval)timeout
-    callbackQueue:(dispatch_queue_t)callbackQueue
-    onCompletion:(RLMUserCompletionBlock)completion NS_REFINED_FOR_SWIFT;
+               authServerURL:(NSURL *)authServerURL
+                     timeout:(NSTimeInterval)timeout
+               callbackQueue:(dispatch_queue_t)callbackQueue
+                onCompletion:(RLMUserCompletionBlock)completion
+    NS_REFINED_FOR_SWIFT;
 
 /**
  Create, log in, and asynchronously return a new user object.
@@ -147,20 +160,22 @@ NS_ASSUME_NONNULL_BEGIN
 
  The completion block always runs on the main queue.
 
- @param credentials     A credentials value identifying the user to be logged in.
- @param authServerURL   The URL of the authentication server (e.g. "http://realm.example.org:9080").
+ @param credentials     A credentials value identifying the user to be logged
+ in.
+ @param authServerURL   The URL of the authentication server (e.g.
+ "http://realm.example.org:9080").
  @param completion      A callback block that returns a user object or an error,
                         indicating the completion of the login operation.
  */
 + (void)logInWithCredentials:(RLMSyncCredentials *)credentials
-    authServerURL:(NSURL *)authServerURL
-    onCompletion:(RLMUserCompletionBlock)completion
+               authServerURL:(NSURL *)authServerURL
+                onCompletion:(RLMUserCompletionBlock)completion
     NS_SWIFT_UNAVAILABLE("Use the full version of this API.");
-
 
 /**
  Returns the default configuration for the user. The default configuration
- points to the default query-based Realm on the server the user authenticated against.
+ points to the default query-based Realm on the server the user authenticated
+ against.
  */
 - (RLMRealmConfiguration *)configuration NS_REFINED_FOR_SWIFT;
 
@@ -169,38 +184,41 @@ NS_ASSUME_NONNULL_BEGIN
 
  @param url The unresolved absolute URL to the Realm on the Realm Object Server,
             e.g. "realm://example.org/~/path/to/realm". "Unresolved" means the
-            path should contain the wildcard marker `~`, which will automatically
-            be filled in with the user identity by the Realm Object Server.
- @return A default configuration object with the sync configuration set to use the given URL.
+            path should contain the wildcard marker `~`, which will
+ automatically be filled in with the user identity by the Realm Object Server.
+ @return A default configuration object with the sync configuration set to use
+ the given URL.
  */
-- (RLMRealmConfiguration *)configurationWithURL:(nullable NSURL *)url NS_REFINED_FOR_SWIFT;
+- (RLMRealmConfiguration *)configurationWithURL:(nullable NSURL *)url
+    NS_REFINED_FOR_SWIFT;
 
 /**
  Create a configuration instance for the given url.
 
  @param url The unresolved absolute URL to the Realm on the Realm Object Server,
             e.g. "realm://example.org/~/path/to/realm". "Unresolved" means the
-            path should contain the wildcard marker `~`, which will automatically
-            be filled in with the user identity by the Realm Object Server.
+            path should contain the wildcard marker `~`, which will
+ automatically be filled in with the user identity by the Realm Object Server.
  @param fullSynchronization If YES, all objects in the server Realm are
-                            automatically synchronized, and the query subscription
-                            methods cannot be used.
+                            automatically synchronized, and the query
+ subscription methods cannot be used.
  @return A default configuration object with the sync configuration set to use
          the given URL and options.
  */
 - (RLMRealmConfiguration *)configurationWithURL:(nullable NSURL *)url
-    fullSynchronization:(bool)fullSynchronization NS_REFINED_FOR_SWIFT;
+                            fullSynchronization:(bool)fullSynchronization
+    NS_REFINED_FOR_SWIFT;
 
 /**
  Create a configuration instance for the given url.
 
  @param url The unresolved absolute URL to the Realm on the Realm Object Server,
             e.g. "realm://example.org/~/path/to/realm". "Unresolved" means the
-            path should contain the wildcard marker `~`, which will automatically
-            be filled in with the user identity by the Realm Object Server.
+            path should contain the wildcard marker `~`, which will
+ automatically be filled in with the user identity by the Realm Object Server.
  @param fullSynchronization If YES, all objects in the server Realm are
-                            automatically synchronized, and the query subscription
-                            methods cannot be used.
+                            automatically synchronized, and the query
+ subscription methods cannot be used.
  @param enableSSLValidation If NO, invalid SSL certificates for the server will
                             not be rejected. THIS SHOULD NEVER BE USED IN
                             PRODUCTION AND EXISTS ONLY FOR TESTING PURPOSES.
@@ -211,9 +229,10 @@ NS_ASSUME_NONNULL_BEGIN
          the given URL and options.
  */
 - (RLMRealmConfiguration *)configurationWithURL:(nullable NSURL *)url
-    fullSynchronization:(bool)fullSynchronization
-    enableSSLValidation:(bool)enableSSLValidation
-    urlPrefix:(nullable NSString *)urlPrefix NS_REFINED_FOR_SWIFT;
+                            fullSynchronization:(bool)fullSynchronization
+                            enableSSLValidation:(bool)enableSSLValidation
+                                      urlPrefix:(nullable NSString *)urlPrefix
+    NS_REFINED_FOR_SWIFT;
 
 /**
  Log a user out, destroying their server state, unregistering them from the SDK,
@@ -234,20 +253,21 @@ NS_ASSUME_NONNULL_BEGIN
  `RLMSyncAuthError`s.
 
  @note Check for `RLMSyncAuthErrorInvalidAccessToken` to see if the user has
-       been remotely logged out because its refresh token expired, or because the
-       third party authentication service providing the user's identity has
-       logged the user out.
+       been remotely logged out because its refresh token expired, or because
+ the third party authentication service providing the user's identity has logged
+ the user out.
 
- @warning Regardless of whether an error handler is installed, certain user errors
-          will automatically cause the user to enter the logged out state.
+ @warning Regardless of whether an error handler is installed, certain user
+ errors will automatically cause the user to enter the logged out state.
  */
-@property (nullable, nonatomic) RLMUserErrorReportingBlock errorHandler NS_REFINED_FOR_SWIFT;
+@property(nullable, nonatomic)
+    RLMUserErrorReportingBlock errorHandler NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Sessions
 
 /**
- Retrieve a valid session object belonging to this user for a given URL, or `nil`
- if no such object exists.
+ Retrieve a valid session object belonging to this user for a given URL, or
+ `nil` if no such object exists.
  */
 - (nullable RLMSyncSession *)sessionForURL:(NSURL *)url;
 
@@ -270,7 +290,8 @@ NS_ASSUME_NONNULL_BEGIN
                     The callback will be invoked on a background queue provided
                     by `NSURLSession`.
  */
-- (void)changePassword:(NSString *)newPassword completion:(RLMPasswordChangeStatusBlock)completion;
+- (void)changePassword:(NSString *)newPassword
+            completion:(RLMPasswordChangeStatusBlock)completion;
 
 /**
  Change an arbitrary user's password asynchronously.
@@ -287,7 +308,9 @@ NS_ASSUME_NONNULL_BEGIN
                     The callback will be invoked on a background queue provided
                     by `NSURLSession`.
  */
-- (void)changePassword:(NSString *)newPassword forUserID:(NSString *)userID completion:(RLMPasswordChangeStatusBlock)completion;
+- (void)changePassword:(NSString *)newPassword
+             forUserID:(NSString *)userID
+            completion:(RLMPasswordChangeStatusBlock)completion;
 
 /**
  Ask the server to send a password reset email to the given email address.
@@ -304,8 +327,9 @@ NS_ASSUME_NONNULL_BEGIN
                    provided by `NSURLSession`, and not on the calling queue.
  */
 + (void)requestPasswordResetForAuthServer:(NSURL *)serverURL
-    userEmail:(NSString *)email
-    completion:(RLMPasswordChangeStatusBlock)completion;
+                                userEmail:(NSString *)email
+                               completion:
+                                   (RLMPasswordChangeStatusBlock)completion;
 
 /**
  Change a user's password using a one-time password reset token.
@@ -329,9 +353,10 @@ NS_ASSUME_NONNULL_BEGIN
                     provided by `NSURLSession`, and not on the calling queue.
  */
 + (void)completePasswordResetForAuthServer:(NSURL *)serverURL
-    token:(NSString *)token
-    password:(NSString *)newPassword
-    completion:(RLMPasswordChangeStatusBlock)completion;
+                                     token:(NSString *)token
+                                  password:(NSString *)newPassword
+                                completion:
+                                    (RLMPasswordChangeStatusBlock)completion;
 
 /**
  Ask the server to send a confirmation email to the given email address.
@@ -348,8 +373,9 @@ NS_ASSUME_NONNULL_BEGIN
                    provided by `NSURLSession`, and not on the calling queue.
  */
 + (void)requestEmailConfirmationForAuthServer:(NSURL *)serverURL
-    userEmail:(NSString *)email
-    completion:(RLMPasswordChangeStatusBlock)completion;
+                                    userEmail:(NSString *)email
+                                   completion:
+                                       (RLMPasswordChangeStatusBlock)completion;
 
 /**
  Confirm a user's email using a one-time confirmation token.
@@ -368,87 +394,98 @@ NS_ASSUME_NONNULL_BEGIN
                     provided by `NSURLSession`, and not on the calling queue.
  */
 + (void)confirmEmailForAuthServer:(NSURL *)serverURL
-    token:(NSString *)token
-    completion:(RLMPasswordChangeStatusBlock)completion;
+                            token:(NSString *)token
+                       completion:(RLMPasswordChangeStatusBlock)completion;
 
 #pragma mark - Administrator
 
 /**
- Given a Realm Object Server authentication provider and a provider identifier for a user
- (for example, a username), look up and return user information for that user.
+ Given a Realm Object Server authentication provider and a provider identifier
+ for a user (for example, a username), look up and return user information for
+ that user.
 
- @param providerUserIdentity    The username or identity of the user as issued by the authentication provider.
-                                In most cases this is different from the Realm Object Server-issued identity.
- @param provider                The authentication provider that manages the user whose information is desired.
- @param completion              Completion block invoked when request has completed or failed.
-                                The callback will be invoked on a background queue provided
-                                by `NSURLSession`.
+ @param providerUserIdentity    The username or identity of the user as issued
+ by the authentication provider. In most cases this is different from the Realm
+ Object Server-issued identity.
+ @param provider                The authentication provider that manages the
+ user whose information is desired.
+ @param completion              Completion block invoked when request has
+ completed or failed. The callback will be invoked on a background queue
+ provided by `NSURLSession`.
  */
 - (void)retrieveInfoForUser:(NSString *)providerUserIdentity
-    identityProvider:(RLMIdentityProvider)provider
-    completion:(RLMRetrieveUserBlock)completion;
+           identityProvider:(RLMIdentityProvider)provider
+                 completion:(RLMRetrieveUserBlock)completion;
 
 #pragma mark - Permissions
 
 /**
- Asynchronously retrieve all permissions associated with the user calling this method.
+ Asynchronously retrieve all permissions associated with the user calling this
+ method.
 
- The results will be returned through the callback block, or an error if the operation failed.
- The callback block will be run on a background thread and not the calling thread.
+ The results will be returned through the callback block, or an error if the
+ operation failed. The callback block will be run on a background thread and not
+ the calling thread.
  */
 - (void)retrievePermissionsWithCallback:(RLMPermissionResultsBlock)callback;
 
 /**
  Apply a given permission.
 
- The operation will take place asynchronously, and the callback will be used to report whether
- the permission change succeeded or failed. The user calling this method must have the right
- to grant the given permission, or else the operation will fail.
+ The operation will take place asynchronously, and the callback will be used to
+ report whether the permission change succeeded or failed. The user calling this
+ method must have the right to grant the given permission, or else the operation
+ will fail.
 
  @see `RLMSyncPermission`
  */
-- (void)applyPermission:(RLMSyncPermission *)permission callback:(RLMPermissionStatusBlock)callback;
+- (void)applyPermission:(RLMSyncPermission *)permission
+               callback:(RLMPermissionStatusBlock)callback;
 
 /**
  Create a permission offer for a Realm.
 
- A permission offer is used to grant access to a Realm this user manages to another
- user. Creating a permission offer produces a string token which can be passed to the
- recepient in any suitable way (for example, via e-mail).
+ A permission offer is used to grant access to a Realm this user manages to
+ another user. Creating a permission offer produces a string token which can be
+ passed to the recepient in any suitable way (for example, via e-mail).
 
- The operation will take place asynchronously. The token can be accepted by the recepient
- using the `-[RLMSyncUser acceptOfferForToken:callback:]` method.
+ The operation will take place asynchronously. The token can be accepted by the
+ recepient using the `-[RLMSyncUser acceptOfferForToken:callback:]` method.
 
- @param url             The URL of the Realm for which the permission offer should pertain. This
-                        may be the URL of any Realm which this user is allowed to manage. If the URL
-                        has a `~` wildcard it will be replaced with this user's user identity.
+ @param url             The URL of the Realm for which the permission offer
+ should pertain. This may be the URL of any Realm which this user is allowed to
+ manage. If the URL has a `~` wildcard it will be replaced with this user's user
+ identity.
  @param accessLevel     What access level to grant to whoever accepts the token.
- @param expirationDate  Optionally, a date which indicates when the offer expires. If the
-                        recepient attempts to accept the offer after the date it will be rejected.
- @param callback        A callback indicating whether the operation succeeded or failed. If it
-                        succeeded the token will be passed in as a string.
+ @param expirationDate  Optionally, a date which indicates when the offer
+ expires. If the recepient attempts to accept the offer after the date it will
+ be rejected.
+ @param callback        A callback indicating whether the operation succeeded or
+ failed. If it succeeded the token will be passed in as a string.
 
  @see `acceptOfferForToken:callback:`
  */
 - (void)createOfferForRealmAtURL:(NSURL *)url
-    accessLevel:(RLMSyncAccessLevel)accessLevel
-    expiration:(nullable NSDate *)expirationDate
-    callback:(RLMPermissionOfferStatusBlock)callback NS_REFINED_FOR_SWIFT;
+                     accessLevel:(RLMSyncAccessLevel)accessLevel
+                      expiration:(nullable NSDate *)expirationDate
+                        callback:(RLMPermissionOfferStatusBlock)callback
+    NS_REFINED_FOR_SWIFT;
 
 /**
  Accept a permission offer.
 
- Pass in a token representing a permission offer. The operation will take place asynchronously.
- If the operation succeeds, the callback will be passed the URL of the Realm for which the
- offer applied, so the Realm can be opened.
+ Pass in a token representing a permission offer. The operation will take place
+ asynchronously. If the operation succeeds, the callback will be passed the URL
+ of the Realm for which the offer applied, so the Realm can be opened.
 
  The token this method accepts can be created by the offering user through the
- `-[RLMSyncUser createOfferForRealmAtURL:accessLevel:expiration:callback:]` method.
+ `-[RLMSyncUser createOfferForRealmAtURL:accessLevel:expiration:callback:]`
+ method.
 
  @see `createOfferForRealmAtURL:accessLevel:expiration:callback:`
  */
 - (void)acceptOfferForToken:(NSString *)token
-    callback:(RLMPermissionOfferResponseStatusBlock)callback;
+                   callback:(RLMPermissionOfferResponseStatusBlock)callback;
 
 /**
  Revoke a permission offer.
@@ -462,20 +499,25 @@ NS_ASSUME_NONNULL_BEGIN
  @see `createOfferForRealmAtURL:accessLevel:expiration:callback:`
  */
 - (void)invalidateOfferForToken:(NSString *)token
-    callback:(RLMPermissionStatusBlock)callback;
+                       callback:(RLMPermissionStatusBlock)callback;
 
 /**
- Asynchronously retrieve all pending permission offers created by the calling user.
+ Asynchronously retrieve all pending permission offers created by the calling
+ user.
 
- The results will be returned through the callback block, or an error if the operation failed.
- The callback block will be run on a background thread and not the calling thread.
+ The results will be returned through the callback block, or an error if the
+ operation failed. The callback block will be run on a background thread and not
+ the calling thread.
  */
-- (void)retrievePermissionOffersWithCallback:(RLMPermissionOfferResultsBlock)callback;
+- (void)retrievePermissionOffersWithCallback:
+    (RLMPermissionOfferResultsBlock)callback;
 
 /// :nodoc:
-- (instancetype)init __attribute__((unavailable("RLMSyncUser cannot be created directly")));
+- (instancetype)init
+    __attribute__((unavailable("RLMSyncUser cannot be created directly")));
 /// :nodoc:
-+ (instancetype)new __attribute__((unavailable("RLMSyncUser cannot be created directly")));
++ (instancetype)new
+    __attribute__((unavailable("RLMSyncUser cannot be created directly")));
 
 @end
 
@@ -489,47 +531,52 @@ NS_ASSUME_NONNULL_BEGIN
 @interface RLMSyncUserAccountInfo : NSObject
 
 /// The authentication provider which manages this user account.
-@property (nonatomic, readonly) RLMIdentityProvider provider;
+@property(nonatomic, readonly) RLMIdentityProvider provider;
 
 /// The username or identity of this user account.
-@property (nonatomic, readonly) NSString *providerUserIdentity;
+@property(nonatomic, readonly) NSString *providerUserIdentity;
 
 /// :nodoc:
-- (instancetype)init __attribute__((unavailable("RLMSyncUserAccountInfo cannot be created directly")));
+- (instancetype)init __attribute__((
+    unavailable("RLMSyncUserAccountInfo cannot be created directly")));
 /// :nodoc:
-+ (instancetype)new __attribute__((unavailable("RLMSyncUserAccountInfo cannot be created directly")));
++ (instancetype)new __attribute__((
+    unavailable("RLMSyncUserAccountInfo cannot be created directly")));
 
 @end
 
 /**
- A data object representing information about a user that was retrieved from a user lookup call.
+ A data object representing information about a user that was retrieved from a
+ user lookup call.
  */
 @interface RLMSyncUserInfo : NSObject
 
-    /**
-     An array of all the user accounts associated with this user.
-     */
-@property (nonatomic, readonly) NSArray<RLMSyncUserAccountInfo *> *accounts;
+/**
+ An array of all the user accounts associated with this user.
+ */
+@property(nonatomic, readonly) NSArray<RLMSyncUserAccountInfo *> *accounts;
 
 /**
  The identity issued to this user by the Realm Object Server.
  */
-@property (nonatomic, readonly) NSString *identity;
+@property(nonatomic, readonly) NSString *identity;
 
 /**
  Metadata about this user stored on the Realm Object Server.
  */
-@property (nonatomic, readonly) NSDictionary<NSString *, NSString *> *metadata;
+@property(nonatomic, readonly) NSDictionary<NSString *, NSString *> *metadata;
 
 /**
  Whether the user is flagged on the Realm Object Server as an administrator.
  */
-@property (nonatomic, readonly) BOOL isAdmin;
+@property(nonatomic, readonly) BOOL isAdmin;
 
 /// :nodoc:
-- (instancetype)init __attribute__((unavailable("RLMSyncUserInfo cannot be created directly")));
+- (instancetype)init
+    __attribute__((unavailable("RLMSyncUserInfo cannot be created directly")));
 /// :nodoc:
-+ (instancetype)new __attribute__((unavailable("RLMSyncUserInfo cannot be created directly")));
++ (instancetype)new
+    __attribute__((unavailable("RLMSyncUserInfo cannot be created directly")));
 
 @end
 

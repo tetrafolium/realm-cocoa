@@ -25,7 +25,8 @@
 /**
  A callback used to vend the results of a partial sync fetch.
  */
-typedef void(^RLMPartialSyncFetchCallback)(RLMResults * _Nullable results, NSError * _Nullable error);
+typedef void (^RLMPartialSyncFetchCallback)(RLMResults *_Nullable results,
+                                            NSError *_Nullable error);
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -33,14 +34,16 @@ NS_ASSUME_NONNULL_BEGIN
 @interface RLMRealm (Sync)
 
 /// :nodoc:
-- (void)subscribeToObjects:(Class)type where:(NSString *)query callback:(RLMPartialSyncFetchCallback)callback
+- (void)subscribeToObjects:(Class)type
+                     where:(NSString *)query
+                  callback:(RLMPartialSyncFetchCallback)callback
     __attribute__((unavailable("Use -[RLMResults subscribe]")));
 
 /**
  Get the RLMSyncSession used by this Realm. Will be nil if this is not a
  synchronized Realm.
 */
-@property (nonatomic, nullable, readonly) RLMSyncSession *syncSession;
+@property(nonatomic, nullable, readonly) RLMSyncSession *syncSession;
 
 @end
 

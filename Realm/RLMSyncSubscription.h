@@ -22,27 +22,31 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- `RLMSyncSubscriptionState` is an enumeration representing the possible state of a sync subscription.
+ `RLMSyncSubscriptionState` is an enumeration representing the possible state of
+ a sync subscription.
  */
-typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
+typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState){
     /**
-     An error occurred while creating the subscription or while the server was processing it.
+     An error occurred while creating the subscription or while the server was
+     processing it.
      */
     RLMSyncSubscriptionStateError = -1,
 
     /**
-     The subscription is being created, but has not yet been written to the synced Realm.
+     The subscription is being created, but has not yet been written to the
+     synced Realm.
      */
     RLMSyncSubscriptionStateCreating = 2,
 
     /**
-     The subscription has been created, and is waiting to be processed by the server.
+     The subscription has been created, and is waiting to be processed by the
+     server.
      */
     RLMSyncSubscriptionStatePending = 0,
 
     /**
-     The subscription has been processed by the server, and objects matching the subscription
-     are now being synchronized to this client.
+     The subscription has been processed by the server, and objects matching the
+     subscription are now being synchronized to this client.
      */
     RLMSyncSubscriptionStateComplete = 1,
 
@@ -53,7 +57,8 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
 };
 
 /**
- `RLMSyncSubscription` represents a subscription to a set of objects in a synced Realm.
+ `RLMSyncSubscription` represents a subscription to a set of objects in a synced
+ Realm.
 
  When query-based sync is enabled for a synchronized Realm, the server only
  synchronizes objects to the client when they match a sync subscription
@@ -61,36 +66,38 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
  by an `RLMResults`) and an optional name.
 
  The state of the subscription can be observed using
- [Key-Value Observing](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueObserving/KeyValueObserving.html)
+ [Key-Value
+ Observing](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueObserving/KeyValueObserving.html)
  on the `state` property.
 
  Subscriptions are created using `-[RLMResults subscribe]` or
  `-[RLMResults subscribeWithName:]`. Existing subscriptions for a Realm can be
- looked up with `-[RLMRealm subscriptions]` or `-[RLMRealm subscriptionWithName:]`.
+ looked up with `-[RLMRealm subscriptions]` or `-[RLMRealm
+ subscriptionWithName:]`.
  */
 @interface RLMSyncSubscription : NSObject
 
-    /**
-     The unique name for this subscription.
+/**
+ The unique name for this subscription.
 
-     This will be `nil` if this object was created with `-[RLMResults subscribe]`.
-     Subscription objects read from a Realm with `-[RLMRealm subscriptions]` will
-     always have a non-`nil` name and subscriptions which were not explicitly named
-     will have an automatically generated one.
-     */
-@property (nonatomic, readonly, nullable) NSString *name;
+ This will be `nil` if this object was created with `-[RLMResults subscribe]`.
+ Subscription objects read from a Realm with `-[RLMRealm subscriptions]` will
+ always have a non-`nil` name and subscriptions which were not explicitly named
+ will have an automatically generated one.
+ */
+@property(nonatomic, readonly, nullable) NSString *name;
 
 /**
  The current state of the subscription. See `RLMSyncSubscriptionState`.
  */
-@property (nonatomic, readonly) RLMSyncSubscriptionState state;
+@property(nonatomic, readonly) RLMSyncSubscriptionState state;
 
 /**
  The error which occurred when registering this subscription, if any.
 
  Will be non-nil only when `state` is `RLMSyncSubscriptionStateError`.
  */
-@property (nonatomic, readonly, nullable) NSError *error;
+@property(nonatomic, readonly, nullable) NSError *error;
 
 /**
  The raw query which this subscription is running on the server.
@@ -103,7 +110,7 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
 
  This is `nil` while the subscription is in the Creating state.
  */
-@property (nonatomic, readonly, nullable) NSString *query;
+@property(nonatomic, readonly, nullable) NSString *query;
 
 /**
  When this subscription was first created.
@@ -112,7 +119,7 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
  which did not store the creation date. Newly created subscriptions should
  always have a non-nil creation date.
  */
-@property (nonatomic, readonly, nullable) NSDate *createdAt;
+@property(nonatomic, readonly, nullable) NSDate *createdAt;
 
 /**
  When this subscription was last updated.
@@ -125,7 +132,7 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
  to `-[RLMResults subscribeWithOptions:]`, and not when the set of objects which
  match the subscription last changed.
  */
-@property (nonatomic, readonly, nullable) NSDate *updatedAt;
+@property(nonatomic, readonly, nullable) NSDate *updatedAt;
 
 /**
  When this subscription will be automatically removed.
@@ -136,7 +143,7 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
 
  This property will be `nil` if the `timeToLive` option was not enabled.
  */
-@property (nonatomic, readonly, nullable) NSDate *expiresAt;
+@property(nonatomic, readonly, nullable) NSDate *expiresAt;
 
 /**
  How long this subscription will persist after last being updated.
@@ -147,7 +154,7 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
 
  This property will be NaN if the `timeToLive` option was not enabled.
  */
-@property (nonatomic, readonly) NSTimeInterval timeToLive;
+@property(nonatomic, readonly) NSTimeInterval timeToLive;
 
 /**
  Remove this subscription.
@@ -167,14 +174,18 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
 #pragma mark - Unavailable Methods
 
 /**
- `-[RLMSyncSubscription init]` is not available because `RLMSyncSubscription` cannot be created directly.
+ `-[RLMSyncSubscription init]` is not available because `RLMSyncSubscription`
+ cannot be created directly.
  */
-- (instancetype)init __attribute__((unavailable("RLMSyncSubscription cannot be created directly")));
+- (instancetype)init __attribute__((
+    unavailable("RLMSyncSubscription cannot be created directly")));
 
 /**
- `+[RLMSyncSubscription new]` is not available because `RLMSyncSubscription` cannot be created directly.
+ `+[RLMSyncSubscription new]` is not available because `RLMSyncSubscription`
+ cannot be created directly.
  */
-+ (instancetype)new __attribute__((unavailable("RLMSyncSubscription cannot be created directly")));
++ (instancetype)new __attribute__((
+    unavailable("RLMSyncSubscription cannot be created directly")));
 
 @end
 
@@ -182,14 +193,14 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
  Configuration options for query-based sync subscriptions.
  */
 @interface RLMSyncSubscriptionOptions : NSObject
-    /**
-     The name of the subscription.
+/**
+ The name of the subscription.
 
-     Naming a subscription makes it possible to look up a subscription by name
-     (using `-[RLMRealm subscriptionWithName:]`) or update an existing
-     subscription rather than creating a new one.
-     */
-@property (nonatomic, copy, nullable) NSString *name;
+ Naming a subscription makes it possible to look up a subscription by name
+ (using `-[RLMRealm subscriptionWithName:]`) or update an existing
+ subscription rather than creating a new one.
+ */
+@property(nonatomic, copy, nullable) NSString *name;
 
 /**
  Whether this should update an existing subscription with the same name.
@@ -203,9 +214,10 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
  objects will fail.
 
  The `updatedAt` and (if `timeToLive` is used) `expiresAt` properties are
- updated whenever a subscription is overwritten even if nothing else has changed.
+ updated whenever a subscription is overwritten even if nothing else has
+ changed.
  */
-@property (nonatomic) BOOL overwriteExisting;
+@property(nonatomic) BOOL overwriteExisting;
 
 /**
  How long (in seconds) a subscription should persist after being created.
@@ -217,7 +229,7 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
 
  A time to live of 0 or less disables subscription expiration.
  */
-@property (nonatomic) NSTimeInterval timeToLive;
+@property(nonatomic) NSTimeInterval timeToLive;
 
 /**
  The maximum number of top-level matches to include in this subscription.
@@ -233,7 +245,7 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
  objects which match the query, all objects will be included. A limit of zero is
  treated as unlimited.
  */
-@property (nonatomic) NSUInteger limit;
+@property(nonatomic) NSUInteger limit;
 
 /**
  Which RLMLinkingObjects properties should be included in the subscription.
@@ -251,7 +263,8 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
  Any keypath which ends in a RLMLinkingObject property can be included in this
  array, including ones involving intermediate links.
  */
-@property (nonatomic, copy, nullable) NSArray<NSString *> *includeLinkingObjectProperties;
+@property(nonatomic, copy, nullable)
+    NSArray<NSString *> *includeLinkingObjectProperties;
 @end
 
 /**
@@ -259,25 +272,25 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
  */
 @interface RLMResults (SyncSubscription)
 
-    /**
-     Subscribe to the query represented by this `RLMResults`.
+/**
+ Subscribe to the query represented by this `RLMResults`.
 
-     Subscribing to a query asks the server to synchronize all objects to the
-     client which match the query, along with all objects which are reachable
-     from those objects via links. This happens asynchronously, and the local
-     client Realm may not immediately have all objects which match the query.
-     Observe the `state` property of the returned subscription object to be
-     notified of when the subscription has been processed by the server and
-     all objects matching the query are available.
+ Subscribing to a query asks the server to synchronize all objects to the
+ client which match the query, along with all objects which are reachable
+ from those objects via links. This happens asynchronously, and the local
+ client Realm may not immediately have all objects which match the query.
+ Observe the `state` property of the returned subscription object to be
+ notified of when the subscription has been processed by the server and
+ all objects matching the query are available.
 
-     The subscription will not be explicitly named. A name will be automatically
-     generated for internal use. The exact format of this name may change without
-     warning and should not be depended on.
+ The subscription will not be explicitly named. A name will be automatically
+ generated for internal use. The exact format of this name may change without
+ warning and should not be depended on.
 
-     @return An object representing the newly-created subscription.
+ @return An object representing the newly-created subscription.
 
-     @see RLMSyncSubscription
-    */
+ @see RLMSyncSubscription
+*/
 - (RLMSyncSubscription *)subscribe;
 
 /**
@@ -308,7 +321,8 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
 
  @see RLMSyncSubscription
 */
-- (RLMSyncSubscription *)subscribeWithName:(nullable NSString *)subscriptionName;
+- (RLMSyncSubscription *)subscribeWithName:
+    (nullable NSString *)subscriptionName;
 
 /**
  Subscribe to a subset of the query represented by this `RLMResults`.
@@ -346,7 +360,8 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
 
  @see RLMSyncSubscription
  */
-- (RLMSyncSubscription *)subscribeWithName:(nullable NSString *)subscriptionName limit:(NSUInteger)limit;
+- (RLMSyncSubscription *)subscribeWithName:(nullable NSString *)subscriptionName
+                                     limit:(NSUInteger)limit;
 
 /**
  Subscribe to a subset of the query represented by this `RLMResults`.
@@ -375,26 +390,29 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
 
  @see RLMSyncSubscription
  */
-- (RLMSyncSubscription *)subscribeWithOptions:(RLMSyncSubscriptionOptions *)options;
+- (RLMSyncSubscription *)subscribeWithOptions:
+    (RLMSyncSubscriptionOptions *)options;
 @end
 
 /**
  Support for managing existing subscriptions to object queries in a Realm.
  */
 @interface RLMRealm (SyncSubscription)
-    /**
-     Get a list of the query-based sync subscriptions made for this Realm.
+/**
+ Get a list of the query-based sync subscriptions made for this Realm.
 
-     This list includes all subscriptions which are currently in the states `Pending`,
-     `Created`, and `Error`. Newly created subscriptions which are still in the
-     `Creating` state are not included, and calling this immediately after calling
-     `-[RLMResults subscribe]` will typically not include that subscription. Similarly,
-     because unsubscription happens asynchronously, this may continue to include
-     subscriptions after `-[RLMSyncSubscription unsubscribe]` is called on them.
+ This list includes all subscriptions which are currently in the states
+ `Pending`, `Created`, and `Error`. Newly created subscriptions which are still
+ in the `Creating` state are not included, and calling this immediately after
+ calling
+ `-[RLMResults subscribe]` will typically not include that subscription.
+ Similarly, because unsubscription happens asynchronously, this may continue to
+ include subscriptions after `-[RLMSyncSubscription unsubscribe]` is called on
+ them.
 
-     This method can only be called on a Realm which is using query-based sync and
-     will throw an exception if called on a non-synchronized or full-sync Realm.
-     */
+ This method can only be called on a Realm which is using query-based sync and
+ will throw an exception if called on a non-synchronized or full-sync Realm.
+ */
 - (RLMResults<RLMSyncSubscription *> *)subscriptions;
 
 /**
@@ -408,7 +426,8 @@ typedef RLM_CLOSED_ENUM(NSInteger, RLMSyncSubscriptionState) {
  This method can only be called on a Realm which is using query-based sync and
  will throw an exception if called on a non-synchronized or full-sync Realm.
 
- @return The named subscription, or `nil` if no subscription exists with that name.
+ @return The named subscription, or `nil` if no subscription exists with that
+ name.
  */
 - (nullable RLMSyncSubscription *)subscriptionWithName:(NSString *)name;
 @end

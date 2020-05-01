@@ -16,9 +16,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
+#import "AppDelegate.h"
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "AppDelegate.h"
 
 @interface CocoaPodsExampleTests : XCTestCase
 @end
@@ -26,7 +26,7 @@
 @implementation CocoaPodsExampleTests
 
 - (void)testExample {
-    XCTAssertTrue([MyModel isSubclassOfClass:[RLMObject class]]);
+  XCTAssertTrue([MyModel isSubclassOfClass:[RLMObject class]]);
 }
 
 @end

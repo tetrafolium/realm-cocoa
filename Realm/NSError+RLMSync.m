@@ -23,21 +23,23 @@
 @implementation NSError (RLMSync)
 
 - (RLMSyncErrorActionToken *)rlmSync_errorActionToken {
-    if (self.domain != RLMSyncErrorDomain) {
-        return nil;
-    }
-    if (self.code == RLMSyncErrorClientResetError
-            || self.code == RLMSyncErrorPermissionDeniedError) {
-        return (RLMSyncErrorActionToken *)self.userInfo[kRLMSyncErrorActionTokenKey];
-    }
+  if (self.domain != RLMSyncErrorDomain) {
     return nil;
+  }
+  if (self.code == RLMSyncErrorClientResetError ||
+      self.code == RLMSyncErrorPermissionDeniedError) {
+    return (RLMSyncErrorActionToken *)
+        self.userInfo[kRLMSyncErrorActionTokenKey];
+  }
+  return nil;
 }
 
 - (NSString *)rlmSync_clientResetBackedUpRealmPath {
-    if (self.domain == RLMSyncErrorDomain && self.code == RLMSyncErrorClientResetError) {
-        return self.userInfo[kRLMSyncPathOfRealmBackupCopyKey];
-    }
-    return nil;
+  if (self.domain == RLMSyncErrorDomain &&
+      self.code == RLMSyncErrorClientResetError) {
+    return self.userInfo[kRLMSyncPathOfRealmBackupCopyKey];
+  }
+  return nil;
 }
 
 @end

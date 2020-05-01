@@ -20,9 +20,9 @@
 
 @interface Person : RLMObject
 // Add properties here to define the model
-@property NSString  *fullName;
-@property NSDate    *birthdate;
-@property NSInteger  numberOfFriends;
+@property NSString *fullName;
+@property NSDate *birthdate;
+@property NSInteger numberOfFriends;
 @end
 
 // This protocol enables typed collections. i.e.:

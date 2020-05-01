@@ -20,6 +20,6 @@
 #import <Realm/Realm.h>
 
 @interface Venue : RLMObject
-@property NSString * foursquareID;
-@property NSString * name;
+@property NSString *foursquareID;
+@property NSString *name;
 @end

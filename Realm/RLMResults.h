@@ -24,17 +24,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  `RLMResults` is an auto-updating container type in Realm returned from object
- queries. It represents the results of the query in the form of a collection of objects.
+ queries. It represents the results of the query in the form of a collection of
+ objects.
 
- `RLMResults` can be queried using the same predicates as `RLMObject` and `RLMArray`,
- and you can chain queries to further filter results.
+ `RLMResults` can be queried using the same predicates as `RLMObject` and
+ `RLMArray`, and you can chain queries to further filter results.
 
- `RLMResults` always reflect the current state of the Realm on the current thread,
- including during write transactions on the current thread. The one exception to
- this is when using `for...in` fast enumeration, which will always enumerate
- over the objects which matched the query when the enumeration is begun, even if
- some of them are deleted or modified to be excluded by the filter during the
- enumeration.
+ `RLMResults` always reflect the current state of the Realm on the current
+ thread, including during write transactions on the current thread. The one
+ exception to this is when using `for...in` fast enumeration, which will always
+ enumerate over the objects which matched the query when the enumeration is
+ begun, even if some of them are deleted or modified to be excluded by the
+ filter during the enumeration.
 
  `RLMResults` are lazily evaluated the first time they are accessed; they only
  run queries when the result of the query is requested. This means that
@@ -47,44 +48,46 @@ NS_ASSUME_NONNULL_BEGIN
 
  `RLMResults` cannot be directly instantiated.
  */
-@interface RLMResults<RLMObjectType> : NSObject<RLMCollection, NSFastEnumeration>
+@interface RLMResults<RLMObjectType>
+    : NSObject <RLMCollection, NSFastEnumeration>
 
 #pragma mark - Properties
 
-    /**
-     The number of objects in the results collection.
-     */
-@property (nonatomic, readonly, assign) NSUInteger count;
+/**
+ The number of objects in the results collection.
+ */
+@property(nonatomic, readonly, assign) NSUInteger count;
 
 /**
  The type of the objects in the results collection.
  */
-@property (nonatomic, readonly, assign) RLMPropertyType type;
+@property(nonatomic, readonly, assign) RLMPropertyType type;
 
 /**
  Indicates whether the objects in the collection can be `nil`.
  */
-@property (nonatomic, readwrite, getter = isOptional) BOOL optional;
+@property(nonatomic, readwrite, getter=isOptional) BOOL optional;
 
 /**
  The class name  of the objects contained in the results collection.
 
  Will be `nil` if `type` is not RLMPropertyTypeObject.
  */
-@property (nonatomic, readonly, copy, nullable) NSString *objectClassName;
+@property(nonatomic, readonly, copy, nullable) NSString *objectClassName;
 
 /**
  The Realm which manages this results collection.
  */
-@property (nonatomic, readonly) RLMRealm *realm;
+@property(nonatomic, readonly) RLMRealm *realm;
 
 /**
  Indicates if the results collection is no longer valid.
 
- The results collection becomes invalid if `invalidate` is called on the containing `realm`.
- An invalidated results collection can be accessed, but will always be empty.
+ The results collection becomes invalid if `invalidate` is called on the
+ containing `realm`. An invalidated results collection can be accessed, but will
+ always be empty.
  */
-@property (nonatomic, readonly, getter = isInvalidated) BOOL invalidated;
+@property(nonatomic, readonly, getter=isInvalidated) BOOL invalidated;
 
 #pragma mark - Accessing Objects from an RLMResults
 
@@ -122,16 +125,20 @@ NS_ASSUME_NONNULL_BEGIN
 
  Returns `NSNotFound` if the object is not found in the results collection.
 
- @param object  An object (of the same type as returned from the `objectClassName` selector).
+ @param object  An object (of the same type as returned from the
+ `objectClassName` selector).
  */
 - (NSUInteger)indexOfObject:(RLMObjectType)object;
 
 /**
- Returns the index of the first object in the results collection matching the predicate.
+ Returns the index of the first object in the results collection matching the
+ predicate.
 
- @param predicateFormat A predicate format string, optionally followed by a variable number of arguments.
+ @param predicateFormat A predicate format string, optionally followed by a
+ variable number of arguments.
 
- @return    The index of the object, or `NSNotFound` if the object is not found in the results collection.
+ @return    The index of the object, or `NSNotFound` if the object is not found
+ in the results collection.
  */
 - (NSUInteger)indexOfObjectWhere:(NSString *)predicateFormat, ...;
 
@@ -139,25 +146,30 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSUInteger)indexOfObjectWhere:(NSString *)predicateFormat args:(va_list)args;
 
 /**
- Returns the index of the first object in the results collection matching the predicate.
+ Returns the index of the first object in the results collection matching the
+ predicate.
 
  @param predicate   The predicate with which to filter the objects.
 
- @return    The index of the object, or `NSNotFound` if the object is not found in the results collection.
+ @return    The index of the object, or `NSNotFound` if the object is not found
+ in the results collection.
  */
 - (NSUInteger)indexOfObjectWithPredicate:(NSPredicate *)predicate;
 
 /**
  Returns all the objects matching the given predicate in the results collection.
 
- @param predicateFormat A predicate format string, optionally followed by a variable number of arguments.
+ @param predicateFormat A predicate format string, optionally followed by a
+ variable number of arguments.
 
- @return                An `RLMResults` of objects that match the given predicate.
+ @return                An `RLMResults` of objects that match the given
+ predicate.
  */
 - (RLMResults<RLMObjectType> *)objectsWhere:(NSString *)predicateFormat, ...;
 
 /// :nodoc:
-- (RLMResults<RLMObjectType> *)objectsWhere:(NSString *)predicateFormat args:(va_list)args;
+- (RLMResults<RLMObjectType> *)objectsWhere:(NSString *)predicateFormat
+                                       args:(va_list)args;
 
 /**
  Returns all the objects matching the given predicate in the results collection.
@@ -176,7 +188,8 @@ NS_ASSUME_NONNULL_BEGIN
 
  @return    An `RLMResults` sorted by the specified key path.
  */
-- (RLMResults<RLMObjectType> *)sortedResultsUsingKeyPath:(NSString *)keyPath ascending:(BOOL)ascending;
+- (RLMResults<RLMObjectType> *)sortedResultsUsingKeyPath:(NSString *)keyPath
+                                               ascending:(BOOL)ascending;
 
 /**
  Returns a sorted `RLMResults` from an existing results collection.
@@ -185,7 +198,8 @@ NS_ASSUME_NONNULL_BEGIN
 
  @return    An `RLMResults` sorted by the specified properties.
  */
-- (RLMResults<RLMObjectType> *)sortedResultsUsingDescriptors:(NSArray<RLMSortDescriptor *> *)properties;
+- (RLMResults<RLMObjectType> *)sortedResultsUsingDescriptors:
+    (NSArray<RLMSortDescriptor *> *)properties;
 
 /**
  Returns a distinct `RLMResults` from an existing results collection.
@@ -194,7 +208,8 @@ NS_ASSUME_NONNULL_BEGIN
 
  @return    An `RLMResults` made distinct based on the specified key paths
  */
-- (RLMResults<RLMObjectType> *)distinctResultsUsingKeyPaths:(NSArray<NSString *> *)keyPaths;
+- (RLMResults<RLMObjectType> *)distinctResultsUsingKeyPaths:
+    (NSArray<NSString *> *)keyPaths;
 
 #pragma mark - Notifications
 
@@ -248,17 +263,21 @@ NS_ASSUME_NONNULL_BEGIN
      // end of run loop execution context
 
  You must retain the returned token for as long as you want updates to continue
- to be sent to the block. To stop receiving updates, call `-invalidate` on the token.
+ to be sent to the block. To stop receiving updates, call `-invalidate` on the
+ token.
 
  @warning This method cannot be called during a write transaction, or when the
           containing Realm is read-only.
 
  @param block The block to be called whenever a change occurs.
- @return A token which must be held for as long as you want updates to be delivered.
+ @return A token which must be held for as long as you want updates to be
+ delivered.
  */
-- (RLMNotificationToken *)addNotificationBlock:(void (^)(RLMResults<RLMObjectType> *__nullable results,
-    RLMCollectionChange *__nullable change,
-    NSError *__nullable error))block __attribute__((warn_unused_result));
+- (RLMNotificationToken *)addNotificationBlock:
+    (void (^)(RLMResults<RLMObjectType> *__nullable results,
+              RLMCollectionChange *__nullable change,
+              NSError *__nullable error))block
+    __attribute__((warn_unused_result));
 
 #pragma mark - Aggregating Property Values
 
@@ -268,21 +287,24 @@ NS_ASSUME_NONNULL_BEGIN
 
      NSNumber *min = [results minOfProperty:@"age"];
 
- @warning You cannot use this method on `RLMObject`, `RLMArray`, and `NSData` properties.
+ @warning You cannot use this method on `RLMObject`, `RLMArray`, and `NSData`
+ properties.
 
- @param property The property whose minimum value is desired. Only properties of types `int`, `float`, `double`, and
-                 `NSDate` are supported.
+ @param property The property whose minimum value is desired. Only properties of
+ types `int`, `float`, `double`, and `NSDate` are supported.
 
  @return The minimum value of the property, or `nil` if the Results are empty.
  */
 - (nullable id)minOfProperty:(NSString *)property;
 
 /**
- Returns the maximum (highest) value of the given property among all the objects represented by the results collection.
+ Returns the maximum (highest) value of the given property among all the objects
+ represented by the results collection.
 
      NSNumber *max = [results maxOfProperty:@"age"];
 
- @warning You cannot use this method on `RLMObject`, `RLMArray`, and `NSData` properties.
+ @warning You cannot use this method on `RLMObject`, `RLMArray`, and `NSData`
+ properties.
 
  @param property The property whose maximum value is desired. Only properties of
                  types `int`, `float`, `double`, and `NSDate` are supported.
@@ -292,11 +314,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable id)maxOfProperty:(NSString *)property;
 
 /**
- Returns the sum of the values of a given property over all the objects represented by the results collection.
+ Returns the sum of the values of a given property over all the objects
+ represented by the results collection.
 
      NSNumber *sum = [results sumOfProperty:@"age"];
 
- @warning You cannot use this method on `RLMObject`, `RLMArray`, and `NSData` properties.
+ @warning You cannot use this method on `RLMObject`, `RLMArray`, and `NSData`
+ properties.
 
  @param property The property whose values should be summed. Only properties of
                  types `int`, `float`, and `double` are supported.
@@ -306,16 +330,19 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSNumber *)sumOfProperty:(NSString *)property;
 
 /**
- Returns the average value of a given property over the objects represented by the results collection.
+ Returns the average value of a given property over the objects represented by
+ the results collection.
 
      NSNumber *average = [results averageOfProperty:@"age"];
 
- @warning You cannot use this method on `RLMObject`, `RLMArray`, and `NSData` properties.
+ @warning You cannot use this method on `RLMObject`, `RLMArray`, and `NSData`
+ properties.
 
  @param property The property whose average value should be calculated. Only
                  properties of types `int`, `float`, and `double` are supported.
 
- @return    The average value of the given property, or `nil` if the Results are empty.
+ @return    The average value of the given property, or `nil` if the Results are
+ empty.
  */
 - (nullable NSNumber *)averageOfProperty:(NSString *)property;
 
@@ -325,22 +352,24 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Unavailable Methods
 
 /**
- `-[RLMResults init]` is not available because `RLMResults` cannot be created directly.
- `RLMResults` can be obtained by querying a Realm.
+ `-[RLMResults init]` is not available because `RLMResults` cannot be created
+ directly. `RLMResults` can be obtained by querying a Realm.
  */
-- (instancetype)init __attribute__((unavailable("RLMResults cannot be created directly")));
+- (instancetype)init
+    __attribute__((unavailable("RLMResults cannot be created directly")));
 
 /**
- `+[RLMResults new]` is not available because `RLMResults` cannot be created directly.
- `RLMResults` can be obtained by querying a Realm.
+ `+[RLMResults new]` is not available because `RLMResults` cannot be created
+ directly. `RLMResults` can be obtained by querying a Realm.
  */
-+ (instancetype)new __attribute__((unavailable("RLMResults cannot be created directly")));
++ (instancetype)new
+    __attribute__((unavailable("RLMResults cannot be created directly")));
 
 @end
 
 /**
- `RLMLinkingObjects` is an auto-updating container type. It represents a collection of objects that link to its
- parent object.
+ `RLMLinkingObjects` is an auto-updating container type. It represents a
+ collection of objects that link to its parent object.
 
  For more information, please see the "Inverse Relationships" section in the
  [documentation](https://realm.io/docs/objc/latest/#relationships).

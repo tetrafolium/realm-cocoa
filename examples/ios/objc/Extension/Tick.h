@@ -20,8 +20,8 @@
 
 @interface Tick : RLMObject
 
-@property (nonatomic, strong) NSString *tickID;
+@property(nonatomic, strong) NSString *tickID;
 
-@property (nonatomic, assign) NSInteger count;
+@property(nonatomic, assign) NSInteger count;
 
 @end

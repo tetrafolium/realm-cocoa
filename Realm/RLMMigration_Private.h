@@ -28,10 +28,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface RLMMigration ()
 
-@property (nonatomic, strong) RLMRealm *oldRealm;
-@property (nonatomic, strong) RLMRealm *realm;
+@property(nonatomic, strong) RLMRealm *oldRealm;
+@property(nonatomic, strong) RLMRealm *realm;
 
-- (instancetype)initWithRealm:(RLMRealm *)realm oldRealm:(RLMRealm *)oldRealm schema:(realm::Schema &)schema;
+- (instancetype)initWithRealm:(RLMRealm *)realm
+                     oldRealm:(RLMRealm *)oldRealm
+                       schema:(realm::Schema &)schema;
 
 - (void)execute:(RLMMigrationBlock)block;
 

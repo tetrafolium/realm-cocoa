@@ -20,6 +20,7 @@
 
 @interface RLMSyncSessionRefreshHandle (ObjectServerTests)
 
-+ (void)calculateFireDateUsingTestLogic:(BOOL)forTest blockOnRefreshCompletion:(void(^)(BOOL))block;
++ (void)calculateFireDateUsingTestLogic:(BOOL)forTest
+               blockOnRefreshCompletion:(void (^)(BOOL))block;
 
 @end

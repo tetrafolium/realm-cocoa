@@ -16,9 +16,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
+#import "AppDelegate.h"
 #import <Cocoa/Cocoa.h>
 #import <XCTest/XCTest.h>
-#import "AppDelegate.h"
 
 @interface XCFrameworkExampleTests : XCTestCase
 @end
@@ -26,7 +26,7 @@
 @implementation XCFrameworkExampleTests
 
 - (void)testExample {
-    XCTAssertTrue([MyModel isSubclassOfClass:[RLMObject class]]);
+  XCTAssertTrue([MyModel isSubclassOfClass:[RLMObject class]]);
 }
 
 @end

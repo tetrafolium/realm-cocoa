@@ -20,7 +20,7 @@
 
 @interface RepositoryCell : UICollectionViewCell
 
-@property (nonatomic, weak) IBOutlet UIImageView *avatarImageView;
-@property (nonatomic, weak) IBOutlet UILabel *titleLabel;
+@property(nonatomic, weak) IBOutlet UIImageView *avatarImageView;
+@property(nonatomic, weak) IBOutlet UILabel *titleLabel;
 
 @end

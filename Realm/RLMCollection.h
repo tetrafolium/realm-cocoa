@@ -23,7 +23,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class RLMRealm, RLMResults, RLMSortDescriptor, RLMNotificationToken, RLMCollectionChange;
+@class RLMRealm, RLMResults, RLMSortDescriptor, RLMNotificationToken,
+    RLMCollectionChange;
 typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
 
 /**
@@ -39,29 +40,29 @@ typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
 /**
  The number of objects in the collection.
  */
-@property (nonatomic, readonly, assign) NSUInteger count;
+@property(nonatomic, readonly, assign) NSUInteger count;
 
 /**
  The type of the objects in the collection.
  */
-@property (nonatomic, readonly, assign) RLMPropertyType type;
+@property(nonatomic, readonly, assign) RLMPropertyType type;
 
 /**
  Indicates whether the objects in the collection can be `nil`.
  */
-@property (nonatomic, readonly, getter = isOptional) BOOL optional;
+@property(nonatomic, readonly, getter=isOptional) BOOL optional;
 
 /**
  The class name  of the objects contained in the collection.
 
  Will be `nil` if `type` is not RLMPropertyTypeObject.
  */
-@property (nonatomic, readonly, copy, nullable) NSString *objectClassName;
+@property(nonatomic, readonly, copy, nullable) NSString *objectClassName;
 
 /**
  The Realm which manages the collection, or `nil` for unmanaged collections.
  */
-@property (nonatomic, readonly) RLMRealm *realm;
+@property(nonatomic, readonly) RLMRealm *realm;
 
 #pragma mark - Accessing Objects from a Collection
 
@@ -99,16 +100,19 @@ typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
 
  Returns `NSNotFound` if the object is not found in the collection.
 
- @param object  An object (of the same type as returned from the `objectClassName` selector).
+ @param object  An object (of the same type as returned from the
+ `objectClassName` selector).
  */
 - (NSUInteger)indexOfObject:(id)object;
 
 /**
  Returns the index of the first object in the collection matching the predicate.
 
- @param predicateFormat A predicate format string, optionally followed by a variable number of arguments.
+ @param predicateFormat A predicate format string, optionally followed by a
+ variable number of arguments.
 
- @return    The index of the object, or `NSNotFound` if the object is not found in the collection.
+ @return    The index of the object, or `NSNotFound` if the object is not found
+ in the collection.
  */
 - (NSUInteger)indexOfObjectWhere:(NSString *)predicateFormat, ...;
 
@@ -120,14 +124,16 @@ typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
 
  @param predicate   The predicate with which to filter the objects.
 
- @return    The index of the object, or `NSNotFound` if the object is not found in the collection.
+ @return    The index of the object, or `NSNotFound` if the object is not found
+ in the collection.
  */
 - (NSUInteger)indexOfObjectWithPredicate:(NSPredicate *)predicate;
 
 /**
  Returns all objects matching the given predicate in the collection.
 
- @param predicateFormat A predicate format string, optionally followed by a variable number of arguments.
+ @param predicateFormat A predicate format string, optionally followed by a
+ variable number of arguments.
 
  @return    An `RLMResults` containing objects that match the given predicate.
  */
@@ -141,7 +147,8 @@ typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
 
  @param predicate   The predicate with which to filter the objects.
 
- @return            An `RLMResults` containing objects that match the given predicate.
+ @return            An `RLMResults` containing objects that match the given
+ predicate.
  */
 - (RLMResults *)objectsWithPredicate:(NSPredicate *)predicate;
 
@@ -153,7 +160,8 @@ typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
 
  @return    An `RLMResults` sorted by the specified key path.
  */
-- (RLMResults *)sortedResultsUsingKeyPath:(NSString *)keyPath ascending:(BOOL)ascending;
+- (RLMResults *)sortedResultsUsingKeyPath:(NSString *)keyPath
+                                ascending:(BOOL)ascending;
 
 /**
  Returns a sorted `RLMResults` from the collection.
@@ -162,13 +170,15 @@ typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
 
  @return    An `RLMResults` sorted by the specified properties.
  */
-- (RLMResults *)sortedResultsUsingDescriptors:(NSArray<RLMSortDescriptor *> *)properties;
+- (RLMResults *)sortedResultsUsingDescriptors:
+    (NSArray<RLMSortDescriptor *> *)properties;
 
 /// :nodoc:
 - (id)objectAtIndexedSubscript:(NSUInteger)index;
 
 /**
- Returns an `NSArray` containing the results of invoking `valueForKey:` using `key` on each of the collection's objects.
+ Returns an `NSArray` containing the results of invoking `valueForKey:` using
+ `key` on each of the collection's objects.
 
  @param key The name of the property.
 
@@ -177,7 +187,8 @@ typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
 - (nullable id)valueForKey:(NSString *)key;
 
 /**
- Invokes `setValue:forKey:` on each of the collection's objects using the specified `value` and `key`.
+ Invokes `setValue:forKey:` on each of the collection's objects using the
+ specified `value` and `key`.
 
  @warning This method may only be called during a write transaction.
 
@@ -197,10 +208,10 @@ typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
 
  The `change` parameter will be `nil` the first time the block is called.
  For each call after that, it will contain information about
- which rows in the collection were added, removed or modified. If a write transaction
- did not modify any objects in this collection, the block is not called at all.
- See the `RLMCollectionChange` documentation for information on how the changes
- are reported and an example of updating a `UITableView`.
+ which rows in the collection were added, removed or modified. If a write
+ transaction did not modify any objects in this collection, the block is not
+ called at all. See the `RLMCollectionChange` documentation for information on
+ how the changes are reported and an example of updating a `UITableView`.
 
  If an error occurs the block will be called with `nil` for the collection
  parameter and a non-`nil` error. Currently the only errors that can occur are
@@ -237,17 +248,21 @@ typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
      // end of run loop execution context
 
  You must retain the returned token for as long as you want updates to continue
- to be sent to the block. To stop receiving updates, call `-invalidate` on the token.
+ to be sent to the block. To stop receiving updates, call `-invalidate` on the
+ token.
 
  @warning This method cannot be called during a write transaction, or when the
           containing Realm is read-only.
 
  @param block The block to be called each time the collection changes.
- @return A token which must be held for as long as you want collection notifications to be delivered.
+ @return A token which must be held for as long as you want collection
+ notifications to be delivered.
  */
-- (RLMNotificationToken *)addNotificationBlock:(void (^)(id<RLMCollection> __nullable collection,
-    RLMCollectionChange *__nullable change,
-    NSError *__nullable error))block __attribute__((warn_unused_result));
+- (RLMNotificationToken *)addNotificationBlock:
+    (void (^)(id<RLMCollection> __nullable collection,
+              RLMCollectionChange *__nullable change,
+              NSError *__nullable error))block
+    __attribute__((warn_unused_result));
 
 #pragma mark - Aggregating Property Values
 
@@ -257,7 +272,8 @@ typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
 
      NSNumber *min = [results minOfProperty:@"age"];
 
- @warning You cannot use this method on `RLMObject`, `RLMArray`, and `NSData` properties.
+ @warning You cannot use this method on `RLMObject`, `RLMArray`, and `NSData`
+ properties.
 
  @param property The property whose minimum value is desired. Only properties of
                  types `int`, `float`, `double`, and `NSDate` are supported.
@@ -272,7 +288,8 @@ typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
 
      NSNumber *max = [results maxOfProperty:@"age"];
 
- @warning You cannot use this method on `RLMObject`, `RLMArray`, and `NSData` properties.
+ @warning You cannot use this method on `RLMObject`, `RLMArray`, and `NSData`
+ properties.
 
  @param property The property whose maximum value is desired. Only properties of
                  types `int`, `float`, `double`, and `NSDate` are supported.
@@ -282,11 +299,13 @@ typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
 - (nullable id)maxOfProperty:(NSString *)property;
 
 /**
- Returns the sum of the values of a given property over all the objects in the collection.
+ Returns the sum of the values of a given property over all the objects in the
+ collection.
 
      NSNumber *sum = [results sumOfProperty:@"age"];
 
- @warning You cannot use this method on `RLMObject`, `RLMArray`, and `NSData` properties.
+ @warning You cannot use this method on `RLMObject`, `RLMArray`, and `NSData`
+ properties.
 
  @param property The property whose values should be summed. Only properties of
                  types `int`, `float`, and `double` are supported.
@@ -296,16 +315,19 @@ typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
 - (NSNumber *)sumOfProperty:(NSString *)property;
 
 /**
- Returns the average value of a given property over the objects in the collection.
+ Returns the average value of a given property over the objects in the
+ collection.
 
      NSNumber *average = [results averageOfProperty:@"age"];
 
- @warning You cannot use this method on `RLMObject`, `RLMArray`, and `NSData` properties.
+ @warning You cannot use this method on `RLMObject`, `RLMArray`, and `NSData`
+ properties.
 
  @param property The property whose average value should be calculated. Only
                  properties of types `int`, `float`, and `double` are supported.
 
- @return    The average value of the given property, or `nil` if the Results are empty.
+ @return    The average value of the given property, or `nil` if the Results are
+ empty.
  */
 - (nullable NSNumber *)averageOfProperty:(NSString *)property;
 
@@ -313,9 +335,9 @@ typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
 
 /**
  An `RLMSortDescriptor` stores a property name and a sort order for use with
- `sortedResultsUsingDescriptors:`. It is similar to `NSSortDescriptor`, but supports
- only the subset of functionality which can be efficiently run by Realm's query
- engine.
+ `sortedResultsUsingDescriptors:`. It is similar to `NSSortDescriptor`, but
+ supports only the subset of functionality which can be efficiently run by
+ Realm's query engine.
 
  `RLMSortDescriptor` instances are immutable.
  */
@@ -323,22 +345,23 @@ typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
 
 #pragma mark - Properties
 
-    /**
-     The key path which the sort descriptor orders results by.
-     */
-@property (nonatomic, readonly) NSString *keyPath;
+/**
+ The key path which the sort descriptor orders results by.
+ */
+@property(nonatomic, readonly) NSString *keyPath;
 
 /**
  Whether the descriptor sorts in ascending or descending order.
  */
-@property (nonatomic, readonly) BOOL ascending;
+@property(nonatomic, readonly) BOOL ascending;
 
 #pragma mark - Methods
 
 /**
  Returns a new sort descriptor for the given key path and sort direction.
  */
-+ (instancetype)sortDescriptorWithKeyPath:(NSString *)keyPath ascending:(BOOL)ascending;
++ (instancetype)sortDescriptorWithKeyPath:(NSString *)keyPath
+                                ascending:(BOOL)ascending;
 
 /**
  Returns a copy of the receiver with the sort direction reversed.
@@ -348,12 +371,13 @@ typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
 @end
 
 /**
- A `RLMCollectionChange` object encapsulates information about changes to collections
- that are reported by Realm notifications.
+ A `RLMCollectionChange` object encapsulates information about changes to
+ collections that are reported by Realm notifications.
 
  `RLMCollectionChange` is passed to the notification blocks registered with
- `-addNotificationBlock` on `RLMArray` and `RLMResults`, and reports what rows in the
- collection changed since the last time the notification block was called.
+ `-addNotificationBlock` on `RLMArray` and `RLMResults`, and reports what rows
+ in the collection changed since the last time the notification block was
+ called.
 
  The change information is available in two formats: a simple array of row
  indices in the collection for each type of change, and an array of index paths
@@ -361,32 +385,35 @@ typedef RLM_CLOSED_ENUM(int32_t, RLMPropertyType);
  update methods. A complete example of updating a `UITableView` named `tv`:
 
      [tv beginUpdates];
-     [tv deleteRowsAtIndexPaths:[changes deletionsInSection:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-     [tv insertRowsAtIndexPaths:[changes insertionsInSection:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-     [tv reloadRowsAtIndexPaths:[changes modificationsInSection:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-     [tv endUpdates];
+     [tv deleteRowsAtIndexPaths:[changes deletionsInSection:0]
+ withRowAnimation:UITableViewRowAnimationAutomatic]; [tv
+ insertRowsAtIndexPaths:[changes insertionsInSection:0]
+ withRowAnimation:UITableViewRowAnimationAutomatic]; [tv
+ reloadRowsAtIndexPaths:[changes modificationsInSection:0]
+ withRowAnimation:UITableViewRowAnimationAutomatic]; [tv endUpdates];
 
- All of the arrays in an `RLMCollectionChange` are always sorted in ascending order.
+ All of the arrays in an `RLMCollectionChange` are always sorted in ascending
+ order.
  */
 @interface RLMCollectionChange : NSObject
 /// The indices of objects in the previous version of the collection which have
 /// been removed from this one.
-@property (nonatomic, readonly) NSArray<NSNumber *> *deletions;
+@property(nonatomic, readonly) NSArray<NSNumber *> *deletions;
 
 /// The indices in the new version of the collection which were newly inserted.
-@property (nonatomic, readonly) NSArray<NSNumber *> *insertions;
+@property(nonatomic, readonly) NSArray<NSNumber *> *insertions;
 
 /**
  The indices in the new version of the collection which were modified.
 
- For `RLMResults`, this means that one or more of the properties of the object at
- that index were modified (or an object linked to by that object was
+ For `RLMResults`, this means that one or more of the properties of the object
+ at that index were modified (or an object linked to by that object was
  modified).
 
  For `RLMArray`, the array itself being modified to contain a
  different object at that index will also be reported as a modification.
  */
-@property (nonatomic, readonly) NSArray<NSNumber *> *modifications;
+@property(nonatomic, readonly) NSArray<NSNumber *> *modifications;
 
 /// Returns the index paths of the deletion indices in the given section.
 - (NSArray<NSIndexPath *> *)deletionsInSection:(NSUInteger)section;

@@ -21,22 +21,29 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /// :nodoc:
-@protocol RLMInt @end
+@protocol RLMInt
+@end
 /// :nodoc:
-@protocol RLMBool @end
+@protocol RLMBool
+@end
 /// :nodoc:
-@protocol RLMDouble @end
+@protocol RLMDouble
+@end
 /// :nodoc:
-@protocol RLMFloat @end
+@protocol RLMFloat
+@end
 /// :nodoc:
-@protocol RLMString @end
+@protocol RLMString
+@end
 /// :nodoc:
-@protocol RLMDate @end
+@protocol RLMDate
+@end
 /// :nodoc:
-@protocol RLMData @end
+@protocol RLMData
+@end
 
 /// :nodoc:
-@interface NSNumber ()<RLMInt, RLMBool, RLMDouble, RLMFloat>
+@interface NSNumber () <RLMInt, RLMBool, RLMDouble, RLMFloat>
 @end
 
 /**
@@ -53,44 +60,46 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Properties
 
-    /**
-     The name of the property.
-     */
-@property (nonatomic, readonly) NSString *name;
+/**
+ The name of the property.
+ */
+@property(nonatomic, readonly) NSString *name;
 
 /**
  The type of the property.
 
  @see `RLMPropertyType`
  */
-@property (nonatomic, readonly) RLMPropertyType type;
+@property(nonatomic, readonly) RLMPropertyType type;
 
 /**
  Indicates whether this property is indexed.
 
  @see `RLMObject`
  */
-@property (nonatomic, readonly) BOOL indexed;
+@property(nonatomic, readonly) BOOL indexed;
 
 /**
- For `RLMObject` and `RLMArray` properties, the name of the class of object stored in the property.
+ For `RLMObject` and `RLMArray` properties, the name of the class of object
+ stored in the property.
  */
-@property (nonatomic, readonly, copy, nullable) NSString *objectClassName;
+@property(nonatomic, readonly, copy, nullable) NSString *objectClassName;
 
 /**
- For linking objects properties, the property name of the property the linking objects property is linked to.
+ For linking objects properties, the property name of the property the linking
+ objects property is linked to.
  */
-@property (nonatomic, readonly, copy, nullable) NSString *linkOriginPropertyName;
+@property(nonatomic, readonly, copy, nullable) NSString *linkOriginPropertyName;
 
 /**
  Indicates whether this property is optional.
  */
-@property (nonatomic, readonly) BOOL optional;
+@property(nonatomic, readonly) BOOL optional;
 
 /**
  Indicates whether this property is an array.
  */
-@property (nonatomic, readonly) BOOL array;
+@property(nonatomic, readonly) BOOL array;
 
 #pragma mark - Methods
 
@@ -101,25 +110,26 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-
 /**
- An `RLMPropertyDescriptor` instance represents a specific property on a given class.
+ An `RLMPropertyDescriptor` instance represents a specific property on a given
+ class.
  */
 @interface RLMPropertyDescriptor : NSObject
 
-    /**
-     Creates and returns a property descriptor.
+/**
+ Creates and returns a property descriptor.
 
-     @param objectClass  The class of this property descriptor.
-     @param propertyName The name of this property descriptor.
-     */
-+ (instancetype)descriptorWithClass:(Class)objectClass propertyName:(NSString *)propertyName;
+ @param objectClass  The class of this property descriptor.
+ @param propertyName The name of this property descriptor.
+ */
++ (instancetype)descriptorWithClass:(Class)objectClass
+                       propertyName:(NSString *)propertyName;
 
 /// The class of the property.
-@property (nonatomic, readonly) Class objectClass;
+@property(nonatomic, readonly) Class objectClass;
 
 /// The name of the property.
-@property (nonatomic, readonly) NSString *propertyName;
+@property(nonatomic, readonly) NSString *propertyName;
 
 @end
 

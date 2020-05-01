@@ -23,7 +23,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RLMResults ()
-@property (nonatomic, readonly, getter=isAttached) BOOL attached;
+@property(nonatomic, readonly, getter=isAttached) BOOL attached;
 
 + (instancetype)emptyDetachedResults;
 

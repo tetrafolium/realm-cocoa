@@ -23,25 +23,27 @@ NS_ASSUME_NONNULL_BEGIN
 @class RLMObjectSchema;
 
 /**
- `RLMSchema` instances represent collections of model object schemas managed by a Realm.
+ `RLMSchema` instances represent collections of model object schemas managed by
+ a Realm.
 
  When using Realm, `RLMSchema` instances allow performing migrations and
  introspecting the database's schema.
 
  Schemas map to collections of tables in the core database.
  */
-@interface RLMSchema : NSObject<NSCopying>
+@interface RLMSchema : NSObject <NSCopying>
 
 #pragma mark - Properties
 
-    /**
-     An `NSArray` containing `RLMObjectSchema`s for all object types in the Realm.
+/**
+ An `NSArray` containing `RLMObjectSchema`s for all object types in the Realm.
 
-     This property is intended to be used during migrations for dynamic introspection.
+ This property is intended to be used during migrations for dynamic
+ introspection.
 
-     @see `RLMObjectSchema`
-     */
-@property (nonatomic, readonly, copy) NSArray<RLMObjectSchema *> *objectSchema;
+ @see `RLMObjectSchema`
+ */
+@property(nonatomic, readonly, copy) NSArray<RLMObjectSchema *> *objectSchema;
 
 #pragma mark - Methods
 
@@ -56,9 +58,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable RLMObjectSchema *)schemaForClassName:(NSString *)className;
 
 /**
- Looks up and returns an `RLMObjectSchema` for the given class name in the Realm.
+ Looks up and returns an `RLMObjectSchema` for the given class name in the
+ Realm.
 
- If there is no object of type `className` in the schema, an exception will be thrown.
+ If there is no object of type `className` in the schema, an exception will be
+ thrown.
 
  @param className   The object class name.
  @return            An `RLMObjectSchema` for the given class in this Realm.

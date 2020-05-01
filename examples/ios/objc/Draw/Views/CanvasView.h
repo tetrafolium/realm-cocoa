@@ -16,14 +16,14 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
-#import <UIKit/UIKit.h>
 #import <Realm/Realm.h>
+#import <UIKit/UIKit.h>
 
 @class DrawPath;
 
 @interface CanvasView : UIView
 
-@property (nonatomic, strong) RLMResults *paths;
+@property(nonatomic, strong) RLMResults *paths;
 
 - (void)clearCanvas;
 
