@@ -510,7 +510,7 @@
 	[self waitForExpectationsWithTimeout:2.0 handler:nil];
 	XCTAssertTrue(called);
 
-	// Neither adding a new async query nor commiting a write transaction should
+	// Neither adding a new async query nor committing a write transaction should
 	// cause it to resend the error
 	XCTestExpectation *exp2 = [self expectationWithDescription:@""];
 	auto token2 = [IntObject.allObjects

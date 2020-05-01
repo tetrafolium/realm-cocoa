@@ -255,7 +255,7 @@ void RLMArrayValidateMatchingObjectType(
 		@throw RLMException(
 			       @"Object cannot be inserted unless the schema is initialized. "
 			       "This can happen if you try to insert objects into a RLMArray / List "
-			       "from a default value or from an overriden unmanaged initializer "
+			       "from a default value or from an overridden unmanaged initializer "
 			       "(`init()`).");
 	}
 	if (![array->_objectClassName

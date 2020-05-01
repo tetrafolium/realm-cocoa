@@ -229,7 +229,7 @@ NSDictionary<NSString *, NSURL *> *pinnedCertificatePaths;
 /// Defaults to 1 minute.
 @property(nonatomic) NSUInteger pingKeepalivePeriod;
 
-/// How long in milliseconds to wait for a reponse to a heartbeat ping before
+/// How long in milliseconds to wait for a response to a heartbeat ping before
 /// concluding that the connection has dropped.
 ///
 /// Shorter values will make connection state change notifications more

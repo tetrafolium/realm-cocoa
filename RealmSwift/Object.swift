@@ -44,7 +44,7 @@ import Realm.Private
  - `Bool`
  - `Date`, `NSDate`
  - `Data`, `NSData`
- - `@objc enum` which has been delcared as conforming to `RealmEnum`.
+ - `@objc enum` which has been declared as conforming to `RealmEnum`.
  - `RealmOptional<Value>` for optional numeric properties
  - `Object` subclasses, to model many-to-one relationships
  - `List<Element>`, to model many-to-many relationships

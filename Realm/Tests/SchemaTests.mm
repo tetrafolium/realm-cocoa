@@ -376,7 +376,7 @@ RLM_ARRAY_TYPE(NotARealClass)
 		// Clean up any existing overridden things
 		for (Class cls : testClasses) {
 			// Ensure that the className method isn't used during schema init
-			// as it may not be overriden yet
+			// as it may not be overridden yet
 			Class metaClass = object_getClass(cls);
 			IMP imp = imp_implementationWithBlock(^{
 				return nil;
@@ -701,7 +701,7 @@ RLM_ARRAY_TYPE(NotARealClass)
 }
 
 - (void)testClassWithDuplicateProperties {
-	// If a property is overriden in a child class it should not be picked up more
+	// If a property is overridden in a child class it should not be picked up more
 	// than once.
 	RLMObjectSchema *firstSchema = [RLMObjectSchema
 	                                schemaForObjectClass:SchemaTestClassWithSingleDuplicateProperty.class];

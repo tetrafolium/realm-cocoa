@@ -1600,7 +1600,7 @@ void QueryBuilder::apply_predicate(NSPredicate *predicate,
 			break;
 
 		case NSOrPredicateType: {
-			// Add all of the subpredicates with ors inbetween.
+			// Add all of the subpredicates with ors between.
 			process_or_group(m_query, comp.subpredicates,
 			                 [&](__unsafe_unretained NSPredicate *const subp) {
 						apply_predicate(subp, objectSchema);

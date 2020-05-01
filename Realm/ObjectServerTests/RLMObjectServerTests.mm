@@ -326,7 +326,7 @@
 	 }];
 	[self waitForExpectationsWithTimeout:2.0 handler:nil];
 
-	// Login attempt should succeeed
+	// Login attempt should succeed
 	timeoutOptions.connectTimeout = 3000.0;
 	RLMSyncManager.sharedManager.timeoutOptions = timeoutOptions;
 
@@ -375,7 +375,7 @@
 	 }];
 	[self waitForExpectationsWithTimeout:2.0 handler:nil];
 
-	// Login attempt should succeeed
+	// Login attempt should succeed
 	ex = [self expectationWithDescription:@"Login should succeed"];
 	[RLMSyncUser logInWithCredentials:credentials
 	 authServerURL:authURL

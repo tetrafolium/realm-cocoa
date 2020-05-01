@@ -223,9 +223,9 @@ static NSDictionary *RLMAnalyticsPayload() {
 	                @"Target OS Type" : @"osx",
 #endif
 	                @"Swift Version" : swiftVersion,
-	                // Current OS version the app is targetting
+	                // Current OS version the app is targeting
 	                @"Target OS Version" : osVersionString,
-	                // Minimum OS version the app is targetting
+	                // Minimum OS version the app is targeting
 	                @"Target OS Minimum Version" :
 	                appBundle.infoDictionary[@"MinimumOSVersion"]
 	  ? : kUnknownString,

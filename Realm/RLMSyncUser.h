@@ -447,10 +447,10 @@ RLMUserErrorReportingBlock errorHandler NS_REFINED_FOR_SWIFT;
 
    A permission offer is used to grant access to a Realm this user manages to
    another user. Creating a permission offer produces a string token which can be
-   passed to the recepient in any suitable way (for example, via e-mail).
+   passed to the recipient in any suitable way (for example, via e-mail).
 
    The operation will take place asynchronously. The token can be accepted by the
-   recepient using the `-[RLMSyncUser acceptOfferForToken:callback:]` method.
+   recipient using the `-[RLMSyncUser acceptOfferForToken:callback:]` method.
 
    @param url             The URL of the Realm for which the permission offer
    should pertain. This may be the URL of any Realm which this user is allowed to
@@ -458,7 +458,7 @@ RLMUserErrorReportingBlock errorHandler NS_REFINED_FOR_SWIFT;
    identity.
    @param accessLevel     What access level to grant to whoever accepts the token.
    @param expirationDate  Optionally, a date which indicates when the offer
-   expires. If the recepient attempts to accept the offer after the date it will
+   expires. If the recipient attempts to accept the offer after the date it will
    be rejected.
    @param callback        A callback indicating whether the operation succeeded or
    failed. If it succeeded the token will be passed in as a string.

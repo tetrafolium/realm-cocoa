@@ -481,9 +481,9 @@ extension SyncUser {
 
      A permission offer is used to grant access to a Realm this user manages to another
      user. Creating a permission offer produces a string token which can be passed to the
-     recepient in any suitable way (for example, via e-mail).
+     recipient in any suitable way (for example, via e-mail).
 
-     The operation will take place asynchronously. The token can be accepted by the recepient
+     The operation will take place asynchronously. The token can be accepted by the recipient
      using the `SyncUser.acceptOffer(forToken:, callback:)` method.
 
      - parameter url: The URL of the Realm for which the permission offer should pertain. This
@@ -491,7 +491,7 @@ extension SyncUser {
                       has a `~` wildcard it will be replaced with this user's user identity.
      - parameter accessLevel: What access level to grant to whoever accepts the token.
      - parameter expiration: Optionally, a date which indicates when the offer expires. If the
-                             recepient attempts to accept the offer after the date it will be rejected.
+                             recipient attempts to accept the offer after the date it will be rejected.
                              If nil, the offer will never expire.
      - parameter callback: A callback indicating whether the operation succeeded or failed. If it
                            succeeded the token will be passed in as a string.
@@ -970,7 +970,7 @@ extension Results {
     /// ---
     ///
     /// The number of top-level objects which are included in the subscription
-    /// can optionally be limited by setting the `limit` paramter. If more
+    /// can optionally be limited by setting the `limit` parameter. If more
     /// top-level objects than the limit match the query, only the first
     /// `limit` objects will be included. This respects the sort and distinct
     /// order of the query being subscribed to for the determination of what the

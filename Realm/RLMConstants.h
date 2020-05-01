@@ -120,7 +120,7 @@ typedef RLM_ERROR_ENUM(NSInteger, RLMError, RLMErrorDomain){
 	RLMErrorFileAccess = 2,
 
 	/**
-	   Denotes a file permission error that ocurred when trying to open a Realm.
+	   Denotes a file permission error that occurred when trying to open a Realm.
 
 	   This error can occur if the user does not have permission to open or create
 	   the specified file in the specified access mode when opening a Realm.

@@ -1047,7 +1047,7 @@
 		         notificationFired = true;
 		 }];
 
-	// dispatch to background syncronously
+	// dispatch to background synchronously
 	[self dispatchAsyncAndWait:^{
 	         RLMRealm *realm = [self realmWithTestPath];
 	         [realm beginWriteTransaction];
