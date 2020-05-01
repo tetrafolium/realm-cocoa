@@ -42,60 +42,60 @@ RLM_ARRAY_TYPE(Dog)
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application
-    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-  self.window.rootViewController = [[UIViewController alloc] init];
-  [self.window makeKeyAndVisible];
+        didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	self.window.rootViewController = [[UIViewController alloc] init];
+	[self.window makeKeyAndVisible];
 
-  [[NSFileManager defaultManager]
-      removeItemAtURL:[RLMRealmConfiguration defaultConfiguration].fileURL
-                error:nil];
+	[[NSFileManager defaultManager]
+	 removeItemAtURL:[RLMRealmConfiguration defaultConfiguration].fileURL
+	 error:nil];
 
-  // Create a standalone object
-  Dog *mydog = [[Dog alloc] init];
+	// Create a standalone object
+	Dog *mydog = [[Dog alloc] init];
 
-  // Set & read properties
-  mydog.name = @"Rex";
-  mydog.age = 9;
-  NSLog(@"Name of dog: %@", mydog.name);
+	// Set & read properties
+	mydog.name = @"Rex";
+	mydog.age = 9;
+	NSLog(@"Name of dog: %@", mydog.name);
 
-  // Realms are used to group data together
-  RLMRealm *realm =
-      [RLMRealm defaultRealm]; // Create realm pointing to default file
+	// Realms are used to group data together
+	RLMRealm *realm =
+		[RLMRealm defaultRealm]; // Create realm pointing to default file
 
-  // Save your object
-  [realm beginWriteTransaction];
-  [realm addObject:mydog];
-  [realm commitWriteTransaction];
+	// Save your object
+	[realm beginWriteTransaction];
+	[realm addObject:mydog];
+	[realm commitWriteTransaction];
 
-  // Query
-  RLMResults *results = [Dog objectsInRealm:realm where:@"name contains 'x'"];
+	// Query
+	RLMResults *results = [Dog objectsInRealm:realm where:@"name contains 'x'"];
 
-  // Queries are chainable!
-  RLMResults *results2 = [results objectsWhere:@"age > 8"];
-  NSLog(@"Number of dogs: %li", (unsigned long)results2.count);
+	// Queries are chainable!
+	RLMResults *results2 = [results objectsWhere:@"age > 8"];
+	NSLog(@"Number of dogs: %li", (unsigned long)results2.count);
 
-  // Link objects
-  Person *person = [[Person alloc] init];
-  person.name = @"Tim";
-  [person.dogs addObject:mydog];
+	// Link objects
+	Person *person = [[Person alloc] init];
+	person.name = @"Tim";
+	[person.dogs addObject:mydog];
 
-  [realm beginWriteTransaction];
-  [realm addObject:person];
-  [realm commitWriteTransaction];
+	[realm beginWriteTransaction];
+	[realm addObject:person];
+	[realm commitWriteTransaction];
 
-  // Multi-threading
-  dispatch_async(
-      dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        @autoreleasepool {
-          RLMRealm *otherRealm = [RLMRealm defaultRealm];
-          RLMResults *otherResults =
-              [Dog objectsInRealm:otherRealm where:@"name contains 'Rex'"];
-          NSLog(@"Number of dogs: %li", (unsigned long)otherResults.count);
-        }
-      });
+	// Multi-threading
+	dispatch_async(
+		dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+		@autoreleasepool {
+		        RLMRealm *otherRealm = [RLMRealm defaultRealm];
+		        RLMResults *otherResults =
+				[Dog objectsInRealm:otherRealm where:@"name contains 'Rex'"];
+		        NSLog(@"Number of dogs: %li", (unsigned long)otherResults.count);
+		}
+	});
 
-  return YES;
+	return YES;
 }
 
 @end

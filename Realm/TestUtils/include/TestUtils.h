@@ -20,6 +20,6 @@
 #import <XCTest/XCTestCase.h>
 
 FOUNDATION_EXTERN void RLMAssertThrowsWithReasonMatchingSwift(
-    XCTestCase *self, __attribute__((noescape)) dispatch_block_t block,
-    NSString *regexString, NSString *message, NSString *fileName,
-    NSUInteger lineNumber);
+	XCTestCase *self, __attribute__((noescape)) dispatch_block_t block,
+	NSString *regexString, NSString *message, NSString *fileName,
+	NSUInteger lineNumber);

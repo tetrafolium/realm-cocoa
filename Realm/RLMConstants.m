@@ -19,9 +19,9 @@
 #import <Realm/RLMConstants.h>
 
 RLMNotification const RLMRealmRefreshRequiredNotification =
-    @"RLMRealmRefreshRequiredNotification";
+	@"RLMRealmRefreshRequiredNotification";
 RLMNotification const RLMRealmDidChangeNotification =
-    @"RLMRealmDidChangeNotification";
+	@"RLMRealmDidChangeNotification";
 
 NSString *const RLMErrorDomain = @"io.realm";
 
@@ -36,4 +36,4 @@ NSString *const RLMRealmCoreVersionKey = @"RLMRealmCoreVersion";
 NSString *const RLMInvalidatedKey = @"invalidated";
 
 NSString *const RLMBackupRealmConfigurationErrorKey =
-    @"RLMBackupRealmConfiguration";
+	@"RLMBackupRealmConfiguration";

@@ -24,10 +24,10 @@ extern "C" {
 
 @class RLMRealm, RLMSchema, RLMObjectBase, RLMResults, RLMProperty;
 
-typedef NS_ENUM(NSUInteger, RLMUpdatePolicy) {
-  RLMUpdatePolicyError = 1,
-  RLMUpdatePolicyUpdateChanged = 3,
-  RLMUpdatePolicyUpdateAll = 2,
+typedef NS_ENUM (NSUInteger, RLMUpdatePolicy) {
+	RLMUpdatePolicyError = 1,
+	RLMUpdatePolicyUpdateChanged = 3,
+	RLMUpdatePolicyUpdateAll = 2,
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -65,8 +65,8 @@ id _Nullable RLMGetObject(RLMRealm *realm, NSString *objectClassName,
 
 // create object from array or dictionary
 RLMObjectBase *RLMCreateObjectInRealmWithValue(
-    RLMRealm *realm, NSString *className, id _Nullable value,
-    RLMUpdatePolicy updatePolicy) NS_RETURNS_RETAINED;
+	RLMRealm *realm, NSString *className, id _Nullable value,
+	RLMUpdatePolicy updatePolicy) NS_RETURNS_RETAINED;
 
 //
 // Accessor Creation

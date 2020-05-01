@@ -25,22 +25,22 @@ namespace realm {
 class SyncSession;
 struct SyncConfig;
 struct SyncError;
-using SyncSessionErrorHandler = void(std::shared_ptr<SyncSession>, SyncError);
+using SyncSessionErrorHandler = void (std::shared_ptr<SyncSession>, SyncError);
 } // namespace realm
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RLMSyncConfiguration ()
 
-- (instancetype)initWithUser:(RLMSyncUser *)user
-                    realmURL:(NSURL *)url
-               customFileURL:(nullable NSURL *)customFileURL
-                   isPartial:(BOOL)isPartial
-                  stopPolicy:(RLMSyncStopPolicy)stopPolicy;
+- (instancetype)initWithUser: (RLMSyncUser *)user
+realmURL: (NSURL *)url
+customFileURL: (nullable NSURL *)customFileURL
+isPartial: (BOOL)isPartial
+stopPolicy: (RLMSyncStopPolicy)stopPolicy;
 
-- (instancetype)initWithRawConfig:(realm::SyncConfig)config;
+-(instancetype)initWithRawConfig: (realm::SyncConfig)config;
 
-- (realm::SyncConfig &)rawConfiguration;
+-(realm::SyncConfig &)rawConfiguration;
 
 @end
 

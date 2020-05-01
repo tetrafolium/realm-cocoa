@@ -52,17 +52,17 @@ static const NSString *const kRLMSyncValueKey = @"value";
 @implementation RLMTokenDataModel
 
 - (instancetype)initWithDictionary:(NSDictionary *)jsonDictionary {
-  if (self = [super init]) {
-    self.isAdmin = NO;
-    RLM_SYNC_PARSE_STRING_OR_ABORT(jsonDictionary, kRLMSyncIdentityKey,
-                                   identity);
-    RLM_SYNC_PARSE_OPTIONAL_STRING(jsonDictionary, kRLMSyncAppIDKey, appID);
-    RLM_SYNC_PARSE_OPTIONAL_STRING(jsonDictionary, kRLMSyncPathKey, path);
-    RLM_SYNC_PARSE_OPTIONAL_BOOL(jsonDictionary, kRLMSyncIsAdminKey, isAdmin);
-    RLM_SYNC_PARSE_DOUBLE_OR_ABORT(jsonDictionary, kRLMSyncExpiresKey, expires);
-    return self;
-  }
-  return nil;
+	if (self = [super init]) {
+		self.isAdmin = NO;
+		RLM_SYNC_PARSE_STRING_OR_ABORT(jsonDictionary, kRLMSyncIdentityKey,
+		                               identity);
+		RLM_SYNC_PARSE_OPTIONAL_STRING(jsonDictionary, kRLMSyncAppIDKey, appID);
+		RLM_SYNC_PARSE_OPTIONAL_STRING(jsonDictionary, kRLMSyncPathKey, path);
+		RLM_SYNC_PARSE_OPTIONAL_BOOL(jsonDictionary, kRLMSyncIsAdminKey, isAdmin);
+		RLM_SYNC_PARSE_DOUBLE_OR_ABORT(jsonDictionary, kRLMSyncExpiresKey, expires);
+		return self;
+	}
+	return nil;
 }
 
 @end
@@ -80,14 +80,14 @@ static const NSString *const kRLMSyncValueKey = @"value";
 @implementation RLMTokenModel
 
 - (instancetype)initWithDictionary:(NSDictionary *)jsonDictionary {
-  if (self = [super init]) {
-    RLM_SYNC_PARSE_STRING_OR_ABORT(jsonDictionary, kRLMSyncTokenKey, token);
-    RLM_SYNC_PARSE_OPTIONAL_STRING(jsonDictionary, kRLMSyncPathKey, path);
-    RLM_SYNC_PARSE_MODEL_OR_ABORT(jsonDictionary, kRLMSyncTokenDataKey,
-                                  RLMTokenDataModel, tokenData);
-    return self;
-  }
-  return nil;
+	if (self = [super init]) {
+		RLM_SYNC_PARSE_STRING_OR_ABORT(jsonDictionary, kRLMSyncTokenKey, token);
+		RLM_SYNC_PARSE_OPTIONAL_STRING(jsonDictionary, kRLMSyncPathKey, path);
+		RLM_SYNC_PARSE_MODEL_OR_ABORT(jsonDictionary, kRLMSyncTokenDataKey,
+		                              RLMTokenDataModel, tokenData);
+		return self;
+	}
+	return nil;
 }
 
 @end
@@ -105,29 +105,29 @@ static const NSString *const kRLMSyncValueKey = @"value";
 @implementation RLMAuthResponseModel
 
 - (instancetype)initWithDictionary:(NSDictionary *)jsonDictionary
-                requireAccessToken:(BOOL)requireAccessToken
-               requireRefreshToken:(BOOL)requireRefreshToken {
-  if (self = [super init]) {
-    // Get the access token.
-    if (requireAccessToken) {
-      RLM_SYNC_PARSE_MODEL_OR_ABORT(jsonDictionary, kRLMSyncAccessTokenKey,
-                                    RLMTokenModel, accessToken);
-    } else {
-      RLM_SYNC_PARSE_OPTIONAL_MODEL(jsonDictionary, kRLMSyncAccessTokenKey,
-                                    RLMTokenModel, accessToken);
-    }
-    // Get the refresh token.
-    if (requireRefreshToken) {
-      RLM_SYNC_PARSE_MODEL_OR_ABORT(jsonDictionary, kRLMSyncRefreshTokenKey,
-                                    RLMTokenModel, refreshToken);
-    } else {
-      RLM_SYNC_PARSE_OPTIONAL_MODEL(jsonDictionary, kRLMSyncRefreshTokenKey,
-                                    RLMTokenModel, refreshToken);
-    }
-    self.urlPrefix = jsonDictionary[@"sync_worker"][@"path"];
-    return self;
-  }
-  return nil;
+        requireAccessToken:(BOOL)requireAccessToken
+        requireRefreshToken:(BOOL)requireRefreshToken {
+	if (self = [super init]) {
+		// Get the access token.
+		if (requireAccessToken) {
+			RLM_SYNC_PARSE_MODEL_OR_ABORT(jsonDictionary, kRLMSyncAccessTokenKey,
+			                              RLMTokenModel, accessToken);
+		} else {
+			RLM_SYNC_PARSE_OPTIONAL_MODEL(jsonDictionary, kRLMSyncAccessTokenKey,
+			                              RLMTokenModel, accessToken);
+		}
+		// Get the refresh token.
+		if (requireRefreshToken) {
+			RLM_SYNC_PARSE_MODEL_OR_ABORT(jsonDictionary, kRLMSyncRefreshTokenKey,
+			                              RLMTokenModel, refreshToken);
+		} else {
+			RLM_SYNC_PARSE_OPTIONAL_MODEL(jsonDictionary, kRLMSyncRefreshTokenKey,
+			                              RLMTokenModel, refreshToken);
+		}
+		self.urlPrefix = jsonDictionary[@"sync_worker"][@"path"];
+		return self;
+	}
+	return nil;
 }
 
 @end
@@ -142,14 +142,14 @@ static const NSString *const kRLMSyncValueKey = @"value";
 @implementation RLMSyncUserAccountInfo
 
 - (instancetype)initWithDictionary:(NSDictionary *)jsonDictionary {
-  if (self = [super init]) {
-    RLM_SYNC_PARSE_STRING_OR_ABORT(jsonDictionary, kRLMSyncProviderKey,
-                                   provider);
-    RLM_SYNC_PARSE_STRING_OR_ABORT(jsonDictionary, kRLMSyncProviderIDKey,
-                                   providerUserIdentity);
-    return self;
-  }
-  return nil;
+	if (self = [super init]) {
+		RLM_SYNC_PARSE_STRING_OR_ABORT(jsonDictionary, kRLMSyncProviderKey,
+		                               provider);
+		RLM_SYNC_PARSE_STRING_OR_ABORT(jsonDictionary, kRLMSyncProviderIDKey,
+		                               providerUserIdentity);
+		return self;
+	}
+	return nil;
 }
 
 @end
@@ -166,37 +166,37 @@ static const NSString *const kRLMSyncValueKey = @"value";
 @implementation RLMUserResponseModel
 
 - (void)parseMetadataFromJSON:(NSDictionary *)jsonDictionary {
-  NSMutableDictionary *buffer = [NSMutableDictionary dictionary];
-  NSArray *metadataArray = jsonDictionary[kRLMSyncMetadataKey];
-  if (![metadataArray isKindOfClass:[NSArray class]]) {
-    self.metadata = @{};
-    return;
-  }
-  for (NSDictionary *object in metadataArray) {
-    if (![object isKindOfClass:[NSDictionary class]]) {
-      continue;
-    }
-    NSString *key = object[kRLMSyncKeyKey];
-    NSString *value = object[kRLMSyncValueKey];
-    if (!key || !value) {
-      continue;
-    }
-    buffer[key] = value;
-  }
-  self.metadata = [buffer copy];
+	NSMutableDictionary *buffer = [NSMutableDictionary dictionary];
+	NSArray *metadataArray = jsonDictionary[kRLMSyncMetadataKey];
+	if (![metadataArray isKindOfClass:[NSArray class]]) {
+		self.metadata = @{};
+		return;
+	}
+	for (NSDictionary *object in metadataArray) {
+		if (![object isKindOfClass:[NSDictionary class]]) {
+			continue;
+		}
+		NSString *key = object[kRLMSyncKeyKey];
+		NSString *value = object[kRLMSyncValueKey];
+		if (!key || !value) {
+			continue;
+		}
+		buffer[key] = value;
+	}
+	self.metadata = [buffer copy];
 }
 
 - (instancetype)initWithDictionary:(NSDictionary *)jsonDictionary {
-  if (self = [super init]) {
-    self.isAdmin = NO;
-    RLM_SYNC_PARSE_STRING_OR_ABORT(jsonDictionary, kRLMSyncUserIDKey, identity);
-    RLM_SYNC_PARSE_OPTIONAL_BOOL(jsonDictionary, kRLMSyncIsAdminKey, isAdmin);
-    RLM_SYNC_PARSE_MODEL_ARRAY_OR_ABORT(jsonDictionary, kRLMSyncAccountsKey,
-                                        RLMSyncUserAccountInfo, accounts);
-    [self parseMetadataFromJSON:jsonDictionary];
-    return self;
-  }
-  return nil;
+	if (self = [super init]) {
+		self.isAdmin = NO;
+		RLM_SYNC_PARSE_STRING_OR_ABORT(jsonDictionary, kRLMSyncUserIDKey, identity);
+		RLM_SYNC_PARSE_OPTIONAL_BOOL(jsonDictionary, kRLMSyncIsAdminKey, isAdmin);
+		RLM_SYNC_PARSE_MODEL_ARRAY_OR_ABORT(jsonDictionary, kRLMSyncAccountsKey,
+		                                    RLMSyncUserAccountInfo, accounts);
+		[self parseMetadataFromJSON:jsonDictionary];
+		return self;
+	}
+	return nil;
 }
 
 @end
@@ -215,32 +215,32 @@ static const NSString *const kRLMSyncValueKey = @"value";
 @implementation RLMSyncErrorResponseModel
 
 - (instancetype)initWithDictionary:(NSDictionary *)jsonDictionary {
-  if (self = [super init]) {
-    RLM_SYNC_PARSE_DOUBLE_OR_ABORT(jsonDictionary, kRLMSyncErrorStatusKey,
-                                   status);
-    RLM_SYNC_PARSE_DOUBLE_OR_ABORT(jsonDictionary, kRLMSyncErrorCodeKey, code);
-    RLM_SYNC_PARSE_OPTIONAL_STRING(jsonDictionary, kRLMSyncErrorTitleKey,
-                                   title);
-    RLM_SYNC_PARSE_OPTIONAL_STRING(jsonDictionary, kRLMSyncErrorHintKey, hint);
+	if (self = [super init]) {
+		RLM_SYNC_PARSE_DOUBLE_OR_ABORT(jsonDictionary, kRLMSyncErrorStatusKey,
+		                               status);
+		RLM_SYNC_PARSE_DOUBLE_OR_ABORT(jsonDictionary, kRLMSyncErrorCodeKey, code);
+		RLM_SYNC_PARSE_OPTIONAL_STRING(jsonDictionary, kRLMSyncErrorTitleKey,
+		                               title);
+		RLM_SYNC_PARSE_OPTIONAL_STRING(jsonDictionary, kRLMSyncErrorHintKey, hint);
 
-    NSString *detail = jsonDictionary[@"detail"];
-    if ([detail isKindOfClass:[NSString class]]) {
-      _title = detail;
-    }
+		NSString *detail = jsonDictionary[@"detail"];
+		if ([detail isKindOfClass:[NSString class]]) {
+			_title = detail;
+		}
 
-    for (NSDictionary<NSString *, NSString *>
-             *problem in jsonDictionary[@"invalid_params"]) {
-      NSString *name = problem[@"name"];
-      NSString *reason = problem[@"reason"];
-      if (name && reason) {
-        _title =
-            [NSString stringWithFormat:@"%@ %@: %@;", _title, name, reason];
-      }
-    }
+		for (NSDictionary<NSString *, NSString *>
+		     *problem in jsonDictionary[@"invalid_params"]) {
+			NSString *name = problem[@"name"];
+			NSString *reason = problem[@"reason"];
+			if (name && reason) {
+				_title =
+					[NSString stringWithFormat:@"%@ %@: %@;", _title, name, reason];
+			}
+		}
 
-    return self;
-  }
-  return nil;
+		return self;
+	}
+	return nil;
 }
 
 @end

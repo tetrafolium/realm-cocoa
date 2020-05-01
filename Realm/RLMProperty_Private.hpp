@@ -27,8 +27,8 @@ struct Property;
 @interface RLMProperty ()
 
 + (instancetype)propertyForObjectStoreProperty:
-    (const realm::Property &)property;
+(const realm::Property &)property;
 
-- (realm::Property)objectStoreCopy:(RLMSchema *)schema;
+-(realm::Property)objectStoreCopy: (RLMSchema *)schema;
 
 @end

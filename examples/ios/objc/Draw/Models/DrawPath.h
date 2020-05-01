@@ -23,7 +23,7 @@
 @interface DrawPath : RLMObject
 
 @property BOOL
-    completed; // Set to YES once the user stops drawing this particular line
+        completed; // Set to YES once the user stops drawing this particular line
 @property NSString *color; // The name of the color that this path is drawn in
 @property RLMArray<DrawPoint *><DrawPoint> *points;
 

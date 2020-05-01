@@ -21,11 +21,11 @@
 @implementation Repository
 
 + (NSString *)primaryKey {
-  return @"identifier";
+	return @"identifier";
 }
 
 + (NSArray<NSString *> *)requiredProperties {
-  return @[ @"identifier" ];
+	return @[ @"identifier" ];
 }
 
 @end

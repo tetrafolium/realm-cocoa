@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - RLMTokenModel
 
 @interface RLMTokenModel : NSObject
-RLM_SYNC_UNINITIALIZABLE
+	        RLM_SYNC_UNINITIALIZABLE
 
 @property(nonatomic, readonly) NSString *token;
 @property(nonatomic, nullable, readonly) NSString *path;
@@ -40,7 +40,7 @@ RLM_SYNC_UNINITIALIZABLE
 #pragma mark - RLMTokenDataModel
 
 @interface RLMTokenDataModel : NSObject
-RLM_SYNC_UNINITIALIZABLE
+	        RLM_SYNC_UNINITIALIZABLE
 
 @property(nonatomic, readonly) NSString *identity;
 @property(nonatomic, nullable, readonly) NSString *appID;
@@ -55,32 +55,32 @@ RLM_SYNC_UNINITIALIZABLE
 #pragma mark - RLMAuthResponseModel
 
 /**
- An internal class representing a valid JSON response to an auth request.
+   An internal class representing a valid JSON response to an auth request.
 
- ```
- {
- "access_token": { ... } // (optional),
- "refresh_token": { ... } // (optional)
- }
- ```
+   ```
+   {
+   "access_token": { ... } // (optional),
+   "refresh_token": { ... } // (optional)
+   }
+   ```
  */
 @interface RLMAuthResponseModel : NSObject
-RLM_SYNC_UNINITIALIZABLE
+	        RLM_SYNC_UNINITIALIZABLE
 
 @property(nonatomic, readonly, nullable) RLMTokenModel *accessToken;
 @property(nonatomic, readonly, nullable) RLMTokenModel *refreshToken;
 @property(nonatomic, readonly, nullable) NSString *urlPrefix;
 
 - (instancetype)initWithDictionary:(NSDictionary *)jsonDictionary
-                requireAccessToken:(BOOL)requireAccessToken
-               requireRefreshToken:(BOOL)requireRefreshToken;
+        requireAccessToken:(BOOL)requireAccessToken
+        requireRefreshToken:(BOOL)requireRefreshToken;
 
 @end
 
 #pragma mark - RLMUserInfoResponseModel
 
 @interface RLMUserResponseModel : NSObject
-RLM_SYNC_UNINITIALIZABLE
+	        RLM_SYNC_UNINITIALIZABLE
 
 @property(nonatomic, readonly) NSString *identity;
 @property(nonatomic, readonly) NSArray<RLMSyncUserAccountInfo *> *accounts;
@@ -94,7 +94,7 @@ RLM_SYNC_UNINITIALIZABLE
 #pragma mark - RLMSyncErrorResponseModel
 
 @interface RLMSyncErrorResponseModel : NSObject
-RLM_SYNC_UNINITIALIZABLE
+	        RLM_SYNC_UNINITIALIZABLE
 
 @property(nonatomic, readonly) NSInteger status;
 @property(nonatomic, readonly) NSInteger code;

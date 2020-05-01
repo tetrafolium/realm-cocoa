@@ -21,40 +21,40 @@
 
 // Old data models
 /* V0
-@interface Person : RLMObject
-@property NSString *firstName;
-@property NSString *lastName;
-@property int age;
-@end
+   @interface Person : RLMObject
+   @property NSString *firstName;
+   @property NSString *lastName;
+   @property int age;
+   @end
  */
 
 /* V1
-@interface Person : RLMObject
-@property NSString *fullName;   // combine firstName and lastName into single
-field
-@property int age;
-@end
-*/
+   @interface Person : RLMObject
+   @property NSString *fullName;   // combine firstName and lastName into single
+   field
+   @property int age;
+   @end
+ */
 
 /* V2
-@interface Pet : RLMObject      // add a new model class
-@property NSString *name;
-@property NSString *type;
-@end
-RLM_ARRAY_TYPE(Pet)
+   @interface Pet : RLMObject      // add a new model class
+   @property NSString *name;
+   @property NSString *type;
+   @end
+   RLM_ARRAY_TYPE(Pet)
 
-@interface Person : RLMObject
-@property NSString *fullName;
-@property RLMArray<Pet> *pets;  // add and array property
-@property int age;
-@end
-*/
+   @interface Person : RLMObject
+   @property NSString *fullName;
+   @property RLMArray<Pet> *pets;  // add and array property
+   @property int age;
+   @end
+ */
 
 /* V3 */
-typedef NS_ENUM(NSInteger, AnimalType) {
-  AnimalTypeDog = 1,
-  AnimalTypeCat,
-  AnimalTypeHamster,
+typedef NS_ENUM (NSInteger, AnimalType) {
+	AnimalTypeDog = 1,
+	AnimalTypeCat,
+	AnimalTypeHamster,
 };
 
 @interface Pet : RLMObject

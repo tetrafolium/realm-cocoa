@@ -25,43 +25,43 @@ class RLMClassInfo;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RLMResults () {
-@protected
-  realm::Results _results;
+	@protected
+	realm::Results _results;
 }
 
 /**
- Initialize a 'raw' `RLMResults` using only an object store level Results.
- This is only meant for applications where a results collection is being backed
- by an object store object class that has no binding-level equivalent. The
- consumer is responsible for bridging between the underlying objects and
- whatever binding-level class is being vended out.
+   Initialize a 'raw' `RLMResults` using only an object store level Results.
+   This is only meant for applications where a results collection is being backed
+   by an object store object class that has no binding-level equivalent. The
+   consumer is responsible for bridging between the underlying objects and
+   whatever binding-level class is being vended out.
  */
-- (instancetype)initWithResults:(realm::Results)results;
+-(instancetype)initWithResults: (realm::Results)results;
 
-- (instancetype)initWithObjectInfo:(RLMClassInfo &)info
-                           results:(realm::Results &&)results;
-+ (instancetype)resultsWithObjectInfo:(RLMClassInfo &)info
-                              results:(realm::Results &&)results;
+-(instancetype)initWithObjectInfo: (RLMClassInfo &)info
+results: (realm::Results &&)results;
++(instancetype)resultsWithObjectInfo: (RLMClassInfo &)info
+results: (realm::Results &&)results;
 
-- (instancetype)subresultsWithResults:(realm::Results)results;
+-(instancetype)subresultsWithResults: (realm::Results)results;
 @end
 
-NS_ASSUME_NONNULL_END
+        NS_ASSUME_NONNULL_END
 
-    // Utility functions
+// Utility functions
 
-    [[gnu::noinline]] [[noreturn]] void
-    RLMThrowResultsError(NSString *_Nullable aggregateMethod);
+[[gnu::noinline]] [[noreturn]] void
+RLMThrowResultsError(NSString *_Nullable aggregateMethod);
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnullability-completeness"
 template <typename Function>
 static auto translateRLMResultsErrors(Function &&f,
                                       NSString *aggregateMethod = nil) {
-  try {
-    return f();
-  } catch (...) {
-    RLMThrowResultsError(aggregateMethod);
-  }
+	try {
+		return f();
+	} catch (...) {
+		RLMThrowResultsError(aggregateMethod);
+	}
 }
 #pragma clang diagnostic pop

@@ -21,15 +21,15 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class RLMProperty, RLMArray;
-typedef NS_ENUM(int32_t, RLMPropertyType);
+typedef NS_ENUM (int32_t, RLMPropertyType);
 
 FOUNDATION_EXTERN void RLMInitializeWithValue(RLMObjectBase *, id, RLMSchema *);
 
 // RLMObject accessor and read/write realm
 @interface RLMObjectBase () {
-@public
-  RLMRealm *_realm;
-  __unsafe_unretained RLMObjectSchema *_objectSchema;
+	@public
+	RLMRealm *_realm;
+	__unsafe_unretained RLMObjectSchema *_objectSchema;
 }
 
 // shared schema for this class
@@ -46,16 +46,16 @@ FOUNDATION_EXTERN void RLMInitializeWithValue(RLMObjectBase *, id, RLMSchema *);
 
 // Calls valueForKey: and re-raises NSUndefinedKeyExceptions
 FOUNDATION_EXTERN
-    id _Nullable RLMValidatedValueForProperty(id object, NSString *key,
-                                              NSString *className);
+id _Nullable RLMValidatedValueForProperty(id object, NSString *key,
+                                          NSString *className);
 
 // Compare two RLObjectBases
 FOUNDATION_EXTERN BOOL RLMObjectBaseAreEqual(RLMObjectBase *_Nullable o1,
                                              RLMObjectBase *_Nullable o2);
 
 typedef void (^RLMObjectNotificationCallback)(
-    NSArray<NSString *> *_Nullable propertyNames, NSArray *_Nullable oldValues,
-    NSArray *_Nullable newValues, NSError *_Nullable error);
+	NSArray<NSString *> *_Nullable propertyNames, NSArray *_Nullable oldValues,
+	NSArray *_Nullable newValues, NSError *_Nullable error);
 FOUNDATION_EXTERN RLMNotificationToken *
 RLMObjectAddNotificationBlock(RLMObjectBase *obj,
                               RLMObjectNotificationCallback block);
@@ -70,8 +70,8 @@ FOUNDATION_EXTERN const NSUInteger RLMDescriptionMaxDepth;
 
 @interface RLMManagedPropertyAccessor : NSObject
 + (void)initializeObject:(void *)object
-                  parent:(RLMObjectBase *)parent
-                property:(RLMProperty *)property;
+        parent:(RLMObjectBase *)parent
+        property:(RLMProperty *)property;
 + (id)get:(void *)pointer;
 @end
 

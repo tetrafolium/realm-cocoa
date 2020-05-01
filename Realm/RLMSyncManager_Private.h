@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface RLMSyncManager ()
 
 @property(nullable, nonatomic, copy)
-    RLMSyncBasicErrorReportingBlock sessionCompletionNotifier;
+RLMSyncBasicErrorReportingBlock sessionCompletionNotifier;
 
 - (void)_fireError:(NSError *)error;
 

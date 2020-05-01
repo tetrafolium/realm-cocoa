@@ -52,185 +52,185 @@
 #pragma mark - Designated Initializers
 
 - (instancetype)init {
-  return [super init];
+	return [super init];
 }
 
 #pragma mark - Convenience Initializers
 
 - (instancetype)initWithValue:(id)value {
-  if (!(self = [self init])) {
-    return nil;
-  }
-  RLMInitializeWithValue(self, value, RLMSchema.partialPrivateSharedSchema);
-  return self;
+	if (!(self = [self init])) {
+		return nil;
+	}
+	RLMInitializeWithValue(self, value, RLMSchema.partialPrivateSharedSchema);
+	return self;
 }
 
 #pragma mark - Class-based Object Creation
 
 + (instancetype)createInDefaultRealmWithValue:(id)value {
-  return (RLMObject *)RLMCreateObjectInRealmWithValue(
-      [RLMRealm defaultRealm], [self className], value, RLMUpdatePolicyError);
+	return (RLMObject *)RLMCreateObjectInRealmWithValue(
+		[RLMRealm defaultRealm], [self className], value, RLMUpdatePolicyError);
 }
 
 + (instancetype)createInRealm:(RLMRealm *)realm withValue:(id)value {
-  return (RLMObject *)RLMCreateObjectInRealmWithValue(
-      realm, [self className], value, RLMUpdatePolicyError);
+	return (RLMObject *)RLMCreateObjectInRealmWithValue(
+		realm, [self className], value, RLMUpdatePolicyError);
 }
 
 + (instancetype)createOrUpdateInDefaultRealmWithValue:(id)value {
-  return [self createOrUpdateInRealm:[RLMRealm defaultRealm] withValue:value];
+	return [self createOrUpdateInRealm:[RLMRealm defaultRealm] withValue:value];
 }
 
 + (instancetype)createOrUpdateModifiedInDefaultRealmWithValue:(id)value {
-  return [self createOrUpdateModifiedInRealm:[RLMRealm defaultRealm]
-                                   withValue:value];
+	return [self createOrUpdateModifiedInRealm:[RLMRealm defaultRealm]
+	        withValue:value];
 }
 
 + (instancetype)createOrUpdateInRealm:(RLMRealm *)realm withValue:(id)value {
-  RLMVerifyHasPrimaryKey(self);
-  return (RLMObject *)RLMCreateObjectInRealmWithValue(
-      realm, [self className], value, RLMUpdatePolicyUpdateAll);
+	RLMVerifyHasPrimaryKey(self);
+	return (RLMObject *)RLMCreateObjectInRealmWithValue(
+		realm, [self className], value, RLMUpdatePolicyUpdateAll);
 }
 
 + (instancetype)createOrUpdateModifiedInRealm:(RLMRealm *)realm
-                                    withValue:(id)value {
-  RLMVerifyHasPrimaryKey(self);
-  return (RLMObject *)RLMCreateObjectInRealmWithValue(
-      realm, [self className], value, RLMUpdatePolicyUpdateChanged);
+        withValue:(id)value {
+	RLMVerifyHasPrimaryKey(self);
+	return (RLMObject *)RLMCreateObjectInRealmWithValue(
+		realm, [self className], value, RLMUpdatePolicyUpdateChanged);
 }
 
 #pragma mark - Subscripting
 
 - (id)objectForKeyedSubscript:(NSString *)key {
-  return RLMObjectBaseObjectForKeyedSubscript(self, key);
+	return RLMObjectBaseObjectForKeyedSubscript(self, key);
 }
 
 - (void)setObject:(id)obj forKeyedSubscript:(NSString *)key {
-  RLMObjectBaseSetObjectForKeyedSubscript(self, key, obj);
+	RLMObjectBaseSetObjectForKeyedSubscript(self, key, obj);
 }
 
 #pragma mark - Getting & Querying
 
 + (RLMResults *)allObjects {
-  return RLMGetObjects(RLMRealm.defaultRealm, self.className, nil);
+	return RLMGetObjects(RLMRealm.defaultRealm, self.className, nil);
 }
 
 + (RLMResults *)allObjectsInRealm:(__unsafe_unretained RLMRealm *const)realm {
-  return RLMGetObjects(realm, self.className, nil);
+	return RLMGetObjects(realm, self.className, nil);
 }
 
 + (RLMResults *)objectsWhere:(NSString *)predicateFormat, ... {
-  va_list args;
-  va_start(args, predicateFormat);
-  RLMResults *results = [self objectsWhere:predicateFormat args:args];
-  va_end(args);
-  return results;
+	va_list args;
+	va_start(args, predicateFormat);
+	RLMResults *results = [self objectsWhere:predicateFormat args:args];
+	va_end(args);
+	return results;
 }
 
 + (RLMResults *)objectsWhere:(NSString *)predicateFormat args:(va_list)args {
-  return [self
-      objectsWithPredicate:[NSPredicate predicateWithFormat:predicateFormat
-                                                  arguments:args]];
+	return [self
+	        objectsWithPredicate:[NSPredicate predicateWithFormat:predicateFormat
+	                              arguments:args]];
 }
 
 + (RLMResults *)objectsInRealm:(RLMRealm *)realm
-                         where:(NSString *)predicateFormat, ... {
-  va_list args;
-  va_start(args, predicateFormat);
-  RLMResults *results = [self objectsInRealm:realm
-                                       where:predicateFormat
-                                        args:args];
-  va_end(args);
-  return results;
+        where:(NSString *)predicateFormat, ... {
+	va_list args;
+	va_start(args, predicateFormat);
+	RLMResults *results = [self objectsInRealm:realm
+	                       where:predicateFormat
+	                       args:args];
+	va_end(args);
+	return results;
 }
 
 + (RLMResults *)objectsInRealm:(RLMRealm *)realm
-                         where:(NSString *)predicateFormat
-                          args:(va_list)args {
-  return [self objectsInRealm:realm
-                withPredicate:[NSPredicate predicateWithFormat:predicateFormat
-                                                     arguments:args]];
+        where:(NSString *)predicateFormat
+        args:(va_list)args {
+	return [self objectsInRealm:realm
+	        withPredicate:[NSPredicate predicateWithFormat:predicateFormat
+	                       arguments:args]];
 }
 
 + (RLMResults *)objectsWithPredicate:(NSPredicate *)predicate {
-  return RLMGetObjects(RLMRealm.defaultRealm, self.className, predicate);
+	return RLMGetObjects(RLMRealm.defaultRealm, self.className, predicate);
 }
 
 + (RLMResults *)objectsInRealm:(RLMRealm *)realm
-                 withPredicate:(NSPredicate *)predicate {
-  return RLMGetObjects(realm, self.className, predicate);
+        withPredicate:(NSPredicate *)predicate {
+	return RLMGetObjects(realm, self.className, predicate);
 }
 
 + (instancetype)objectForPrimaryKey:(id)primaryKey {
-  return RLMGetObject(RLMRealm.defaultRealm, self.className, primaryKey);
+	return RLMGetObject(RLMRealm.defaultRealm, self.className, primaryKey);
 }
 
 + (instancetype)objectInRealm:(RLMRealm *)realm forPrimaryKey:(id)primaryKey {
-  return RLMGetObject(realm, self.className, primaryKey);
+	return RLMGetObject(realm, self.className, primaryKey);
 }
 
 #pragma mark - Other Instance Methods
 
 - (BOOL)isEqualToObject:(RLMObject *)object {
-  return [object isKindOfClass:RLMObject.class] &&
-         RLMObjectBaseAreEqual(self, object);
+	return [object isKindOfClass:RLMObject.class] &&
+	       RLMObjectBaseAreEqual(self, object);
 }
 
 - (RLMNotificationToken *)addNotificationBlock:(RLMObjectChangeBlock)block {
-  return RLMObjectAddNotificationBlock(
-      self, ^(NSArray<NSString *> *propertyNames, NSArray *oldValues,
-              NSArray *newValues, NSError *error) {
-        if (error) {
-          block(false, nil, error);
-        } else if (!propertyNames) {
-          block(true, nil, nil);
-        } else {
-          auto properties =
-              [NSMutableArray arrayWithCapacity:propertyNames.count];
-          for (NSUInteger i = 0, count = propertyNames.count; i < count; ++i) {
-            auto prop = [RLMPropertyChange new];
-            prop.name = propertyNames[i];
-            prop.previousValue = RLMCoerceToNil(oldValues[i]);
-            prop.value = RLMCoerceToNil(newValues[i]);
-            [properties addObject:prop];
-          }
-          block(false, properties, nil);
-        }
-      });
+	return RLMObjectAddNotificationBlock(
+		self, ^(NSArray<NSString *> *propertyNames, NSArray *oldValues,
+		        NSArray *newValues, NSError *error) {
+		if (error) {
+		        block(false, nil, error);
+		} else if (!propertyNames) {
+		        block(true, nil, nil);
+		} else {
+		        auto properties =
+				[NSMutableArray arrayWithCapacity:propertyNames.count];
+		        for (NSUInteger i = 0, count = propertyNames.count; i < count; ++i) {
+		                auto prop = [RLMPropertyChange new];
+		                prop.name = propertyNames[i];
+		                prop.previousValue = RLMCoerceToNil(oldValues[i]);
+		                prop.value = RLMCoerceToNil(newValues[i]);
+		                [properties addObject:prop];
+			}
+		        block(false, properties, nil);
+		}
+	});
 }
 
 + (NSString *)className {
-  return [super className];
+	return [super className];
 }
 
 #pragma mark - Default values for schema definition
 
 + (NSArray *)indexedProperties {
-  return @[];
+	return @[];
 }
 
 + (NSDictionary *)linkingObjectsProperties {
-  return @{};
+	return @{};
 }
 
 + (NSDictionary *)defaultPropertyValues {
-  return nil;
+	return nil;
 }
 
 + (NSString *)primaryKey {
-  return nil;
+	return nil;
 }
 
 + (NSArray *)ignoredProperties {
-  return nil;
+	return nil;
 }
 
 + (NSArray *)requiredProperties {
-  return @[];
+	return @[];
 }
 
 + (bool)_realmIgnoreClass {
-  return false;
+	return false;
 }
 
 @end
@@ -238,147 +238,147 @@
 @implementation RLMDynamicObject
 
 + (bool)_realmIgnoreClass {
-  return true;
+	return true;
 }
 
 + (BOOL)shouldIncludeInDefaultSchema {
-  return NO;
+	return NO;
 }
 
 - (id)valueForUndefinedKey:(NSString *)key {
-  return RLMDynamicGetByName(self, key);
+	return RLMDynamicGetByName(self, key);
 }
 
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key {
-  RLMDynamicValidatedSet(self, key, value);
+	RLMDynamicValidatedSet(self, key, value);
 }
 
 + (RLMObjectSchema *)sharedSchema {
-  return nil;
+	return nil;
 }
 
 @end
 
 BOOL RLMIsObjectOrSubclass(Class klass) {
-  return RLMIsKindOfClass(klass, RLMObjectBase.class);
+	return RLMIsKindOfClass(klass, RLMObjectBase.class);
 }
 
 BOOL RLMIsObjectSubclass(Class klass) {
-  return RLMIsKindOfClass(class_getSuperclass(class_getSuperclass(klass)),
-                          RLMObjectBase.class);
+	return RLMIsKindOfClass(class_getSuperclass(class_getSuperclass(klass)),
+	                        RLMObjectBase.class);
 }
 
 @interface RLMObjectNotificationToken : RLMCancellationToken
 @end
 @implementation RLMObjectNotificationToken {
-@public
-  realm::Object _object;
+	@public
+	realm::Object _object;
 }
 @end
 
 RLMNotificationToken *
 RLMObjectAddNotificationBlock(RLMObjectBase *obj,
                               RLMObjectNotificationCallback block) {
-  if (!obj->_realm) {
-    @throw RLMException(@"Only objects which are managed by a Realm support "
-                        @"change notifications");
-  }
-  [obj->_realm verifyNotificationsAreSupported:true];
+	if (!obj->_realm) {
+		@throw RLMException(@"Only objects which are managed by a Realm support "
+		                    @"change notifications");
+	}
+	[obj->_realm verifyNotificationsAreSupported:true];
 
-  struct {
-    void (^block)(NSArray<NSString *> *, NSArray *, NSArray *, NSError *);
-    RLMObjectBase *object;
+	struct {
+		void (^block)(NSArray<NSString *> *, NSArray *, NSArray *, NSError *);
+		RLMObjectBase *object;
 
-    NSArray<NSString *> *propertyNames = nil;
-    NSArray *oldValues = nil;
-    bool deleted = false;
+		NSArray<NSString *> *propertyNames = nil;
+		NSArray *oldValues = nil;
+		bool deleted = false;
 
-    void populateProperties(realm::CollectionChangeSet const &c) {
-      if (propertyNames) {
-        return;
-      }
-      if (!c.deletions.empty()) {
-        deleted = true;
-        return;
-      }
-      if (c.columns.empty()) {
-        return;
-      }
+		void populateProperties(realm::CollectionChangeSet const &c) {
+			if (propertyNames) {
+				return;
+			}
+			if (!c.deletions.empty()) {
+				deleted = true;
+				return;
+			}
+			if (c.columns.empty()) {
+				return;
+			}
 
-      auto properties = [NSMutableArray new];
-      for (size_t i = 0; i < c.columns.size(); ++i) {
-        if (c.columns[i].empty()) {
-          continue;
-        }
-        if (auto prop = object->_info->propertyForTableColumn(i)) {
-          [properties addObject:prop.name];
-        }
-      }
-      if (properties.count) {
-        propertyNames = properties;
-      }
-    }
+			auto properties = [NSMutableArray new];
+			for (size_t i = 0; i < c.columns.size(); ++i) {
+				if (c.columns[i].empty()) {
+					continue;
+				}
+				if (auto prop = object->_info->propertyForTableColumn(i)) {
+					[properties addObject:prop.name];
+				}
+			}
+			if (properties.count) {
+				propertyNames = properties;
+			}
+		}
 
-    NSArray *readValues(realm::CollectionChangeSet const &c) {
-      if (c.empty()) {
-        return nil;
-      }
-      populateProperties(c);
-      if (!propertyNames) {
-        return nil;
-      }
+		NSArray *readValues(realm::CollectionChangeSet const &c) {
+			if (c.empty()) {
+				return nil;
+			}
+			populateProperties(c);
+			if (!propertyNames) {
+				return nil;
+			}
 
-      auto values = [NSMutableArray arrayWithCapacity:propertyNames.count];
-      for (NSString *name in propertyNames) {
-        id value = [object valueForKey:name];
-        if (!value || [value isKindOfClass:[RLMArray class]]) {
-          [values addObject:NSNull.null];
-        } else {
-          [values addObject:value];
-        }
-      }
-      return values;
-    }
+			auto values = [NSMutableArray arrayWithCapacity:propertyNames.count];
+			for (NSString *name in propertyNames) {
+				id value = [object valueForKey:name];
+				if (!value || [value isKindOfClass:[RLMArray class]]) {
+					[values addObject:NSNull.null];
+				} else {
+					[values addObject:value];
+				}
+			}
+			return values;
+		}
 
-    void before(realm::CollectionChangeSet const &c) {
-      @autoreleasepool {
-        oldValues = readValues(c);
-      }
-    }
+		void before(realm::CollectionChangeSet const &c) {
+			@autoreleasepool {
+				oldValues = readValues(c);
+			}
+		}
 
-    void after(realm::CollectionChangeSet const &c) {
-      @autoreleasepool {
-        auto newValues = readValues(c);
-        if (deleted) {
-          block(nil, nil, nil, nil);
-        } else if (newValues) {
-          block(propertyNames, oldValues, newValues, nil);
-        }
-        propertyNames = nil;
-        oldValues = nil;
-      }
-    }
+		void after(realm::CollectionChangeSet const &c) {
+			@autoreleasepool {
+				auto newValues = readValues(c);
+				if (deleted) {
+					block(nil, nil, nil, nil);
+				} else if (newValues) {
+					block(propertyNames, oldValues, newValues, nil);
+				}
+				propertyNames = nil;
+				oldValues = nil;
+			}
+		}
 
-    void error(std::exception_ptr err) {
-      @autoreleasepool {
-        try {
-          rethrow_exception(err);
-        } catch (...) {
-          NSError *error = nil;
-          RLMRealmTranslateException(&error);
-          block(nil, nil, nil, error);
-        }
-      }
-    }
-  } callback{block, obj};
+		void error(std::exception_ptr err) {
+			@autoreleasepool {
+				try {
+					rethrow_exception(err);
+				} catch (...) {
+					NSError *error = nil;
+					RLMRealmTranslateException(&error);
+					block(nil, nil, nil, error);
+				}
+			}
+		}
+	} callback{block, obj};
 
-  realm::Object object(obj->_realm->_realm, *obj->_info->objectSchema,
-                       obj->_row);
-  auto token = [[RLMObjectNotificationToken alloc]
-      initWithToken:object.add_notification_callback(callback)
-              realm:obj->_realm];
-  token->_object = std::move(object);
-  return token;
+	realm::Object object(obj->_realm->_realm, *obj->_info->objectSchema,
+	                     obj->_row);
+	auto token = [[RLMObjectNotificationToken alloc]
+	              initWithToken:object.add_notification_callback(callback)
+	              realm:obj->_realm];
+	token->_object = std::move(object);
+	return token;
 }
 
 @implementation RLMPropertyChange

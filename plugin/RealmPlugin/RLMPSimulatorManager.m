@@ -23,24 +23,24 @@ static NSString *const RLMPBootedSimulatorKey = @"Booted";
 static NSTask *
 RLMPLaunchedTaskSynchonouslyWithProperty(NSString *path, NSArray *arguments,
                                          NSString *__autoreleasing *output) {
-  // Setup task with given parameters
-  NSTask *task = [[NSTask alloc] init];
-  task.launchPath = path;
-  task.arguments = arguments;
+	// Setup task with given parameters
+	NSTask *task = [[NSTask alloc] init];
+	task.launchPath = path;
+	task.arguments = arguments;
 
-  // Setup output Pipe to created Task
-  NSPipe *outputPipe = [NSPipe pipe];
-  task.standardOutput = outputPipe;
+	// Setup output Pipe to created Task
+	NSPipe *outputPipe = [NSPipe pipe];
+	task.standardOutput = outputPipe;
 
-  [task launch];
-  [task waitUntilExit];
+	[task launch];
+	[task waitUntilExit];
 
-  NSData *outputData = [[outputPipe fileHandleForReading] readDataToEndOfFile];
+	NSData *outputData = [[outputPipe fileHandleForReading] readDataToEndOfFile];
 
-  *output = [[NSString alloc] initWithData:outputData
-                                  encoding:NSUTF8StringEncoding];
+	*output = [[NSString alloc] initWithData:outputData
+	           encoding:NSUTF8StringEncoding];
 
-  return task;
+	return task;
 }
 
 @interface RLMPSimulatorManager ()
@@ -50,71 +50,71 @@ RLMPLaunchedTaskSynchonouslyWithProperty(NSString *path, NSArray *arguments,
 @implementation RLMPSimulatorManager
 
 + (NSString *)bootedSimulatorUUID {
-  NSString *deviceData = [self readDeviceData];
+	NSString *deviceData = [self readDeviceData];
 
-  __block NSString *bootedDeviceUUID;
-  if (deviceData) {
-    // Process output
-    NSDictionary *deviceStatuses = [self processDeviceData:deviceData];
+	__block NSString *bootedDeviceUUID;
+	if (deviceData) {
+		// Process output
+		NSDictionary *deviceStatuses = [self processDeviceData:deviceData];
 
-    [deviceStatuses enumerateKeysAndObjectsUsingBlock:^(
-                        NSString *key, NSString *value, BOOL *stop) {
-      if ([value isEqualToString:RLMPBootedSimulatorKey]) {
-        bootedDeviceUUID = key;
-        // Stop when we found single booted device
-        *stop = YES;
-      }
-    }];
-  }
+		[deviceStatuses enumerateKeysAndObjectsUsingBlock:^(
+			 NSString *key, NSString *value, BOOL *stop) {
+		         if ([value isEqualToString:RLMPBootedSimulatorKey]) {
+		                 bootedDeviceUUID = key;
+		                 // Stop when we found single booted device
+		                 *stop = YES;
+			 }
+		 }];
+	}
 
-  return bootedDeviceUUID;
+	return bootedDeviceUUID;
 }
 
 + (NSString *)readDeviceData {
-  // Find out Xcode path from mainBundle
-  NSURL *bundleURL =
-      [[NSBundle mainBundle] infoDictionary][@"CFBundleInfoPlistURL"];
+	// Find out Xcode path from mainBundle
+	NSURL *bundleURL =
+		[[NSBundle mainBundle] infoDictionary][@"CFBundleInfoPlistURL"];
 
-  // Append with xcrun path
-  NSString *pathToXcrun = @"Contents/Developer/usr/bin/xcrun";
-  NSURL *fullURL = [[NSURL alloc] initWithString:pathToXcrun
-                                   relativeToURL:bundleURL.baseURL];
+	// Append with xcrun path
+	NSString *pathToXcrun = @"Contents/Developer/usr/bin/xcrun";
+	NSURL *fullURL = [[NSURL alloc] initWithString:pathToXcrun
+	                  relativeToURL:bundleURL.baseURL];
 
-  // Set parameters to get device detail
-  NSArray *args = @[ @"simctl", @"list", @"devices" ];
+	// Set parameters to get device detail
+	NSArray *args = @[ @"simctl", @"list", @"devices" ];
 
-  NSString *output;
-  RLMPLaunchedTaskSynchonouslyWithProperty(fullURL.path, args, &output);
+	NSString *output;
+	RLMPLaunchedTaskSynchonouslyWithProperty(fullURL.path, args, &output);
 
-  return output;
+	return output;
 }
 
 + (NSDictionary *)processDeviceData:(NSString *)data {
-  NSMutableDictionary *device = [NSMutableDictionary dictionary];
-  NSScanner *scanner = [NSScanner scannerWithString:data];
+	NSMutableDictionary *device = [NSMutableDictionary dictionary];
+	NSScanner *scanner = [NSScanner scannerWithString:data];
 
-  // Skip punctuation ( ) as we only want status inside
-  scanner.charactersToBeSkipped = [NSCharacterSet punctuationCharacterSet];
-  while (![scanner isAtEnd]) {
-    NSString *deviceKey;
-    NSString *deviceStatus;
-    // Scan up to (
-    [scanner scanUpToString:@"(" intoString:nil];
-    [scanner scanUpToString:@")" intoString:&deviceKey];
+	// Skip punctuation ( ) as we only want status inside
+	scanner.charactersToBeSkipped = [NSCharacterSet punctuationCharacterSet];
+	while (![scanner isAtEnd]) {
+		NSString *deviceKey;
+		NSString *deviceStatus;
+		// Scan up to (
+		[scanner scanUpToString:@"(" intoString:nil];
+		[scanner scanUpToString:@")" intoString:&deviceKey];
 
-    // Scan up to (
-    [scanner scanUpToString:@"(" intoString:nil];
-    [scanner scanUpToString:@")" intoString:&deviceStatus];
+		// Scan up to (
+		[scanner scanUpToString:@"(" intoString:nil];
+		[scanner scanUpToString:@")" intoString:&deviceStatus];
 
-    [scanner scanUpToCharactersFromSet:[NSCharacterSet newlineCharacterSet]
-                            intoString:nil];
+		[scanner scanUpToCharactersFromSet:[NSCharacterSet newlineCharacterSet]
+		 intoString:nil];
 
-    if (deviceKey && deviceStatus) {
-      [device setValue:deviceStatus forKey:deviceKey];
-    }
-  }
+		if (deviceKey && deviceStatus) {
+			[device setValue:deviceStatus forKey:deviceKey];
+		}
+	}
 
-  return device;
+	return device;
 }
 
 @end

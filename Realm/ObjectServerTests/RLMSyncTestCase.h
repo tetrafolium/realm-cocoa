@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface RLMSyncManager ()
 - (void)setSessionCompletionNotifier:
-    (nullable RLMSyncBasicErrorReportingBlock)sessionCompletionNotifier;
+        (nullable RLMSyncBasicErrorReportingBlock)sessionCompletionNotifier;
 @end
 
 @interface SyncObject : RLMObject
@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSURL *)secureAuthServerURL;
 
 + (RLMSyncCredentials *)basicCredentialsWithName:(NSString *)name
-                                        register:(BOOL)shouldRegister;
+        register :(BOOL)shouldRegister;
 
 + (NSURL *)onDiskPathForSyncedRealm:(RLMRealm *)realm;
 
@@ -65,21 +65,21 @@ NS_ASSUME_NONNULL_BEGIN
 /// Synchronously open a synced Realm. Also run a block right after the Realm is
 /// created.
 - (RLMRealm *)openRealmForURL:(NSURL *)url
-                         user:(RLMSyncUser *)user
-             immediatelyBlock:(nullable void (^)(void))block;
+        user:(RLMSyncUser *)user
+        immediatelyBlock:(nullable void (^)(void))block;
 
 /// Synchronously open a synced Realm with encryption key and stop policy.
 /// Also run a block right after the Realm is created.
 - (RLMRealm *)openRealmForURL:(NSURL *)url
-                         user:(RLMSyncUser *)user
-                encryptionKey:(nullable NSData *)encryptionKey
-                   stopPolicy:(RLMSyncStopPolicy)stopPolicy
-             immediatelyBlock:(nullable void (^)(void))block;
+        user:(RLMSyncUser *)user
+        encryptionKey:(nullable NSData *)encryptionKey
+        stopPolicy:(RLMSyncStopPolicy)stopPolicy
+        immediatelyBlock:(nullable void (^)(void))block;
 
 /// Synchronously open a synced Realm and wait until the binding process has
 /// completed or failed. Also run a block right after the Realm is created.
 - (RLMRealm *)openRealmWithConfiguration:(RLMRealmConfiguration *)configuration
-                        immediatelyBlock:(nullable void (^)(void))block;
+        immediatelyBlock:(nullable void (^)(void))block;
 ;
 
 /// Immediately open a synced Realm.
@@ -87,28 +87,28 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Immediately open a synced Realm with encryption key and stop policy.
 - (RLMRealm *)immediatelyOpenRealmForURL:(NSURL *)url
-                                    user:(RLMSyncUser *)user
-                           encryptionKey:(nullable NSData *)encryptionKey
-                              stopPolicy:(RLMSyncStopPolicy)stopPolicy;
+        user:(RLMSyncUser *)user
+        encryptionKey:(nullable NSData *)encryptionKey
+        stopPolicy:(RLMSyncStopPolicy)stopPolicy;
 
 /// Synchronously create, log in, and return a user.
 - (RLMSyncUser *)logInUserForCredentials:(RLMSyncCredentials *)credentials
-                                  server:(NSURL *)url;
+        server:(NSURL *)url;
 
 /// Create and log in an admin user.
 - (RLMSyncUser *)createAdminUserForURL:(NSURL *)url
-                              username:(NSString *)username;
+        username:(NSString *)username;
 
 /// Add a number of objects to a Realm.
 - (void)addSyncObjectsToRealm:(RLMRealm *)realm
-                 descriptions:(NSArray<NSString *> *)descriptions;
+        descriptions:(NSArray<NSString *> *)descriptions;
 
 /// Synchronously wait for downloads to complete for any number of Realms, and
 /// then check their `SyncObject` counts.
 - (void)waitForDownloadsForUser:(RLMSyncUser *)user
-                         realms:(NSArray<RLMRealm *> *)realms
-                      realmURLs:(NSArray<NSURL *> *)realmURLs
-                 expectedCounts:(NSArray<NSNumber *> *)counts;
+        realms:(NSArray<RLMRealm *> *)realms
+        realmURLs:(NSArray<NSURL *> *)realmURLs
+        expectedCounts:(NSArray<NSNumber *> *)counts;
 
 /// "Prime" the sync manager to signal the given semaphore the next time a
 /// session is bound. This method should be called right before a Realm is
@@ -126,14 +126,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// Wait for downloads to complete while spinning the runloop. This method uses
 /// expectations.
 - (void)waitForDownloadsForUser:(RLMSyncUser *)user
-                            url:(NSURL *)url
-                    expectation:(nullable XCTestExpectation *)expectation
-                          error:(NSError **)error;
+        url:(NSURL *)url
+        expectation:(nullable XCTestExpectation *)expectation
+        error:(NSError **)error;
 
 /// Manually set the refresh token for a user. Used for testing invalid token
 /// conditions.
 - (void)manuallySetRefreshTokenForUser:(RLMSyncUser *)user
-                                 value:(NSString *)tokenValue;
+        value:(NSString *)tokenValue;
 
 - (void)setupSyncManager;
 - (void)resetSyncManager;
@@ -143,19 +143,19 @@ NS_ASSUME_NONNULL_BEGIN
 NS_ASSUME_NONNULL_END
 
 #define WAIT_FOR_SEMAPHORE(macro_semaphore, macro_timeout)                     \
-  {                                                                            \
-    int64_t delay_in_ns = (int64_t)(macro_timeout * NSEC_PER_SEC);             \
-    BOOL sema_success = dispatch_semaphore_wait(                               \
-                            macro_semaphore, dispatch_time(DISPATCH_TIME_NOW,  \
-                                                           delay_in_ns)) == 0; \
-    XCTAssertTrue(sema_success, @"Semaphore timed out.");                      \
-  }
+	{                                                                            \
+		int64_t delay_in_ns = (int64_t)(macro_timeout * NSEC_PER_SEC);             \
+		BOOL sema_success = dispatch_semaphore_wait(                               \
+			macro_semaphore, dispatch_time(DISPATCH_TIME_NOW,  \
+			                               delay_in_ns)) == 0; \
+		XCTAssertTrue(sema_success, @"Semaphore timed out.");                      \
+	}
 
 #define CHECK_COUNT(d_count, macro_object_type, macro_realm)                   \
-  {                                                                            \
-    [macro_realm refresh];                                                     \
-    NSInteger c = [macro_object_type allObjectsInRealm:macro_realm].count;     \
-    NSString *w = self.isParent ? @"parent" : @"child";                        \
-    XCTAssert(d_count == c, @"Expected %@ items, but actually got %@ (%@)",    \
-              @(d_count), @(c), w);                                            \
-  }
+	{                                                                            \
+		[macro_realm refresh];                                                     \
+		NSInteger c = [macro_object_type allObjectsInRealm:macro_realm].count;     \
+		NSString *w = self.isParent ? @"parent" : @"child";                        \
+		XCTAssert(d_count == c, @"Expected %@ items, but actually got %@ (%@)",    \
+		          @(d_count), @(c), w);                                            \
+	}

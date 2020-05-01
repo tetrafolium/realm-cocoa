@@ -36,53 +36,54 @@ using namespace realm;
 @implementation RLMRealm (Sync)
 
 - (void)subscribeToObjects:(Class)type
-                     where:(NSString *)query
-                  callback:(RLMPartialSyncFetchCallback)callback {
-  [self verifyThread];
+        where:(NSString *)query
+        callback:(RLMPartialSyncFetchCallback)callback {
+	[self verifyThread];
 
-  RLMClassInfo &info = _info[[type className]];
-  Query q = RLMPredicateToQuery([NSPredicate predicateWithFormat:query],
-                                info.rlmObjectSchema, self.schema, self.group);
-  struct Holder {
-    partial_sync::Subscription subscription;
-    partial_sync::SubscriptionNotificationToken token;
+	RLMClassInfo &info = _info [[type className]];
+	Query q = RLMPredicateToQuery([NSPredicate predicateWithFormat:query],
+	                              info.rlmObjectSchema, self.schema, self.group);
+	struct Holder {
+		partial_sync::Subscription subscription;
+		partial_sync::SubscriptionNotificationToken token;
 
-    Holder(partial_sync::Subscription &&s) : subscription(std::move(s)) {}
-  };
-  auto state = std::make_shared<Holder>(
-      partial_sync::subscribe(Results(_realm, std::move(q)), {}));
-  state->token = state->subscription.add_notification_callback([=]() mutable {
-    if (!callback) {
-      return;
-    }
-    switch (state->subscription.state()) {
-    case partial_sync::SubscriptionState::Invalidated:
-    case partial_sync::SubscriptionState::Pending:
-    case partial_sync::SubscriptionState::Creating:
-      return;
+		Holder(partial_sync::Subscription &&s) : subscription(std::move(s)) {
+		}
+	};
+	auto state = std::make_shared<Holder>(
+		partial_sync::subscribe(Results(_realm, std::move(q)), {}));
+	state->token = state->subscription.add_notification_callback([=]() mutable {
+		if (!callback) {
+		        return;
+		}
+		switch (state->subscription.state()) {
+		case partial_sync::SubscriptionState::Invalidated:
+		case partial_sync::SubscriptionState::Pending:
+		case partial_sync::SubscriptionState::Creating:
+			return;
 
-    case partial_sync::SubscriptionState::Error:
-      try {
-        rethrow_exception(state->subscription.error());
-      } catch (...) {
-        NSError *error = nil;
-        RLMRealmTranslateException(&error);
-        callback(nil, error);
-      }
-      break;
+		case partial_sync::SubscriptionState::Error:
+			try {
+			        rethrow_exception(state->subscription.error());
+			} catch (...) {
+			        NSError *error = nil;
+			        RLMRealmTranslateException(&error);
+			        callback(nil, error);
+			}
+			break;
 
-    case partial_sync::SubscriptionState::Complete:
-      callback([RLMResults emptyDetachedResults], nil);
-      break;
-    }
+		case partial_sync::SubscriptionState::Complete:
+			callback([RLMResults emptyDetachedResults], nil);
+			break;
+		}
 
-    callback = nil;
-    state->token = {};
-  });
+		callback = nil;
+		state->token = {};
+	});
 }
 
 - (RLMSyncSession *)syncSession {
-  return [RLMSyncSession sessionForRealm:self];
+	return [RLMSyncSession sessionForRealm:self];
 }
 
 @end

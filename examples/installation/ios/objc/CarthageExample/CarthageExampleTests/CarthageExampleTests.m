@@ -26,7 +26,7 @@
 @implementation CarthageExampleTests
 
 - (void)testExample {
-  XCTAssertTrue([MyModel isSubclassOfClass:[RLMObject class]]);
+	XCTAssertTrue([MyModel isSubclassOfClass:[RLMObject class]]);
 }
 
 @end

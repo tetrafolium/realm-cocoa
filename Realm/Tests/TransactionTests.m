@@ -24,34 +24,34 @@
 @implementation TransactionTests
 
 - (void)testRealmModifyObjectsOutsideOfWriteTransaction {
-  RLMRealm *realm = [self realmWithTestPath];
-  [realm beginWriteTransaction];
-  StringObject *obj = [StringObject createInRealm:realm withValue:@[ @"a" ]];
-  [realm commitWriteTransaction];
+	RLMRealm *realm = [self realmWithTestPath];
+	[realm beginWriteTransaction];
+	StringObject *obj = [StringObject createInRealm:realm withValue:@[ @"a" ]];
+	[realm commitWriteTransaction];
 
-  XCTAssertThrows([obj setStringCol:@"throw"],
-                  @"Setter should throw when called outside of transaction.");
+	XCTAssertThrows([obj setStringCol:@"throw"],
+	                @"Setter should throw when called outside of transaction.");
 }
 
 - (void)testTransactionMisuse {
-  RLMRealm *realm = [RLMRealm defaultRealm];
+	RLMRealm *realm = [RLMRealm defaultRealm];
 
-  // Insert an object
-  [realm beginWriteTransaction];
-  StringObject *obj = [StringObject createInRealm:realm withValue:@[ @"a" ]];
-  [realm commitWriteTransaction];
+	// Insert an object
+	[realm beginWriteTransaction];
+	StringObject *obj = [StringObject createInRealm:realm withValue:@[ @"a" ]];
+	[realm commitWriteTransaction];
 
-  XCTAssertThrows([StringObject createInRealm:realm withValue:@[ @"a" ]],
-                  @"Outside write transaction");
-  XCTAssertThrows([realm commitWriteTransaction],
-                  @"No write transaction to close");
+	XCTAssertThrows([StringObject createInRealm:realm withValue:@[ @"a" ]],
+	                @"Outside write transaction");
+	XCTAssertThrows([realm commitWriteTransaction],
+	                @"No write transaction to close");
 
-  [realm beginWriteTransaction];
-  XCTAssertThrows([realm beginWriteTransaction],
-                  @"Write transaction already in place");
-  [realm commitWriteTransaction];
+	[realm beginWriteTransaction];
+	XCTAssertThrows([realm beginWriteTransaction],
+	                @"Write transaction already in place");
+	[realm commitWriteTransaction];
 
-  XCTAssertThrows([realm deleteObject:obj], @"Outside writetransaction");
+	XCTAssertThrows([realm deleteObject:obj], @"Outside writetransaction");
 }
 
 @end

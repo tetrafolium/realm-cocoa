@@ -30,18 +30,18 @@
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application
-    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  RLMRealmConfiguration *configuration =
-      [RLMRealmConfiguration defaultConfiguration];
-  configuration.fileURL = [[[NSFileManager defaultManager]
-      containerURLForSecurityApplicationGroupIdentifier:
-          @"group.io.realm.examples.extension"]
-      URLByAppendingPathComponent:@"extension.realm"];
-  [RLMRealmConfiguration setDefaultConfiguration:configuration];
-  self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-  self.window.rootViewController = [[TickViewController alloc] init];
-  [self.window makeKeyAndVisible];
-  return YES;
+        didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+	RLMRealmConfiguration *configuration =
+		[RLMRealmConfiguration defaultConfiguration];
+	configuration.fileURL = [[[NSFileManager defaultManager]
+	                          containerURLForSecurityApplicationGroupIdentifier:
+	                          @"group.io.realm.examples.extension"]
+	                         URLByAppendingPathComponent:@"extension.realm"];
+	[RLMRealmConfiguration setDefaultConfiguration:configuration];
+	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	self.window.rootViewController = [[TickViewController alloc] init];
+	[self.window makeKeyAndVisible];
+	return YES;
 }
 
 @end
@@ -49,56 +49,56 @@
 @implementation TickViewController
 
 - (void)viewDidLoad {
-  [super viewDidLoad];
-  self.tick = [Tick allObjects].firstObject;
-  if (!self.tick) {
-    [[RLMRealm defaultRealm] transactionWithBlock:^{
-      self.tick = [Tick createInDefaultRealmWithValue:@[ @"", @0 ]];
-    }];
-  }
-  self.notificationToken = [self.tick.realm
-      addNotificationBlock:^(NSString *notification, RLMRealm *realm) {
-        // Occasionally, respond immediately to the notification by triggering a
-        // new notification.
-        if (self.tick.count % 13 == 0) {
-          [self tock];
-        }
-        [self updateLabel];
-      }];
-  self.button = [UIButton buttonWithType:UIButtonTypeSystem];
-  self.button.frame = self.view.bounds;
-  [self.button addTarget:self
-                  action:@selector(tock)
-        forControlEvents:UIControlEventTouchUpInside];
-  self.button.titleLabel.textAlignment = NSTextAlignmentCenter;
-  [self.button setTitleColor:[UIColor whiteColor]
-                    forState:UIControlStateNormal];
-  [self.view addSubview:self.button];
-  self.view.backgroundColor = [UIColor purpleColor];
-  [self updateLabel];
+	[super viewDidLoad];
+	self.tick = [Tick allObjects].firstObject;
+	if (!self.tick) {
+		[[RLMRealm defaultRealm] transactionWithBlock:^{
+		         self.tick = [Tick createInDefaultRealmWithValue:@[ @"", @0 ]];
+		 }];
+	}
+	self.notificationToken = [self.tick.realm
+	                          addNotificationBlock:^(NSString *notification, RLMRealm *realm) {
+	                                  // Occasionally, respond immediately to the notification by triggering a
+	                                  // new notification.
+	                                  if (self.tick.count % 13 == 0) {
+	                                          [self tock];
+					  }
+	                                  [self updateLabel];
+				  }];
+	self.button = [UIButton buttonWithType:UIButtonTypeSystem];
+	self.button.frame = self.view.bounds;
+	[self.button addTarget:self
+	 action:@selector(tock)
+	 forControlEvents:UIControlEventTouchUpInside];
+	self.button.titleLabel.textAlignment = NSTextAlignmentCenter;
+	[self.button setTitleColor:[UIColor whiteColor]
+	 forState:UIControlStateNormal];
+	[self.view addSubview:self.button];
+	self.view.backgroundColor = [UIColor purpleColor];
+	[self updateLabel];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-  [super viewWillAppear:animated];
-  self.button.frame = self.view.bounds;
-  [self updateLabel];
+	[super viewWillAppear:animated];
+	self.button.frame = self.view.bounds;
+	[self updateLabel];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-  [super viewDidAppear:animated];
-  [self tock];
-  [self updateLabel];
+	[super viewDidAppear:animated];
+	[self tock];
+	[self updateLabel];
 }
 
 - (void)updateLabel {
-  [self.button setTitle:@(self.tick.count).stringValue
-               forState:UIControlStateNormal];
+	[self.button setTitle:@(self.tick.count).stringValue
+	 forState:UIControlStateNormal];
 }
 
 - (void)tock {
-  [[RLMRealm defaultRealm] transactionWithBlock:^{
-    self.tick.count++;
-  }];
+	[[RLMRealm defaultRealm] transactionWithBlock:^{
+	         self.tick.count++;
+	 }];
 }
 
 @end

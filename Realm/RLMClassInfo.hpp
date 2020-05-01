@@ -36,15 +36,15 @@ namespace std {
 // Add specializations so that NSString can be used as the key for hash
 // containers
 template <> struct hash<NSString *> {
-  size_t operator()(__unsafe_unretained NSString *const str) const {
-    return [str hash];
-  }
+	size_t operator()(__unsafe_unretained NSString *const str) const {
+		return [str hash];
+	}
 };
 template <> struct equal_to<NSString *> {
-  bool operator()(__unsafe_unretained NSString *lhs,
-                  __unsafe_unretained NSString *rhs) const {
-    return [lhs isEqualToString:rhs];
-  }
+	bool operator()(__unsafe_unretained NSString *lhs,
+	                __unsafe_unretained NSString *rhs) const {
+		return [lhs isEqualToString : rhs];
+	}
 };
 } // namespace std
 
@@ -52,67 +52,69 @@ template <> struct equal_to<NSString *> {
 // reference, handles table column lookups, and tracks observed objects
 class RLMClassInfo {
 public:
-  RLMClassInfo(RLMRealm *, RLMObjectSchema *, const realm::ObjectSchema *);
+RLMClassInfo(RLMRealm *, RLMObjectSchema *, const realm::ObjectSchema *);
 
-  __unsafe_unretained RLMRealm *const realm;
-  __unsafe_unretained RLMObjectSchema *const rlmObjectSchema;
-  const realm::ObjectSchema *const objectSchema;
+__unsafe_unretained RLMRealm *const realm;
+__unsafe_unretained RLMObjectSchema *const rlmObjectSchema;
+const realm::ObjectSchema *const objectSchema;
 
-  // Storage for the functionality in RLMObservation for handling indirect
-  // changes to KVO-observed things
-  std::vector<RLMObservationInfo *> observedObjects;
+// Storage for the functionality in RLMObservation for handling indirect
+// changes to KVO-observed things
+std::vector<RLMObservationInfo *> observedObjects;
 
-  // Get the table for this object type. Will return nullptr only if it's a
-  // read-only Realm that is missing the table entirely.
-  realm::Table *_Nullable table() const;
+// Get the table for this object type. Will return nullptr only if it's a
+// read-only Realm that is missing the table entirely.
+realm::Table *_Nullable table() const;
 
-  // Get the RLMProperty for a given table column, or `nil` if it is a column
-  // not used by the current schema
-  RLMProperty *_Nullable propertyForTableColumn(NSUInteger) const noexcept;
+// Get the RLMProperty for a given table column, or `nil` if it is a column
+// not used by the current schema
+RLMProperty *_Nullable propertyForTableColumn(NSUInteger) const noexcept;
 
-  // Get the RLMProperty that's used as the primary key, or `nil` if there is
-  // no primary key for the current schema
-  RLMProperty *_Nullable propertyForPrimaryKey() const noexcept;
+// Get the RLMProperty that's used as the primary key, or `nil` if there is
+// no primary key for the current schema
+RLMProperty *_Nullable propertyForPrimaryKey() const noexcept;
 
-  // Get the table column for the given property. The property must be a valid
-  // persisted property.
-  NSUInteger tableColumn(NSString *propertyName) const;
-  NSUInteger tableColumn(RLMProperty *property) const;
+// Get the table column for the given property. The property must be a valid
+// persisted property.
+NSUInteger tableColumn(NSString *propertyName) const;
+NSUInteger tableColumn(RLMProperty *property) const;
 
-  // Get the info for the target of the link at the given property index.
-  RLMClassInfo &linkTargetType(size_t propertyIndex);
+// Get the info for the target of the link at the given property index.
+RLMClassInfo &linkTargetType(size_t propertyIndex);
 
-  // Get the info for the target of the given property
-  RLMClassInfo &linkTargetType(realm::Property const &property);
+// Get the info for the target of the given property
+RLMClassInfo &linkTargetType(realm::Property const &property);
 
-  void releaseTable() { m_table = nullptr; }
+void releaseTable() {
+	m_table = nullptr;
+}
 
 private:
-  mutable realm::Table *_Nullable m_table = nullptr;
-  std::vector<RLMClassInfo *> m_linkTargets;
+mutable realm::Table *_Nullable m_table = nullptr;
+std::vector<RLMClassInfo *> m_linkTargets;
 };
 
 // A per-RLMRealm object schema map which stores RLMClassInfo keyed on the name
 class RLMSchemaInfo {
-  using impl = std::unordered_map<NSString *, RLMClassInfo>;
+using impl = std::unordered_map<NSString *, RLMClassInfo>;
 
 public:
-  RLMSchemaInfo() = default;
-  RLMSchemaInfo(RLMRealm *realm);
+RLMSchemaInfo() = default;
+RLMSchemaInfo(RLMRealm *realm);
 
-  RLMSchemaInfo clone(realm::Schema const &source_schema,
-                      RLMRealm *target_realm);
+RLMSchemaInfo clone(realm::Schema const &source_schema,
+                    RLMRealm *target_realm);
 
-  // Look up by name, throwing if it's not present
-  RLMClassInfo &operator[](NSString *name);
+// Look up by name, throwing if it's not present
+RLMClassInfo &operator[](NSString *name);
 
-  impl::iterator begin() noexcept;
-  impl::iterator end() noexcept;
-  impl::const_iterator begin() const noexcept;
-  impl::const_iterator end() const noexcept;
+impl::iterator begin() noexcept;
+impl::iterator end() noexcept;
+impl::const_iterator begin() const noexcept;
+impl::const_iterator end() const noexcept;
 
 private:
-  std::unordered_map<NSString *, RLMClassInfo> m_objects;
+std::unordered_map<NSString *, RLMClassInfo> m_objects;
 };
 
 NS_ASSUME_NONNULL_END
